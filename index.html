@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en" ng-app="myApp">
+  <head>
+    <meta charset="utf-8">
+    <title>Testing ES API</title>
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
+    <script src="bower_components/angular/angular.js"></script>
+    <script src="bower_components/elasticsearch/elasticsearch.angular.min.js"></script>
+    <script src="main.js"></script>
+  </head>
+  <body>
+    <div ng-controller="MainController">
+      <h1>Are you testing the API, {{foo}}?</h1>
+      <p>{{hits}}</p>
+    </div>
+  </body>
+</html>
