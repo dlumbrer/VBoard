@@ -7,7 +7,7 @@ myApp.service('client', function (esFactory) {
 });
 
 myApp.controller('MainController', function($scope, client, esFactory) {
-  $scope.foo = "David"
+  //$scope.foo = "David"
 
   //////////////////////////////////PRIMERO OBTENER INDICES////////////////////////////////
   client.cat.indices({
