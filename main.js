@@ -119,13 +119,132 @@ myApp.controller('MainController', function($scope, client, esFactory) {
     }).then(function (resp) {
         //$scope.hits = resp.hits.hits;
         $scope.hits = JSON.stringify(resp.hits, undefined, 2);
-
-        $scope.aggregations = JSON.stringify(resp.aggregations, undefined, 2);
-        console.log(resp)
+        $scope.aggregationsToShow = JSON.stringify(resp.aggregations, undefined, 2);
+        $scope.aggregations = resp.aggregations;
+        console.log($scope.aggregations)
+        $scope.build3DChart();
     }, function (err) {
         $scope.hits = "NO RESULTS"
         console.trace(err.message);
     });
   };
+  /////////////////////////////////////////////////////////////////////////////////////////////////7
+
+  /////////////////////////////////CONSTRUCCIÓN DE THREEDC////////////////////////////////////////////
+  $scope.build3DChart = function(){
+    var container, scene, camera, renderer;
+
+    //objetc which will contain the library functions
+    var dash;
+
+    init();
+    animate();
+
+    function init () {
+
+       ///////////
+       // SCENE //
+       ///////////
+       scene = new THREE.Scene();
+
+       ////////////
+       // CAMERA //
+       ////////////
+       // set the view size in pixels (custom or according to window size)
+       var SCREEN_WIDTH = window.innerWidth;
+       var SCREEN_HEIGHT = window.innerHeight;
+       // camera attributes
+       var VIEW_ANGLE = 45;
+       var ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT;
+       var NEAR = 0.1;
+       var FAR = 20000;
+          // set up camera
+       camera = new THREE.PerspectiveCamera( VIEW_ANGLE, ASPECT, NEAR, FAR);
+       // add the camera to the scene
+       scene.add(camera);
+       // the camera defaults to position (0,0,0)
+       //    so pull it back (z = 400) and up (y = 100) and set the angle towards the scene origin
+       camera.position.set(-553,584,868);
+
+       //////////////
+       // RENDERER //
+       //////////////
+       renderer = new THREE.WebGLRenderer( {antialias:true} );
+       renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
+       renderer.setClearColor( 0xd8d8d8 );
+
+       // attach div element to variable to contain the renderer
+       container = document.getElementById( 'ThreeJS' );
+       // attach renderer to the container div
+       container.appendChild( renderer.domElement );
+
+      ////////////
+      // EVENTS //
+      ////////////
+
+
+      // automatically resize renderer
+      THREEx.WindowResize(renderer, camera);
+
+       ///////////
+       // LIGHTS //
+       ///////////
+       var light1 = new THREE.PointLight(0xffffff,0.8);
+       light1.position.set(0,2500,2500);
+       scene.add(light1);
+
+       var light2 = new THREE.PointLight(0xffffff,0.8);
+       light2.position.set(-2500,2500,-2500);
+       scene.add(light2);
+
+       var light3 = new THREE.PointLight(0xffffff,0.8);
+       light3.position.set(2500,2500,-2500);
+       scene.add(light3);
+
+       // create a set of coordinate axes to help orient user
+       //    specify length in pixels in each direction
+       var axes = new THREE.AxisHelper(1000);
+       scene.add(axes);
+
+       ////////////////////////////MASAJEO DE DATOS//////////////////////////////
+
+       $scope.slices = $scope.aggregations.author.buckets.map(function(bucket) {
+
+        var value = bucket.doc_count;
+
+          return {
+            key: bucket.key_as_string,
+            value: value
+            };
+      });
+      ///////////////////////////////////////////////////////////////////////////
+
+
+      //the empty object will be returned with the library functions
+      dash = THREEDC({},camera,scene,renderer,container);
+
+      var data1= [{key:'monday',value:20},{key:'tuesday',value:80},{key:'friday',value:30}];
+
+      pie=dash.pieChart([100,100,100])
+      pie.data($scope.slices);
+
+       dash.renderAll();
+
+    }
+
+    function animate(){
+       requestAnimationFrame( animate );
+       render();
+       update();
+    }
+
+    function render(){
+       renderer.render( scene, camera );
+    }
+
+    function update(){
+      dash.controls.update();
+    }
+  }
 
 });

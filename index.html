@@ -7,6 +7,7 @@
     <script src="bower_components/angular/angular.js"></script>
     <script src="bower_components/elasticsearch/elasticsearch.angular.min.js"></script>
     <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="bower_components/THREEDC/THREEDC.min.js"></script>
     <script src="main.js"></script>
   </head>
   <body>
@@ -65,6 +66,8 @@
       </div>
 
 
+      <div id="ThreeJS" class="row" style="left:0px; top:0px">
+
       <div class="col-md-12" ng-show="showMapping">
         <h2>Mapping of {{indexName}}:</h2>
         <pre>{{mapping}}</pre>
@@ -75,7 +78,7 @@
       </div>
       <div class="col-md-6">
         <h2>Aggregations:</h2>
-        <pre>{{aggregations}}</pre>
+        <pre>{{aggregationsToShow}}</pre>
       </div>
     </div>
   </body>
