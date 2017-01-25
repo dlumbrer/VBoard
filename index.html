@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" ng-app="myApp">
+<html lang="en">
   <head>
     <meta charset="utf-8">
     <title>Testing ES API</title>
@@ -8,11 +8,11 @@
     <script src="bower_components/elasticsearch/elasticsearch.angular.min.js"></script>
     <script src="bower_components/jquery/dist/jquery.min.js"></script>
     <script src="bower_components/THREEDC/THREEDC.min.js"></script>
-    <script src="main.js"></script>
+    <!--script src="main.js"></script-->
   </head>
   <body>
     <div ng-controller="MainController">
-      <h1>Elasticsearch API to search aggs</h1>
+      <h1>Elasticsearch API to search aggs {{foo}}</h1>
 
 
       <div class="col-sm-12">
@@ -81,5 +81,6 @@
         <pre>{{aggregationsToShow}}</pre>
       </div>
     </div>
+  <script data-main="main" src="bower_components/requirejs/require.js"></script>
   </body>
 </html>
