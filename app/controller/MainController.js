@@ -1,22 +1,10 @@
-//var myApp = angular.module('myApp', ['elasticsearch']);
-
-/*myApp.service('client', function (esFactory) {
-  return esFactory({
-    host: 'http://localhost:9200',
-  });
-});*/
 define(
 		['node_modules/bodybuilder/browser/bodybuilder.min'],
 		function() {
       function MainController($scope, esFactory, ESService) {
-        $scope.foo = "David"
+        $scope.foo = "YEAH!"
 
-				//////PRUEBAS BODYBUILDER/////////
 				var Bodybuilder = require('node_modules/bodybuilder/browser/bodybuilder.min')
-				var body = new Bodybuilder()
-				body.query('match', 'message', 'this is a test')
-				console.log(body.build('v2'))
-				/////////////////////////////////
 
         //////////////////////////////////PRIMERO OBTENER INDICES////////////////////////////////
         ESService.client.cat.indices({
@@ -92,14 +80,25 @@ define(
         $scope.showData = function(){
 
           $scope.metricSelected = $("#metricList").val();
+					$scope.typeBucket = "terms";
           $scope.bucketSelected = $("#bucketsList").val();
           $scope.sizeSelected = $("#sizeValue").val();
+
+					//////PRUEBAS BODYBUILDER/////////
+					var bodyAfterBuild = new Bodybuilder().aggregation($scope.typeBucket, $scope.bucketSelected + '.keyword', null, {order: {_term: 'desc'}, size: $scope.sizeSelected});
+					console.log("Query bodybuilder en crudo", bodyAfterBuild)
+					console.log("BodyBuilder", Bodybuilder)
+					var bodyQuery = new Bodybuilder().aggregation('terms', $scope.bucketSelected + '.keyword', null, {order: {_term: 'desc'}, size: $scope.sizeSelected}).build('v2')
+					console.log("Query bodybuilder", bodyQuery)
+					/////////////////////////////////
 
           ESService.client.search({
             index: 'opnfv',
             type: 'items',
             size: $scope.sizeSelected,
-            body: {
+            body: bodyQuery
+
+						/*{
               "query": {
                 "bool": {
                   "must": [
@@ -124,13 +123,13 @@ define(
                   }
                 }
               }
-            }
+            }*/
           }).then(function (resp) {
               //$scope.hits = resp.hits.hits;
               $scope.hits = JSON.stringify(resp.hits, undefined, 2);
               $scope.aggregationsToShow = JSON.stringify(resp.aggregations, undefined, 2);
               $scope.aggregations = resp.aggregations;
-              console.log($scope.aggregations)
+              console.log("RESPUESTA: ", resp)
               $scope.build3DChart();
           }, function (err) {
               $scope.hits = "NO RESULTS"
@@ -217,12 +216,12 @@ define(
 
              ////////////////////////////MASAJEO DE DATOS//////////////////////////////
 
-             $scope.slices = $scope.aggregations.author.buckets.map(function(bucket) {
+             $scope.slices = $scope.aggregations['agg_' + $scope.typeBucket + '_' + $scope.bucketSelected + '.keyword'].buckets.map(function(bucket) {
 
               var value = bucket.doc_count;
 
                 return {
-                  key: bucket.key_as_string,
+                  key: bucket.key,
                   value: value
                   };
             });

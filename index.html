@@ -12,74 +12,95 @@
   </head>
   <body>
     <div ng-controller="MainController">
-      <h1>Elasticsearch API to search aggs {{foo}}</h1>
+      <h1  style="text-shadow: 0px 0px 7px rgba(0, 0, 0, 0.75); color: #5C2DEA; font-size: 50px; ">THREEDC With ElasticSearch {{foo}}</h1>
 
-
-      <div class="col-sm-12">
-        <label class="control-label col-sm-1" for="indexesList">Index:</label>
-        <div class="col-sm-5">
-          <select class="form-control" id="indexesList">
-            <option ng-repeat="index in indexes" value="{{index.name}}">{{index.name}}</option>
-          </select>
+      <div class="col-md-3">
+        <div class="row">
+          <label class="control-label col-sm-2" for="indexesList">Index:</label>
+          <div class="col-md-10">
+            <select class="form-control" id="indexesList">
+              <option ng-repeat="index in indexes" value="{{index.name}}">{{index.name}}</option>
+            </select>
+          </div>
         </div>
-        <div >
-          <button type="button" class="col-sm-2 btn btn-info" ng-click="searchMappingFromIndex()">Show Mapping</button>
-          <button type="button" class="col-sm-2 btn btn-danger" ng-click="hideMappingFromIndex()">Hide Mapping</button>
-          <button type="button" class="col-sm-2 btn btn-success" ng-click="typeFromIndex()">Select type to search</button>
+        <div class="row">
+          <div >
+            <button type="button" class="col-sm-4 btn btn-info" ng-click="searchMappingFromIndex()">Show Mapping</button>
+            <button type="button" class="col-sm-4 btn btn-danger" ng-click="hideMappingFromIndex()">Hide Mapping</button>
+            <button type="button" class="col-sm-4 btn btn-success" ng-click="typeFromIndex()">Select type</button>
+          </div>
+        </div>
+
+        <div ng-show="showTypeForm">
+        <hr>
+          <div class="row">
+            <label class="control-label col-sm-2" for="typesList">Type:</label>
+            <div class="col-sm-10">
+              <select class="form-control" id="typesList">
+                <option ng-repeat="type in types" value="{{type}}">{{type}}</option>
+              </select>
+            </div>
+          </div>
+          <div class="row">
+            <div >
+              <button type="button" class="col-sm-6 btn btn-info" ng-click="showMetricsBuckets()">Show Metrics and Buckets</button>
+              <button type="button" class="col-sm-6 btn btn-danger" ng-click="hideTypeForm()">Hide Type form</button>
+            </div>
+          </div>
+        </div>
+
+
+
+        <div ng-show="showMetricBucketsForm">
+        <hr>
+          <div class="row">
+            <label class="control-label col-sm-2" for="metricList">Metric:</label>
+            <div class="col-sm-4">
+              <select class="form-control" id="metricList">
+                <option value="count">Count</option>
+              </select>
+            </div>
+            <label class="control-label col-sm-2" for="bucketsList">Buckets:</label>
+            <div class="col-sm-4">
+              <select class="form-control" id="bucketsList">
+                <option ng-repeat="field in fields" value="{{field}}">{{field}}</option>
+              </select>
+            </div>
+          </div>
+          <div class="row">
+            <label class="control-label col-sm-2" for="bucketsList">Size:</label>
+            <div class="col-sm-10">
+              <input type="number" class="form-control" id="sizeValue" value="5">
+            </div>
+          </div>
+          <div class="row">
+            <div >
+              <button type="button" class="col-sm-6 btn btn-info" ng-click="showData()">Show Data</button>
+              <button type="button" class="col-sm-6 btn btn-danger" ng-click="hideMetricsBucketsForm()">Hide Metric-Buckets form</button>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div class="col-sm-12" ng-show="showTypeForm">
-        <label class="control-label col-sm-1" for="typesList">Type:</label>
-        <div class="col-sm-7">
-          <select class="form-control" id="typesList">
-            <option ng-repeat="type in types" value="{{type}}">{{type}}</option>
-          </select>
-        </div>
-        <div >
-          <button type="button" class="col-sm-2 btn btn-info" ng-click="showMetricsBuckets()">Show Metrics and Buckets</button>
-          <button type="button" class="col-sm-2 btn btn-danger" ng-click="hideTypeForm()">Hide Type form</button>
+      <div class="col-md-9" id="ThreeJS" class="row" style="height:60px; left:0px; top:0px"></div>
+
+      <div class="row">
+        <div class="col-md-12">
+          <div class="col-md-12" ng-show="showMapping">
+            <h2>Mapping of {{indexName}}:</h2>
+            <pre>{{mapping}}</pre>
+          </div>
+          <div class="col-md-6">
+            <h2>Hits:</h2>
+            <pre>{{hits}}</pre>
+          </div>
+          <div class="col-md-6">
+            <h2>Aggregations:</h2>
+            <pre>{{aggregationsToShow}}</pre>
+          </div>
         </div>
       </div>
 
-      <div class="col-sm-12" ng-show="showMetricBucketsForm">
-        <label class="control-label col-sm-1" for="metricList">Metric:</label>
-        <div class="col-sm-2">
-          <select class="form-control" id="metricList">
-            <option value="count">Count</option>
-          </select>
-        </div>
-        <label class="control-label col-sm-1" for="bucketsList">Buckets:</label>
-        <div class="col-sm-2">
-          <select class="form-control" id="bucketsList">
-            <option ng-repeat="field in fields" value="{{field}}">{{field}}</option>
-          </select>
-        </div>
-        <label class="control-label col-sm-1" for="bucketsList">Size:</label>
-        <div class="col-sm-2">
-          <input type="number" class="form-control" id="sizeValue" value="5">
-        </div>
-        <div >
-          <button type="button" class="col-sm-1 btn btn-info" ng-click="showData()">Show Data</button>
-          <button type="button" class="col-sm-2 btn btn-danger" ng-click="hideMetricsBucketsForm()">Hide Metric-Buckets form</button>
-        </div>
-      </div>
-
-
-      <div id="ThreeJS" class="row" style="left:0px; top:0px">
-
-      <div class="col-md-12" ng-show="showMapping">
-        <h2>Mapping of {{indexName}}:</h2>
-        <pre>{{mapping}}</pre>
-      </div>
-      <div class="col-md-6">
-        <h2>Hits:</h2>
-        <pre>{{hits}}</pre>
-      </div>
-      <div class="col-md-6">
-        <h2>Aggregations:</h2>
-        <pre>{{aggregationsToShow}}</pre>
-      </div>
     </div>
   <script data-main="main" src="bower_components/requirejs/require.js"></script>
   </body>
