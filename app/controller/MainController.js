@@ -34,9 +34,6 @@ define(
             }
           });
         }
-        $scope.hideMappingFromIndex = function(){
-          $scope.showMapping = false;
-        }
         ///////////////////////////////////////////////////////////////////////////////////////
 
         /////////////////////////////////////Mostrar tipos disponibles///////////////////
@@ -55,10 +52,6 @@ define(
             }
           });
         }
-        $scope.hideTypeForm = function(){
-          $scope.showTypeForm = false;
-
-        }
         //////////////////////////////////////////////////////////////////////
 
         /////////////////////////////////////Una vez con el indice y el tipo podemos buscar metricas y buckets///////////////
@@ -66,11 +59,9 @@ define(
         $scope.showMetricsBuckets = function(){
           $scope.showMetricBucketsForm = true;
           $scope.typeName = $("#typesList").val();
-          $scope.fields = Object.keys($scope.mapping[$scope.indexName].mappings[$scope.typeName].properties);
         }
         $scope.hideMetricsBucketsForm = function(){
           $scope.showMetricBucketsForm = false;
-
         }
 
         ///////////////////////////////////////////////////////////////////////
@@ -80,23 +71,64 @@ define(
         $scope.showData = function(){
 
           $scope.metricSelected = $("#metricList").val();
-					$scope.typeBucket = "terms";
-          $scope.bucketSelected = $("#bucketsList").val();
+					//$scope.typeBucket = $("#aggregationBucketList").val();
+          $scope.fieldBucketSelected = $("#fieldBucketsList").val();
           $scope.sizeSelected = $("#sizeValue").val();
 
 					//////PRUEBAS BODYBUILDER/////////
-					var bodyAfterBuild = new Bodybuilder().aggregation($scope.typeBucket, $scope.bucketSelected + '.keyword', null, {order: {_term: 'desc'}, size: $scope.sizeSelected});
-					console.log("Query bodybuilder en crudo", bodyAfterBuild)
-					console.log("BodyBuilder", Bodybuilder)
-					var bodyQuery = new Bodybuilder().aggregation('terms', $scope.bucketSelected + '.keyword', null, {order: {_term: 'desc'}, size: $scope.sizeSelected}).build('v2')
+					switch ($scope.typeBucket) {
+					    case "terms":
+					        var bodyQuery = new Bodybuilder().aggregation($scope.typeBucket, $scope.fieldBucketSelected + '.keyword', null, {order: {_term: 'desc'}, size: $scope.sizeSelected})
+									bodyQuery = bodyQuery.build('v2')
+									break;
+					    case "date_histogram":
+									$scope.intervalDateHistograms = $("#intervalDateHistogram").val();
+									var bodyQuery = new Bodybuilder().aggregation($scope.typeBucket, $scope.fieldBucketSelected, null, {interval: $scope.intervalDateHistograms}).build('v2')
+					        break;
+					    case "histogram":
+									$scope.intervalHistogram = $("#intervalHistogram").val();
+									var bodyQuery = new Bodybuilder().aggregation($scope.typeBucket, $scope.fieldBucketSelected, null, {interval: $scope.intervalHistogram}).build('v2')
+					        break;
+					}
 					console.log("Query bodybuilder", bodyQuery)
 					/////////////////////////////////
 
-          ESService.client.search({
+					$scope.exexcuteSearch(bodyQuery);
+
+        };
+        /////////////////////////////////////////////////////////////////////////////////////////////////7
+				$scope.showFieldsOfTypeAggregation = function(){
+					switch ($scope.typeBucket) {
+					    case "terms":
+									$scope.fields = Object.keys($scope.mapping[$scope.indexName].mappings[$scope.typeName].properties);
+					        break;
+					    case "date_histogram":
+									$scope.fields = [];
+									var allFields = $scope.mapping[$scope.indexName].mappings[$scope.typeName].properties;
+									Object.keys(allFields).forEach(function(key,index) {
+											if(allFields[key].type == "date"){
+												$scope.fields.push(key)
+											}
+									});
+					        break;
+					    case "histogram":
+									$scope.fields = [];
+									var allFields = $scope.mapping[$scope.indexName].mappings[$scope.typeName].properties;
+									Object.keys(allFields).forEach(function(key,index) {
+									    if(allFields[key].type == "long"){
+												$scope.fields.push(key)
+											}
+									});
+					        break;
+					}
+				}
+
+				$scope.exexcuteSearch = function(query){
+					ESService.client.search({
             index: 'opnfv',
             type: 'items',
             size: $scope.sizeSelected,
-            body: bodyQuery
+            body: query
 
 						/*{
               "query": {
@@ -130,16 +162,15 @@ define(
               $scope.aggregationsToShow = JSON.stringify(resp.aggregations, undefined, 2);
               $scope.aggregations = resp.aggregations;
               console.log("RESPUESTA: ", resp)
-              $scope.build3DChart();
+              //$scope.build3DChart();
           }, function (err) {
               $scope.hits = "NO RESULTS"
               console.trace(err.message);
           });
-        };
-        /////////////////////////////////////////////////////////////////////////////////////////////////7
+				}
 
         /////////////////////////////////CONSTRUCCIÓN DE THREEDC////////////////////////////////////////////
-        $scope.build3DChart = function(){
+        /*$scope.build3DChart = function(){
           var container, scene, camera, renderer;
 
           //objetc which will contain the library functions
@@ -216,7 +247,7 @@ define(
 
              ////////////////////////////MASAJEO DE DATOS//////////////////////////////
 
-             $scope.slices = $scope.aggregations['agg_' + $scope.typeBucket + '_' + $scope.bucketSelected + '.keyword'].buckets.map(function(bucket) {
+             $scope.slices = $scope.aggregations['agg_' + $scope.typeBucket + '_' + $scope.fieldBucketSelected + '.keyword'].buckets.map(function(bucket) {
 
               var value = bucket.doc_count;
 
@@ -253,7 +284,7 @@ define(
           function update(){
             dash.controls.update();
           }
-        }
+        }*/
 
       }
 
