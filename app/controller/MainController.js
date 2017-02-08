@@ -4,9 +4,11 @@ define(
       function MainController($scope, esFactory, ESService) {
         $scope.foo = "YEAH!"
 
-				var Bodybuilder = require('node_modules/bodybuilder/browser/bodybuilder.min')
+				var bodybuilder = require('node_modules/bodybuilder/browser/bodybuilder.min')
 
         //////////////////////////////////PRIMERO OBTENER INDICES////////////////////////////////
+				var generatorQueries = genES({})
+
         ESService.client.cat.indices({
           h: ['index', 'docs.count']
         }).then(function (body) {
@@ -18,7 +20,10 @@ define(
           indices.pop(); //the last line is empty by default
           $scope.indexes = indices;
           console.log("INDICES", indices)
-        });
+        }, function (err) {
+		        return "ERROR"
+		        console.trace(err.message);
+		    });
 
 
         /////////////////////////////SHOW MAPPING OF THE INDEX SELECTED IF YOU WANT////////////////////////////
@@ -75,22 +80,53 @@ define(
           $scope.fieldBucketSelected = $("#fieldBucketsList").val();
           $scope.sizeSelected = $("#sizeValue").val();
 
+					var statements = [{
+					  "aggregationType":"terms",
+					  "aggregationField":"author_org_name.keyword"
+					}, {
+					  "aggregationType":"terms",
+					  "aggregationField":"repo_name.keyword"
+					}, {
+					  "aggregationType":"date_histogram",
+					  "aggregationField":"author_date" ,
+					  "aggregationOptions": {"interval" : "1M"}
+					}, {
+					  "aggregationType":"histogram",
+					  "aggregationField":"lines_changed",
+					  "aggregationOptions": {"interval" : "2000"}
+					}]
+
 					//////PRUEBAS BODYBUILDER/////////
-					switch ($scope.typeBucket) {
-					    case "terms":
-					        var bodyQuery = new Bodybuilder().aggregation($scope.typeBucket, $scope.fieldBucketSelected + '.keyword', null, {order: {_term: 'desc'}, size: $scope.sizeSelected})
-									bodyQuery = bodyQuery.build('v2')
-									break;
+					//switch ($scope.typeBucket) {
+					    //case "terms":
+					        /*var bodyQuery = bodybuilder().aggregation($scope.typeBucket, $scope.fieldBucketSelected + '.keyword', null, {order: {_term: 'desc'}, size: $scope.sizeSelected}, (agg) => {
+										var index = 0;
+								    var nestedAgg;
+								    function makeNestedAgg(aggBuilder) {
+								      if (!statements[index]) return nestedAgg;
+								      var type = statements[index].aggregationType;
+								      var field = statements[index].aggregationField;
+											var options = statements[index].aggregationOptions;
+								      index++;
+								      return aggBuilder.aggregation(type, field, options, (agg) => makeNestedAgg(nestedAgg = agg));
+								    }
+								    return makeNestedAgg(agg);
+									})
+									console.log(bodyQuery)*/
+									//bodyQuery = generatorQueries.objBB.build()
+									bodyQuery = generatorQueries.buildBodybuilderObject(statements, bodybuilder).buildQuery().getQuery();
+									/*break;
 					    case "date_histogram":
 									$scope.intervalDateHistograms = $("#intervalDateHistogram").val();
-									var bodyQuery = new Bodybuilder().aggregation($scope.typeBucket, $scope.fieldBucketSelected, null, {interval: $scope.intervalDateHistograms}).build('v2')
-					        break;
+									var bodyQuery = bodybuilder().aggregation($scope.typeBucket, $scope.fieldBucketSelected, null, {interval: $scope.intervalDateHistograms}).aggregation("terms", "repo_name.keyword").build('v2')
+									console.log(bodyQuery);
+									break;
 					    case "histogram":
 									$scope.intervalHistogram = $("#intervalHistogram").val();
-									var bodyQuery = new Bodybuilder().aggregation($scope.typeBucket, $scope.fieldBucketSelected, null, {interval: $scope.intervalHistogram}).build('v2')
+									var bodyQuery = bodybuilder().aggregation($scope.typeBucket, $scope.fieldBucketSelected, null, {interval: $scope.intervalHistogram}).build('v2')
 					        break;
-					}
-					console.log("Query bodybuilder", bodyQuery)
+					}*/
+					console.log("Query con mi api", bodyQuery)
 					/////////////////////////////////
 
 					$scope.exexcuteSearch(bodyQuery);
