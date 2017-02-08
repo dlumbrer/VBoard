@@ -8,6 +8,7 @@ define(
 
         //////////////////////////////////PRIMERO OBTENER INDICES////////////////////////////////
 				var generatorQueries = genES({})
+				var builderData = builderESDS({})
 
         ESService.client.cat.indices({
           h: ['index', 'docs.count']
@@ -80,7 +81,7 @@ define(
           $scope.fieldBucketSelected = $("#fieldBucketsList").val();
           $scope.sizeSelected = $("#sizeValue").val();
 
-					var statements = [{
+					/*var statements = [{
 					  "aggregationType":"terms",
 					  "aggregationField":"author_org_name.keyword"
 					}, {
@@ -94,42 +95,23 @@ define(
 					  "aggregationType":"histogram",
 					  "aggregationField":"lines_changed",
 					  "aggregationOptions": {"interval" : "2000"}
-					}]
+					}]*/
 
-					//////PRUEBAS BODYBUILDER/////////
-					//switch ($scope.typeBucket) {
-					    //case "terms":
-					        /*var bodyQuery = bodybuilder().aggregation($scope.typeBucket, $scope.fieldBucketSelected + '.keyword', null, {order: {_term: 'desc'}, size: $scope.sizeSelected}, (agg) => {
-										var index = 0;
-								    var nestedAgg;
-								    function makeNestedAgg(aggBuilder) {
-								      if (!statements[index]) return nestedAgg;
-								      var type = statements[index].aggregationType;
-								      var field = statements[index].aggregationField;
-											var options = statements[index].aggregationOptions;
-								      index++;
-								      return aggBuilder.aggregation(type, field, options, (agg) => makeNestedAgg(nestedAgg = agg));
-								    }
-								    return makeNestedAgg(agg);
-									})
-									console.log(bodyQuery)*/
-									//bodyQuery = generatorQueries.objBB.build()
-									bodyQuery = generatorQueries.buildBodybuilderObject(statements, bodybuilder).buildQuery().getQuery();
-									/*break;
-					    case "date_histogram":
-									$scope.intervalDateHistograms = $("#intervalDateHistogram").val();
-									var bodyQuery = bodybuilder().aggregation($scope.typeBucket, $scope.fieldBucketSelected, null, {interval: $scope.intervalDateHistograms}).aggregation("terms", "repo_name.keyword").build('v2')
-									console.log(bodyQuery);
-									break;
-					    case "histogram":
-									$scope.intervalHistogram = $("#intervalHistogram").val();
-									var bodyQuery = bodybuilder().aggregation($scope.typeBucket, $scope.fieldBucketSelected, null, {interval: $scope.intervalHistogram}).build('v2')
-					        break;
-					}*/
-					console.log("Query con mi api", bodyQuery)
-					/////////////////////////////////
+					var statements = builderData.buildDataStructure().getDataStructure()
 
-					$scope.exexcuteSearch(bodyQuery);
+					//bodyQuery = generatorQueries.buildBodybuilderObject(statements, bodybuilder).buildQuery().getQuery();
+					//console.log("Query con mi api", bodyQuery)
+					//var promiseSearch = generatorQueries.executeSearch(ESService.client, "opnfv")
+					var promiseSearch = generatorQueries.buildBodybuilderObject(statements, bodybuilder).buildQuery().executeSearch(ESService.client, "opnfv")
+					promiseSearch.then(function (resp) {
+						$scope.hits = JSON.stringify(resp.hits, undefined, 2);
+						$scope.aggregationsToShow = JSON.stringify(resp.aggregations, undefined, 2);
+						$scope.aggregations = resp.aggregations;
+			    }, function (err) {
+			        console.trace(err.message);
+			    });
+
+					//$scope.exexcuteSearch(bodyQuery);
 
         };
         /////////////////////////////////////////////////////////////////////////////////////////////////7
@@ -159,14 +141,14 @@ define(
 					}
 				}
 
-				$scope.exexcuteSearch = function(query){
+				/*$scope.exexcuteSearch = function(query){
 					ESService.client.search({
             index: 'opnfv',
             type: 'items',
             size: $scope.sizeSelected,
             body: query
 
-						/*{
+						{
               "query": {
                 "bool": {
                   "must": [
@@ -191,7 +173,7 @@ define(
                   }
                 }
               }
-            }*/
+            }
           }).then(function (resp) {
               //$scope.hits = resp.hits.hits;
               $scope.hits = JSON.stringify(resp.hits, undefined, 2);
@@ -203,7 +185,7 @@ define(
               $scope.hits = "NO RESULTS"
               console.trace(err.message);
           });
-				}
+				}*/
 
         /////////////////////////////////CONSTRUCCIÓN DE THREEDC////////////////////////////////////////////
         /*$scope.build3DChart = function(){

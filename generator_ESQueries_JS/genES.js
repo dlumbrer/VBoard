@@ -1,8 +1,8 @@
 function genES (genES) {
-
+  //¿DEBO CONSTRUIR EL OBJETO PASANDOLE POR PARAMETRO EL CLIENTE Y BODYBUILDER O NO?
   genES.version = "0.0.1";
 
-
+  ///////////////////////////////PRUEBAS//////////////////////////////////////
   genES.getIndicesNames = function(client){
     client.cat.indices({
       h: ['index', 'doc_count']
@@ -18,9 +18,10 @@ function genES (genES) {
         return "ERROR"
         console.trace(err.message);
     });
-
   }
+  ////////////////////////////////////////////////////////////////////////////
 
+  //Monta el objeto bodybuilder
   genES.buildBodybuilderObject = function(statements, bodybuilder) {
     var bodyQuery = bodybuilder().aggregation(statements[0].aggregationType, statements[0].aggregationField, statements[0].aggregationOptions, (agg) => {
       var index = 1;
@@ -38,14 +39,32 @@ function genES (genES) {
     genES.objBB = bodyQuery;
     return genES;
   }
+  //Devuelve el objeto bodybuilder
+  genES.getBodybuilderObject = function() {
+    return genES.objBB;
+  }
 
+
+  //Monta la query
   genES.buildQuery = function() {
     genES.query = genES.objBB.build()
     return genES;
   }
-
+  //Devuelve la query montada
   genES.getQuery = function() {
     return genES.query;
+  }
+
+
+  //Este metodo devuelve una promesa por que esta haciendo una búsqueda externa
+  genES.executeSearch = function(client, indexName){
+    var promise = client.search({
+      index: indexName,
+      type: 'items',
+      size: 5,
+      body: genES.query
+    })
+    return promise
   }
 
 	return genES;
