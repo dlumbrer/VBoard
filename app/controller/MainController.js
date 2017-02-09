@@ -64,7 +64,8 @@ define(
 
         $scope.showMetricsBuckets = function(){
           $scope.showMetricBucketsForm = true;
-          $scope.typeName = $("#typesList").val();
+          $scope.visType = $("#typesList").val();
+					$scope.typeName = "items";
         }
         $scope.hideMetricsBucketsForm = function(){
           $scope.showMetricBucketsForm = false;
@@ -74,13 +75,40 @@ define(
 
         /////////////////////////////////////Mostramos datos///////////////
 
+				$scope.addMetricForm = function(){
+					$scope.metricSelected = $("#metricList").val();
+          builderData.addMetric("count")
+					//console.log(builderData)
+					$scope.metricsSelected = builderData.metrics;
+        }
+
+				//CUANDO QUIERES AÑADIR MAS SUBBUCKET
+				$scope.addSubbucketForm = function(){
+					$scope.typeBucket = $("#aggregationBucketList").val();
+					$scope.fieldBucketSelected = $("#fieldBucketsList").val();
+					//$scope.sizeSelected = $("#sizeValue").val();
+
+					var options = {}
+					switch ($scope.typeBucket) {
+							case "terms":
+									$scope.fieldBucketSelected = $scope.fieldBucketSelected + ".keyword";
+									options = {"size": $("#sizeValue").val()}
+									break;
+							case "date_histogram":
+									options = {"interval": $("#intervalDateHistogram").val()}
+									break;
+							case "histogram":
+									options = {"interval": $("#intervalHistogram").val()}
+									break;
+					}
+
+
+          builderData.addBucket($scope.typeBucket, $scope.fieldBucketSelected, options)
+					//console.log(builderData)
+					$scope.bucketsSelected = builderData.buckets;
+        }
+
         $scope.showData = function(){
-
-          $scope.metricSelected = $("#metricList").val();
-					//$scope.typeBucket = $("#aggregationBucketList").val();
-          $scope.fieldBucketSelected = $("#fieldBucketsList").val();
-          $scope.sizeSelected = $("#sizeValue").val();
-
 					/*var statements = [{
 					  "aggregationType":"terms",
 					  "aggregationField":"author_org_name.keyword"
@@ -102,7 +130,7 @@ define(
 					//bodyQuery = generatorQueries.buildBodybuilderObject(statements, bodybuilder).buildQuery().getQuery();
 					//console.log("Query con mi api", bodyQuery)
 					//var promiseSearch = generatorQueries.executeSearch(ESService.client, "opnfv")
-					var promiseSearch = generatorQueries.buildBodybuilderObject(statements, bodybuilder).buildQuery().executeSearch(ESService.client, "opnfv")
+					var promiseSearch = generatorQueries.buildBodybuilderObject(statements, bodybuilder).buildQuery().executeSearch(ESService.client, $scope.indexName)
 					promiseSearch.then(function (resp) {
 						$scope.hits = JSON.stringify(resp.hits, undefined, 2);
 						$scope.aggregationsToShow = JSON.stringify(resp.aggregations, undefined, 2);
