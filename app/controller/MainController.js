@@ -186,13 +186,15 @@ define(
 						$scope.hits = JSON.stringify(resp.hits, undefined, 2);
 						$scope.aggregationsToShow = JSON.stringify(resp.aggregations, undefined, 2);
 						$scope.aggregations = resp.aggregations;
-						console.log($scope.aggregations)
-						$scope.buildPie();
+						console.log("Respuesta (Agregaciones)", $scope.aggregations)
+
+						$scope.buildPie(); //Deberia pasarle el tipo de metrica/campo. tipo de bucket/campo
 
 						//resetear datos
-						builderData.buckets = [];
+						//builderData.buckets = [];
+						//builderData.metrics = [];
+						builderData.reset()
 						//$scope.bucketsSelected = builderData.buckets;
-						builderData.metrics = [];
 						//$scope.bucketsSelected = builderData.metrics;
 
 			    }, function (err) {
@@ -212,11 +214,13 @@ define(
 				$scope.buildPie = function(){
 
 					var data = $scope.aggregations['agg_' + $scope.typeBucket + '_' + $scope.fieldBucketSelected].buckets.map(function(bucket) {
+
 					 var value = bucket.doc_count;
-						 return {
-							 key: bucket.key,
-							 value: value
-							 };
+
+					 return {
+						 key: bucket.key,
+						 value: value
+						 };
 				 });
 
 

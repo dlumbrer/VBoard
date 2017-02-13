@@ -38,7 +38,7 @@ function builderESDS (builderESDS) {
 
     builderESDS.dataStucture = builderESDS.buckets.concat(builderESDS.metrics);
 
-    console.log(builderESDS.dataStucture)
+    console.log("Estructura de datos", builderESDS.dataStucture)
 
     //builderESDS.dataStucture = statements;
     return builderESDS;
@@ -74,6 +74,17 @@ function builderESDS (builderESDS) {
     };
     builderESDS.bucketId++;
     builderESDS.buckets.push(agg)
+
+    return builderESDS;
+  }
+  ////////////////////////////////////////////////////////////////////////
+
+  builderESDS.reset = function(){
+    builderESDS.metrics = [];
+    builderESDS.buckets = [];
+
+    builderESDS.metricId = 0;
+    builderESDS.bucketId = 0;
 
     return builderESDS;
   }
