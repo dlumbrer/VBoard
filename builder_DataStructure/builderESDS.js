@@ -36,7 +36,7 @@ function builderESDS (builderESDS) {
       "aggregationOptions": {"interval" : "2000"}
     }]
 
-    builderESDS.dataStucture = builderESDS.buckets;
+    builderESDS.dataStucture = builderESDS.buckets.concat(builderESDS.metrics);
 
     console.log(builderESDS.dataStucture)
 

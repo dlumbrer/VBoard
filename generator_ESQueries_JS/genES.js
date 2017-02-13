@@ -23,19 +23,23 @@ function genES (genES) {
 
   //Monta el objeto bodybuilder
   genES.buildBodybuilderObject = function(statements, bodybuilder) {
-    var bodyQuery = bodybuilder().aggregation(statements[0].aggregationType, statements[0].aggregationField, statements[0].aggregationOptions, (agg) => {
-      var index = 1;
-      var nestedAgg;
-      function makeNestedAgg(aggBuilder) {
-        if (!statements[index]) return nestedAgg;
-        var type = statements[index].aggregationType;
-        var field = statements[index].aggregationField;
-        var options = statements[index].aggregationOptions;
-        index++;
-        return aggBuilder.aggregation(type, field, options, (agg) => makeNestedAgg(nestedAgg = agg));
-      }
-      return makeNestedAgg(agg);
-    })
+    if(statements.length > 1){
+      var bodyQuery = bodybuilder().aggregation(statements[0].aggregationType, statements[0].aggregationField, statements[0].aggregationOptions, (agg) => {
+        var index = 1;
+        var nestedAgg;
+        function makeNestedAgg(aggBuilder) {
+          if (!statements[index]) return nestedAgg;
+          var type = statements[index].aggregationType;
+          var field = statements[index].aggregationField;
+          var options = statements[index].aggregationOptions;
+          index++;
+          return aggBuilder.aggregation(type, field, options, (agg) => makeNestedAgg(nestedAgg = agg));
+        }
+        return makeNestedAgg(agg);
+      })
+    }else{
+      var bodyQuery = bodybuilder().aggregation(statements[0].aggregationType, statements[0].aggregationField, statements[0].aggregationOptions);
+    }
     genES.objBB = bodyQuery;
     return genES;
   }
@@ -69,3 +73,50 @@ function genES (genES) {
 
 	return genES;
 }
+
+
+/*$scope.exexcuteSearch = function(query){
+  ESService.client.search({
+    index: 'opnfv',
+    type: 'items',
+    size: $scope.sizeSelected,
+    body: query
+
+    {
+      "query": {
+        "bool": {
+          "must": [
+            {
+              "query_string": {
+                "query": "*",
+                "analyze_wildcard": true
+              }
+            },
+          ],
+          "must_not": []
+        }
+      },
+      "aggs": {
+        "author": {
+          "terms": {
+            "field": $scope.bucketSelected + ".keyword",
+            "size": $scope.sizeSelected,
+            "order": {
+              "_count": "desc"
+            }
+          }
+        }
+      }
+    }
+  }).then(function (resp) {
+      //$scope.hits = resp.hits.hits;
+      $scope.hits = JSON.stringify(resp.hits, undefined, 2);
+      $scope.aggregationsToShow = JSON.stringify(resp.aggregations, undefined, 2);
+      $scope.aggregations = resp.aggregations;
+      console.log("RESPUESTA: ", resp)
+      //$scope.build3DChart();
+  }, function (err) {
+      $scope.hits = "NO RESULTS"
+      console.trace(err.message);
+  });
+}*/

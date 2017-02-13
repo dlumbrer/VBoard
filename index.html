@@ -75,18 +75,28 @@
         <hr>
           <h3>Metrics:</h3>
           <div class="row">
-            <label class="control-label col-md-2" for="metricList">Agreggation:</label>
+            <label class="control-label col-md-2" for="metricList">Type:</label>
             <div class="col-md-10">
-              <select class="form-control" id="metricList">
+              <select class="form-control" ng-model="metricList" id="metricList" ng-change="showFieldsOfMetricType()">
                 <option value="count">Count</option>
+                <option value="avg">Average</option>
+                <option value="sum">Sum</option>
               </select>
+            </div>
+            <div class="col-md-12" ng-show="metricList!='count'">
+              <label class="control-label col-md-2" for="fieldMetricList">Field:</label>
+              <div class="col-md-10">
+                <select class="form-control" id="fieldMetricList">
+                  <option ng-repeat="fieldMetric in fieldsMetric" value="{{fieldMetric}}">{{fieldMetric}}</option>
+                </select>
+              </div>
             </div>
           </div>
           <button type="button" class="col-sm-12 btn btn-success" ng-click="addMetricForm()">Add Metric</button>
           <br>
           <h3>Buckets:</h3>
           <div class="row">
-            <label class="control-label col-md-2" for="aggregationBucketList">Agreggation:</label>
+            <label class="control-label col-md-2" for="aggregationBucketList">Type:</label>
             <div class="col-md-4">
               <select ng-model="typeBucket" class="form-control" id="aggregationBucketList" ng-change="showFieldsOfTypeAggregation()">
                 <option value="terms">Terms</option>
@@ -139,7 +149,7 @@
         {{bucketsSelected}}
       </div>
 
-      <!--div class="col-md-9" id="ThreeJS" class="row" style="height:60px; left:0px; top:0px"></div-->
+      <div class="col-md-9" id="ThreeJS" class="row" style="height:60px; left:0px; top:0px"></div>
 
       <div class="row">
         <div class="col-md-12">
