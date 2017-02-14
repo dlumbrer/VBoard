@@ -140,6 +140,9 @@ define(
 									var fieldSelected = $("#fieldMetricList").val();
 									builderData.addMetric($scope.metricList, fieldSelected);
 									break;
+								default:
+										console.log("Esta vacío")
+										return
 					}
 
 					$scope.metricsSelected = builderData.metrics;
@@ -162,6 +165,10 @@ define(
 							case "histogram":
 									options = {"interval": $("#intervalHistogram").val()}
 									break;
+							default:
+									console.log("Esta vacío")
+									return
+
 					}
 
 

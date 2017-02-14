@@ -23,17 +23,29 @@ function genES (genES) {
 
   //Monta el objeto bodybuilder
   genES.buildBodybuilderObject = function(statements, bodybuilder) {
+    var index = 0;
     if(statements.length > 1){
-      var bodyQuery = bodybuilder().aggregation(statements[0].aggregationType, statements[0].aggregationField, statements[0].aggregationOptions, (agg) => {
-        var index = 1;
+      var bodyQuery = bodybuilder().aggregation(statements[index].aggregationType, statements[index].aggregationField, statements[index].aggregationOptions, (agg) => {
         var nestedAgg;
         function makeNestedAgg(aggBuilder) {
+          index++;
           if (!statements[index]) return nestedAgg;
-          var type = statements[index].aggregationType;
+          var type = statements[index].type;
+
+          //Si es metric no hay que hacer un nestedAgg, ahora son todas agregaciones en paralelo
+          if (type == "metric"){
+            //Ahora las metricas
+            for (var i = index; i < statements.length; i++) {
+              aggBuilder.aggregation(statements[i].aggregationType, statements[i].aggregationField, statements[i].aggregationOptions);
+            }
+            return aggBuilder;
+          }
+
+          var aggtype = statements[index].aggregationType;
           var field = statements[index].aggregationField;
           var options = statements[index].aggregationOptions;
-          index++;
-          return aggBuilder.aggregation(type, field, options, (agg) => makeNestedAgg(nestedAgg = agg));
+          //index++;
+          return aggBuilder.aggregation(aggtype, field, options, (agg) => makeNestedAgg(nestedAgg = agg));
         }
         return makeNestedAgg(agg);
       })
@@ -52,6 +64,7 @@ function genES (genES) {
   //Monta la query
   genES.buildQuery = function() {
     genES.query = genES.objBB.build()
+    console.log(genES.query)
     return genES;
   }
   //Devuelve la query montada
