@@ -65,7 +65,7 @@ define(
 
         $scope.showMetricsBuckets = function(){
           $scope.showMetricBucketsForm = true;
-          $scope.visType = $("#typesList").val();
+          //$scope.visType = $("#typesList").val();
 					$scope.typeName = "items";
         }
         $scope.hideMetricsBucketsForm = function(){
@@ -73,6 +73,44 @@ define(
         }
 
         ///////////////////////////////////////////////////////////////////////
+
+				/////////////////////////////////////////////////// MOSTRAR BOTON DE ADD METRIC/BUCKET DEPENDIENDO DEL TIPO DE VISUALIZACIÓN QUE SE HAYA ELEGDO//////////
+				$scope.showAddMetricVisType = function(){
+
+					switch ($scope.visType) {
+							case "pie":
+									return false;
+							case "3DBars":
+									return false;
+							default:
+									return
+
+					}
+
+					return true;
+
+				}
+
+				$scope.showAddSubBucketVisType = function(){
+
+					switch ($scope.visType) {
+							case "pie":
+									return false;
+							case "3DBars":
+									if($scope.bucketsSelected && $scope.bucketsSelected.length == 1){
+										return false;
+									}else{
+										return true;
+									}
+							default:
+									return
+
+					}
+					return true;
+
+				}
+
+				///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 				/////////////////////////////////////////////////MOSTRAR CAMPOS A ELECCION SGUN EL TIPO DE METRICA/BUCKET////////////////////////////////////////////////7
 				$scope.showFieldsOfMetricType = function(){
@@ -195,7 +233,19 @@ define(
 						$scope.aggregations = resp.aggregations;
 						console.log("Respuesta (Agregaciones)", $scope.aggregations)
 
-						$scope.buildPie(); //Deberia pasarle el tipo de metrica/campo. tipo de bucket/campo
+						switch ($scope.visType) {
+								case "pie":
+										$scope.buildPie();
+										break;
+								case "3DBars":
+										$scope.buildTDBarsChart();
+										break;
+								default:
+										console.log("Esta vacío")
+										return
+
+						}
+
 
 						//resetear datos
 						//builderData.buckets = [];
@@ -219,15 +269,17 @@ define(
 				/////////////////////////FUNCIONES DE THREDC/////////////////////////////////////////////
 				z = 0;
 				$scope.buildPie = function(){
+					var data = $scope.aggregations['agg_' + $scope.bucketsSelected[0].aggregationType + '_' + $scope.bucketsSelected[0].aggregationField].buckets.map(function(bucket) {
+						if($scope.metricsSelected.length > 0){
+							var value = bucket['agg_' + $scope.metricsSelected[0].aggregationType + "_" + $scope.metricsSelected[0].aggregationField].value;
+						}else{
+							var value = bucket.doc_count;
+						}
 
-					var data = $scope.aggregations['agg_' + $scope.typeBucket + '_' + $scope.fieldBucketSelected].buckets.map(function(bucket) {
-
-					 var value = bucket.doc_count;
-
-					 return {
-						 key: bucket.key,
-						 value: value
-						 };
+						return {
+							key: bucket.key,
+							value: value
+						};
 				 });
 
 
@@ -240,6 +292,107 @@ define(
 				 }
 				 //pie.render();
 			 }
+
+			 $scope.buildTDBarsChart = function(){
+				 var data = [];
+				 $scope.aggregations['agg_' + $scope.bucketsSelected[0].aggregationType + '_' + $scope.bucketsSelected[0].aggregationField].buckets.map(function(bucketx) {
+
+						var bucketsy = bucketx['agg_' + $scope.bucketsSelected[1].aggregationType + '_' + $scope.bucketsSelected[1].aggregationField].buckets;
+
+						bucketsy.map(function(buckety){
+							if($scope.metricsSelected.length > 0){
+								var value = buckety['agg_' + $scope.metricsSelected[0].aggregationType + "_" + $scope.metricsSelected[0].aggregationField].value;
+							}else{
+								var value = buckety.doc_count;
+							}
+							data.push({key1:bucketx.key, key2:buckety.key, value: value})
+						})
+
+				});
+
+			data = getOrderedData(data);
+
+				z += 300;
+				bars=dash.TDbarsChart([100,100,z])
+				bars.data(data);
+				bars.width(300);
+				bars.height(400);
+				bars.depth(500);
+				bars.gridsOn();
+
+				for (var i = 0; i < dash.allCharts.length; i++) {
+					 dash.allCharts[i].reBuild()
+				}
+				//bars.render();
+			}
+
+
+			var getKeysOne=function(datos) {
+			  var keysOne=[];
+				for (var i = 0; i < datos.length; i++) {
+				  if(keysOne.indexOf(datos[i].key1)===-1){
+				    keysOne.push(datos[i].key1);
+				  }
+				 }
+			return keysOne;
+			}
+
+			var getKeysTwo=function(datos) {
+			  var keysTwo=[];
+			for (var i = 0; i < datos.length; i++) {
+			  if(keysTwo.indexOf(datos[i].key2)===-1) keysTwo.push(datos[i].key2);
+			};
+			return keysTwo;
+			}
+
+			/* Construct structure of this sort (1 = actual element, gap = false)
+			   (Additional function in order to get Missing gaps)
+			   1   1
+			   1 1 1 1
+			   1 1 1 1
+			   */
+			var getAdditionalMesh = function(keysOne, keysTwo, datos){
+
+			  var additionalStructure = [];
+			  var ycolumn;
+			  var itExists;
+			    for (var j = 0; j < keysOne.length; j++){
+			    ycolumn = [];
+			      for (var k = 0; k < keysTwo.length; k++){
+			        for (var i = 0; i < datos.length; i++){
+			          itExists = false;
+			          if ((datos[i].key1 === keysOne[j]) && (datos[i].key2 === keysTwo[k])){
+			            itExists = datos[i];
+			            break;
+			          }
+			        }
+			        ycolumn.push(itExists);
+			      }
+			    additionalStructure.push(ycolumn);
+			    }
+			  return additionalStructure;
+			}
+
+			var getOrderedData = function (datos){
+			  var finalData = [];
+			  var keysOne = getKeysOne(datos);
+			  var keysTwo = getKeysTwo(datos);
+			  var additionalStructure = getAdditionalMesh(keysOne, keysTwo, datos);
+			  for (var j = 0; j < keysOne.length; j++){
+			    for (var k = 0; k < keysTwo.length; k++){
+			        if (!additionalStructure[j][k]){
+			          additionalStructure[j][k] = {key1: keysOne[j], key2: keysTwo[k], value: 0};
+			        }
+			      }
+			    }
+
+			  for (var j = 0; j < keysTwo.length; j++){
+			    for (var k = 0; k < keysOne.length; k++){
+			      finalData.push(additionalStructure[k][j]);
+			    }
+			  }
+			  return finalData;
+			}
 
         /////////////////////////////////CONSTRUCCIÓN DE THREEDC////////////////////////////////////////////
         var container, scene, camera, renderer;

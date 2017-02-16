@@ -133,3 +133,30 @@ function genES (genES) {
       console.trace(err.message);
   });
 }*/
+
+
+/*///ESTILO DEL ARRAY
+var statements = [{
+  "id": 0,
+  "type": "bucket",
+  "aggregationType":"terms",
+  "aggregationField":"author_org_name.keyword",
+  "aggregationOptions": {"size" : "10"}
+}, {
+  "id": 1,
+  "type": "bucket",
+  "aggregationType":"terms",
+  "aggregationField":"repo_name.keyword"
+}, {
+  "id": 2,
+  "type": "bucket",
+  "aggregationType":"date_histogram",
+  "aggregationField":"author_date" ,
+  "aggregationOptions": {"interval" : "1M"}
+}, {
+  "id": 3,
+  "type": "bucket",
+  "aggregationType":"histogram",
+  "aggregationField":"lines_changed",
+  "aggregationOptions": {"interval" : "2000"}
+}]*/
