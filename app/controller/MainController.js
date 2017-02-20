@@ -79,9 +79,18 @@ define(
 
 					switch ($scope.visType) {
 							case "pie":
+							case "bars":
+							case "line":
+							case "curve":
 									return false;
 							case "3DBars":
 									return false;
+							case "bubbles":
+									if($scope.metricsSelected && $scope.metricsSelected.length == 1){
+										return false;
+									}else{
+										return true;
+									}
 							default:
 									return
 
@@ -95,8 +104,17 @@ define(
 
 					switch ($scope.visType) {
 							case "pie":
+							case "bars":
+							case "line":
+							case "curve":
 									return false;
 							case "3DBars":
+									if($scope.bucketsSelected && $scope.bucketsSelected.length == 1){
+										return false;
+									}else{
+										return true;
+									}
+							case "bubbles":
 									if($scope.bucketsSelected && $scope.bucketsSelected.length == 1){
 										return false;
 									}else{
@@ -235,10 +253,16 @@ define(
 
 						switch ($scope.visType) {
 								case "pie":
-										$scope.buildPie();
+								case "bars":
+								case "line":
+								case "curve":
+										$scope.build2D($scope.visType);
 										break;
 								case "3DBars":
 										$scope.buildTDBarsChart();
+										break;
+								case "bubbles":
+										$scope.buildBubblesChart();
 										break;
 								default:
 										console.log("Esta vacío")
@@ -266,9 +290,9 @@ define(
 
 
 
-				/////////////////////////FUNCIONES DE THREDC/////////////////////////////////////////////
+/////////////////////////FUNCIONES DE THREDC - CONSTRUCCIÓN DE CHARTS/////////////////////////////////////////////
 				z = 0;
-				$scope.buildPie = function(){
+				$scope.build2D = function(visType){
 					var data = $scope.aggregations['agg_' + $scope.bucketsSelected[0].aggregationType + '_' + $scope.bucketsSelected[0].aggregationField].buckets.map(function(bucket) {
 						if($scope.metricsSelected.length > 0){
 							var value = bucket['agg_' + $scope.metricsSelected[0].aggregationType + "_" + $scope.metricsSelected[0].aggregationField].value;
@@ -284,8 +308,22 @@ define(
 
 
 				 z += 100;
-				 pie=dash.pieChart([100,100,z])
-				 pie.data(data)
+				 switch (visType) {
+						 case "pie":
+							 chart=dash.pieChart([100,100,z])
+							 break;
+						 case "bars":
+							 chart=dash.barsChart([100,100,z])
+							 break;
+						 case "line":
+							 chart=dash.lineChart([100,100,z])
+							 break;
+						 case "curve":
+							 chart=dash.smoothCurveChart([100,100,z])
+							 break;
+				 }
+
+				 chart.data(data)
 
 				 for (var i = 0; i < dash.allCharts.length; i++) {
 				 		dash.allCharts[i].reBuild()
@@ -310,9 +348,9 @@ define(
 
 				});
 
-			data = getOrderedData(data);
+				data = getOrderedDataTD(data);
 
-				z += 300;
+				z += 600;
 				bars=dash.TDbarsChart([100,100,z])
 				bars.data(data);
 				bars.width(300);
@@ -324,6 +362,45 @@ define(
 					 dash.allCharts[i].reBuild()
 				}
 				//bars.render();
+			}
+
+			$scope.buildBubblesChart = function(){
+					 var data = [];
+					 $scope.aggregations['agg_' + $scope.bucketsSelected[0].aggregationType + '_' + $scope.bucketsSelected[0].aggregationField].buckets.map(function(bucketx) {
+
+							var bucketsy = bucketx['agg_' + $scope.bucketsSelected[1].aggregationType + '_' + $scope.bucketsSelected[1].aggregationField].buckets;
+
+							bucketsy.map(function(buckety){
+								if($scope.metricsSelected.length > 0){
+									var value1 = buckety['agg_' + $scope.metricsSelected[0].aggregationType + "_" + $scope.metricsSelected[0].aggregationField].value;
+									if($scope.metricsSelected[1]){
+										var value2 = buckety['agg_' + $scope.metricsSelected[1].aggregationType + "_" + $scope.metricsSelected[1].aggregationField].value;
+									}else{
+										var value2 = buckety.doc_count;
+									}
+								}else{
+									var value1 = buckety.doc_count;
+									var value2 = buckety.doc_count;
+								}
+								data.push({key1:bucketx.key, key2:buckety.key, value: value1, value2: value2})
+							})
+
+					});
+
+					data = getOrderedDataBubbles(data);
+
+					z += 600;
+					bars=dash.bubbleChart([100,100,z])
+					bars.data(data);
+					bars.width(300);
+					bars.height(400);
+					bars.depth(500);
+					bars.gridsOn();
+
+					for (var i = 0; i < dash.allCharts.length; i++) {
+						 dash.allCharts[i].reBuild()
+					}
+					//bars.render();
 			}
 
 
@@ -373,7 +450,7 @@ define(
 			  return additionalStructure;
 			}
 
-			var getOrderedData = function (datos){
+			var getOrderedDataTD = function (datos){
 			  var finalData = [];
 			  var keysOne = getKeysOne(datos);
 			  var keysTwo = getKeysTwo(datos);
@@ -394,7 +471,29 @@ define(
 			  return finalData;
 			}
 
-        /////////////////////////////////CONSTRUCCIÓN DE THREEDC////////////////////////////////////////////
+			var getOrderedDataBubbles = function (datos){
+			  var finalData = [];
+			  var keysOne = getKeysOne(datos);
+			  var keysTwo = getKeysTwo(datos);
+			  var additionalStructure = getAdditionalMesh(keysOne, keysTwo, datos);
+			  for (var j = 0; j < keysOne.length; j++){
+			    for (var k = 0; k < keysTwo.length; k++){
+			        if (!additionalStructure[j][k]){
+			          additionalStructure[j][k] = {key1: keysOne[j], key2: keysTwo[k], value: 0, value2: 0};
+			          //missingGaps.push({key1: keysOne[j], key2: keysTwo[k], value: 0})
+			        }
+			      }
+			    }
+
+			  for (var j = 0; j < keysTwo.length; j++){
+			    for (var k = 0; k < keysOne.length; k++){
+			      finalData.push(additionalStructure[k][j]);
+			    }
+			  }
+			  return finalData;
+			}
+
+/////////////////////////////////CONSTRUCCIÓN DE THREEDC////////////////////////////////////////////
         var container, scene, camera, renderer;
 
         //objetc which will contain the library functions

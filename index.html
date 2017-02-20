@@ -57,8 +57,12 @@
             <label class="control-label col-sm-2" for="typesList">VisType:</label>
             <div class="col-sm-10">
               <select class="form-control" ng-model="visType" id="typesList" ng-change="showMetricBucketsForm = false">
-                <option value="pie">Pie Chart</option>
+                <option value="pie">Pie</option>
+                <option value="bars">Bars</option>
+                <option value="line">Line</option>
+                <option value="curve">Smooth curve</option>
                 <option value="3DBars">3D Bars</option>
+                <option value="bubbles">Bubbles</option>
               </select>
             </div>
           </div>
