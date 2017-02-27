@@ -134,6 +134,9 @@ define(
 				$scope.showFieldsOfMetricType = function(){
 					switch ($scope.metricList) {
 							case "avg":
+							case "sum":
+							case "extended_stats":
+							case "median":
 									$scope.fieldsMetric = [];
 									var allFields = $scope.mapping[$scope.indexName].mappings[$scope.typeName].properties;
 									Object.keys(allFields).forEach(function(key,index) {
@@ -142,14 +145,18 @@ define(
 											}
 									});
 									break;
-							case "sum":
+							case "max":
+							case "min":
 									$scope.fieldsMetric = [];
 									var allFields = $scope.mapping[$scope.indexName].mappings[$scope.typeName].properties;
 									Object.keys(allFields).forEach(function(key,index) {
-											if(allFields[key].type == "long"){
+											if(allFields[key].type == "long" || allFields[key].type == "date"){
 												$scope.fieldsMetric.push(key)
 											}
 									});
+									break;
+							case "cardinality":
+									$scope.fieldsMetric = Object.keys($scope.mapping[$scope.indexName].mappings[$scope.typeName].properties);
 									break;
 					}
 				}
@@ -189,16 +196,22 @@ define(
 							case "count":
 									break;
 							case "avg":
-									var fieldSelected = $("#fieldMetricList").val();
-									builderData.addMetric($scope.metricList, fieldSelected);
-									break;
 							case "sum":
+							case "max":
+							case "min":
+							case "extended_stats":
+							case "cardinality":
 									var fieldSelected = $("#fieldMetricList").val();
 									builderData.addMetric($scope.metricList, fieldSelected);
 									break;
-								default:
-										console.log("Esta vacío")
-										return
+							case "median":
+									var fieldSelected = $("#fieldMetricList").val();
+									options = {"percents": ["50"]}
+									builderData.addMetric("percentiles", fieldSelected, options);
+									break;
+							default:
+									console.log("Esta vacío")
+									return
 					}
 
 					$scope.metricsSelected = builderData.metrics;
@@ -311,15 +324,19 @@ define(
 				 switch (visType) {
 						 case "pie":
 							 chart=dash.pieChart([100,100,z])
+							 chart.gridsOn();
 							 break;
 						 case "bars":
 							 chart=dash.barsChart([100,100,z])
+							 chart.gridsOn();
 							 break;
 						 case "line":
 							 chart=dash.lineChart([100,100,z])
+							 chart.gridsOn();
 							 break;
 						 case "curve":
 							 chart=dash.smoothCurveChart([100,100,z])
+							 chart.gridsOn();
 							 break;
 				 }
 
