@@ -1,7 +1,7 @@
 define(
 		['node_modules/bodybuilder/browser/bodybuilder.min'],
 		function() {
-      function MainController($scope, esFactory, ESService) {
+      function MainController($scope, esFactory, ESService, ModalService) {
         $scope.foo = "YEAH!"
 
 				var bodybuilder = require('node_modules/bodybuilder/browser/bodybuilder.min')
@@ -200,7 +200,7 @@ define(
 							case "max":
 							case "min":
 							case "extended_stats":
-							case "cardinality":
+							case "carinality":
 									var fieldSelected = $("#fieldMetricList").val();
 									builderData.addMetric($scope.metricList, fieldSelected);
 									break;
@@ -607,10 +607,37 @@ define(
           dash.controls.update();
         }
 
+				////////////////////////////////////////FORM CREATOR/////////////////////////////////////
+
+				function createForm(){
+
+				}
+
+				///////////////////////////////////SAVE VIS////////////////////////////////////
+
+				$scope.openSaveModal = function() {
+
+					ModalService.showModal({
+	            templateUrl: 'modal.html',
+	            controller: function($scope, close) {
+
+								 $scope.close = function(result) {
+								 	console.log("PEPEPEPEPE")
+								 };
+							}
+	        }).then(function(modal) {
+	            modal.element.modal();
+	            modal.close.then(function(result) {
+	                $scope.message = "You said " + result;
+	            });
+	        });
+				};
 
       }
 
-      MainController.$inject = [ '$scope', 'esFactory', 'ESService'];
+
+
+      MainController.$inject = [ '$scope', 'esFactory', 'ESService', 'ModalService'];
 
 			return MainController;
 

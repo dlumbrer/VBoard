@@ -4,12 +4,14 @@
     <meta charset="utf-8">
     <title>Testing ES API</title>
     <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
-    <script src="bower_components/angular/angular.js"></script>
-    <script src="bower_components/elasticsearch/elasticsearch.angular.min.js"></script>
     <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="bower_components/angular/angular.js"></script>
+    <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="bower_components/elasticsearch/elasticsearch.angular.min.js"></script>
     <script src="bower_components/THREEDC/THREEDC.min.js"></script>
     <script src="generator_ESQueries_JS/genES.js"></script>
     <script src="builder_DataStructure/builderESDS.js"></script>
+    <script src="bower_components/angular-modal-service/dst/angular-modal-service.min.js"></script>
     <!--script src="main.js"></script-->
   </head>
   <body>
@@ -157,6 +159,10 @@
         {{metricsSelected}}
         <hr>
         {{bucketsSelected}}
+
+        <div class="row">
+          <button type="button" class="col-md-12 btn btn-info" ng-click="openSaveModal()">Save visualization</button>
+        </div>
       </div>
 
       <div class="col-md-9" id="ThreeJS" class="row" style="height:60px; left:0px; top:0px"></div>
@@ -179,6 +185,26 @@
       </div>
 
     </div>
+
+    <script type="text/ng-template" id="modal.html">
+         <div class="modal fade">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" ng-click="close('Cancel')" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Yes or No?</h4>
+              </div>
+              <div class="modal-body">
+                <p>It's your call...</p>
+              </div>
+              <div class="modal-footer">
+                <button type="button" ng-click="close('No')" class="btn btn-default" data-dismiss="modal">No</button>
+                <button type="button" ng-click="close('Yes')" class="btn btn-primary" data-dismiss="modal">Yes</button>
+              </div>
+            </div>
+          </div>
+        </div>
+     </script>
   <script data-main="main" src="bower_components/requirejs/require.js"></script>
   </body>
 </html>
