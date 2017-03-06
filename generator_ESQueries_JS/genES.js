@@ -84,8 +84,27 @@ function genES (genES) {
     return promise
   }
 
+  //SUBIR VISUALIZACIÓN A ES
+  genES.saveVis = function(client, nameP, descriptionP, vistype, visobjectP){
+    client.create({
+      index: '.visthreed',
+      type: 'items',
+      id: vistype + "_" + nameP,
+      body: {
+        chartType: vistype,
+        description: descriptionP,
+        name: nameP,
+        visobject: visobjectP,
+      }
+    }, function (error, response) {
+      console.log(error, response, "OK")
+    });
+  }
+
 	return genES;
 }
+
+
 
 
 /*$scope.exexcuteSearch = function(query){

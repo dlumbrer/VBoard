@@ -162,8 +162,19 @@ define(
 				}
 				$scope.showFieldsOfTypeAggregation = function(){
 					switch ($scope.typeBucket) {
+							case "one":
 							case "terms":
-									$scope.fields = Object.keys($scope.mapping[$scope.indexName].mappings[$scope.typeName].properties);
+									//$scope.fields = Object.keys($scope.mapping[$scope.indexName].mappings[$scope.typeName].properties);
+									$scope.fields = [];
+									var allFields = $scope.mapping[$scope.indexName].mappings[$scope.typeName].properties;
+									Object.keys(allFields).forEach(function(key,index) {
+											if(allFields[key].type == "text"){
+												$scope.fields.push(key + ".keyword")
+											}else{
+												$scope.fields.push(key)
+											}
+									});
+									break;
 									break;
 							case "date_histogram":
 									$scope.fields = [];
@@ -225,13 +236,21 @@ define(
 					var options = {}
 					switch ($scope.typeBucket) {
 							case "terms":
-									$scope.fieldBucketSelected = $scope.fieldBucketSelected + ".keyword";
+									var type = "terms";
+									$scope.fieldBucketSelected = $scope.fieldBucketSelected;
 									options = {"size": $("#sizeValue").val()}
 									break;
+							case "one":
+									var type = "terms";
+									$scope.fieldBucketSelected = $scope.fieldBucketSelected;
+									options = {"size": "1"}
+									break;
 							case "date_histogram":
+									var type = "date_histogram";
 									options = {"interval": $("#intervalDateHistogram").val()}
 									break;
 							case "histogram":
+									var type = "histogram";
 									options = {"interval": $("#intervalHistogram").val()}
 									break;
 							default:
@@ -241,7 +260,7 @@ define(
 					}
 
 
-          builderData.addBucket($scope.typeBucket, $scope.fieldBucketSelected, options)
+          builderData.addBucket(type, $scope.fieldBucketSelected, options)
 					//console.log(builderData)
 					$scope.bucketsSelected = builderData.buckets;
         }
@@ -303,7 +322,7 @@ define(
 
 
 
-/////////////////////////FUNCIONES DE THREDC - CONSTRUCCIÓN DE CHARTS/////////////////////////////////////////////
+/////////////////////////FUNCIONES DE THREDC - CONSTRUCCIÓN DE CHARTS///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 				z = 0;
 				$scope.build2D = function(visType){
 					var data = $scope.aggregations['agg_' + $scope.bucketsSelected[0].aggregationType + '_' + $scope.bucketsSelected[0].aggregationField].buckets.map(function(bucket) {
@@ -342,6 +361,14 @@ define(
 
 				 chart.data(data)
 
+				 ////////////GUARDAR LA VISUALIACION EN EL SCOPE
+				 $scope.actualVis = {
+					 chartType: visType,
+					 chartObject: $.extend(true, {}, chart)
+				 }
+				 //$scope.actualVis = $.extend(true, {}, chart);
+				 console.log("SCOPE CON LA VISUALIZACIÓN", $scope)
+
 				 for (var i = 0; i < dash.allCharts.length; i++) {
 				 		dash.allCharts[i].reBuild()
 				 }
@@ -374,6 +401,14 @@ define(
 				bars.height(400);
 				bars.depth(500);
 				bars.gridsOn();
+
+				////////////GUARDAR LA VISUALIACION EN EL SCOPE
+				$scope.actualVis = {
+					chartType: "3DBars",
+					chartObject: $.extend(true, {}, bars)
+				}
+				//$scope.actualVis = $.extend(true, {}, bars);
+				console.log("SCOPE CON LA VISUALIZACIÓN", $scope)
 
 				for (var i = 0; i < dash.allCharts.length; i++) {
 					 dash.allCharts[i].reBuild()
@@ -413,6 +448,14 @@ define(
 					bars.height(400);
 					bars.depth(500);
 					bars.gridsOn();
+
+					////////////GUARDAR LA VISUALIACION EN EL SCOPE
+					$scope.actualVis = {
+ 					 chartType: "bubbles",
+ 					 chartObject: $.extend(true, {}, bars)
+ 				 }
+				 //$scope.actualVis = $.extend(true, {}, bars);
+ 				 console.log("SCOPE CON LA VISUALIZACIÓN", $scope)
 
 					for (var i = 0; i < dash.allCharts.length; i++) {
 						 dash.allCharts[i].reBuild()
@@ -607,28 +650,43 @@ define(
           dash.controls.update();
         }
 
-				////////////////////////////////////////FORM CREATOR/////////////////////////////////////
+////////////////////////////////////////FORM CREATOR/////////////////////////////////////
 
 				function createForm(){
 
 				}
 
-				///////////////////////////////////SAVE VIS////////////////////////////////////
+///////////////////////////////////SAVE VIS////////////////////////////////////
 
 				$scope.openSaveModal = function() {
 
 					ModalService.showModal({
 	            templateUrl: 'modal.html',
+							scope: $scope,
 	            controller: function($scope, close) {
 
-								 $scope.close = function(result) {
-								 	console.log("PEPEPEPEPE")
+								////////////////////////////////////////////////////////////ERROR AL APLANAR
+								/*var objVis = {
+									data : $scope.$parent.actualVis._data,
+									test : "JUANITO"
+								}*/
+
+								 $scope.save = function(result) {
+								 	console.log("Guardamos ---- ", $scope.name, $scope.description, $scope.$parent.actualVis)
+
+									//console.log(JSON.stringify($scope.$parent.actualVis));
+									generatorQueries.saveVis(ESService.client, $scope.name, $scope.description, $scope.$parent.actualVis.chartType, $scope.$parent.actualVis.chartObject)
 								 };
+
+								 $scope.cancel = function(result) {
+								 	console.log("cancel")
+								 };
+								 ///////////////////////////////////////////////////////////////////////7
 							}
 	        }).then(function(modal) {
 	            modal.element.modal();
 	            modal.close.then(function(result) {
-	                $scope.message = "You said " + result;
+	                console.log("modal cerrado")
 	            });
 	        });
 				};
