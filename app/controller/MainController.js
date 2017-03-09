@@ -30,16 +30,18 @@ define(
 
         /////////////////////////////SHOW MAPPING OF THE INDEX SELECTED IF YOU WANT////////////////////////////
         $scope.searchMappingFromIndex = function(){
-          $scope.showMapping = true;
-          $scope.indexName = $("#indexesList").val();
-          ESService.client.indices.getMapping({index: $scope.indexName}, function(error, resp) {
-            if (error) {
-                console.log(error);
-            } else {
-                console.log(resp);
-                $scope.mapping = JSON.stringify(resp, undefined, 2);
-            }
-          });
+          $scope.showMapping = !$scope.showMapping;
+					if($scope.showMapping){
+	          $scope.indexName = $("#indexesList").val();
+	          ESService.client.indices.getMapping({index: $scope.indexName}, function(error, resp) {
+	            if (error) {
+	                console.log(error);
+	            } else {
+	                console.log(resp);
+	                $scope.mapping = JSON.stringify(resp, undefined, 2);
+	            }
+	          });
+					}
         }
         ///////////////////////////////////////////////////////////////////////////////////////
 
@@ -205,6 +207,7 @@ define(
 					var options = {}
 					switch ($scope.metricList) {
 							case "count":
+									builderData.addMetric($scope.metricList);
 									break;
 							case "avg":
 							case "sum":
@@ -326,7 +329,7 @@ define(
 				z = 0;
 				$scope.build2D = function(visType){
 					var data = $scope.aggregations['agg_' + $scope.bucketsSelected[0].aggregationType + '_' + $scope.bucketsSelected[0].aggregationField].buckets.map(function(bucket) {
-						if($scope.metricsSelected.length > 0){
+						if($scope.metricsSelected.length > 0 && $scope.metricsSelected[0].aggregationType != "count"){
 							var value = bucket['agg_' + $scope.metricsSelected[0].aggregationType + "_" + $scope.metricsSelected[0].aggregationField].value;
 						}else{
 							var value = bucket.doc_count;
@@ -382,7 +385,7 @@ define(
 						var bucketsy = bucketx['agg_' + $scope.bucketsSelected[1].aggregationType + '_' + $scope.bucketsSelected[1].aggregationField].buckets;
 
 						bucketsy.map(function(buckety){
-							if($scope.metricsSelected.length > 0){
+							if($scope.metricsSelected.length > 0 && $scope.metricsSelected[0].aggregationType != "count"){
 								var value = buckety['agg_' + $scope.metricsSelected[0].aggregationType + "_" + $scope.metricsSelected[0].aggregationField].value;
 							}else{
 								var value = buckety.doc_count;
@@ -423,9 +426,14 @@ define(
 							var bucketsy = bucketx['agg_' + $scope.bucketsSelected[1].aggregationType + '_' + $scope.bucketsSelected[1].aggregationField].buckets;
 
 							bucketsy.map(function(buckety){
-								if($scope.metricsSelected.length > 0){
-									var value1 = buckety['agg_' + $scope.metricsSelected[0].aggregationType + "_" + $scope.metricsSelected[0].aggregationField].value;
-									if($scope.metricsSelected[1]){
+								//HAY QUE EVITAR LOS COUNT
+								if($scope.metricsSelected.length == 2){
+									if($scope.metricsSelected[0].aggregationType != "count"){
+										var value1 = buckety['agg_' + $scope.metricsSelected[0].aggregationType + "_" + $scope.metricsSelected[0].aggregationField].value;
+									}else{
+										var value1 = buckety.doc_count;
+									}
+									if($scope.metricsSelected[1].aggregationType != "count"){
 										var value2 = buckety['agg_' + $scope.metricsSelected[1].aggregationType + "_" + $scope.metricsSelected[1].aggregationField].value;
 									}else{
 										var value2 = buckety.doc_count;

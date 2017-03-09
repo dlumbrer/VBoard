@@ -36,7 +36,10 @@ function genES (genES) {
           if (type == "metric"){
             //Ahora las metricas
             for (var i = index; i < statements.length; i++) {
-              aggBuilder.aggregation(statements[i].aggregationType, statements[i].aggregationField, statements[i].aggregationOptions);
+              //No meto las de count
+              if(statements[i].aggregationType != "count"){
+                aggBuilder.aggregation(statements[i].aggregationType, statements[i].aggregationField, statements[i].aggregationOptions);
+              }
             }
             return aggBuilder;
           }
@@ -50,6 +53,7 @@ function genES (genES) {
         return makeNestedAgg(agg);
       })
     }else{
+      //Solo una agregación
       var bodyQuery = bodybuilder().aggregation(statements[0].aggregationType, statements[0].aggregationField, statements[0].aggregationOptions);
     }
     genES.objBB = bodyQuery;
