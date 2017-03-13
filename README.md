@@ -15,21 +15,21 @@ Go in your browser to http://localhost:8000/ and enjoy!
 
 ## Steps to build a a visualization
 
-1. Select the index of your ElasticSearch (the index should have a type called "items")
+* Select the index of your ElasticSearch (the index should have a type called "items")
 
 ![Screenshot](images/selectindex.png)
 
-2. Select Chart type
+* Select Chart type
 ..* Pie, Bars, Line, Curve, 3DBars, Bubbles
 
 ![Screenshot](images/selectvistype.png)
 
-3. Select Data (metrics and buckets)
+* Select Data (metrics and buckets)
 ..* Each chart require more or less metrics/buckets
 
 ![Screenshot](images/selectdata.png)
 
-4. Play!
+* Play!
 
 ![Screenshot](images/example1.png)
 ![Screenshot](images/example2.png)
