@@ -20,12 +20,12 @@ Go in your browser to http://localhost:8000/ and enjoy!
 ![Screenshot](images/selectindex.png)
 
 * Select Chart type
-..* Pie, Bars, Line, Curve, 3DBars, Bubbles
+  * Pie, Bars, Line, Curve, 3DBars, Bubbles
 
 ![Screenshot](images/selectvistype.png)
 
 * Select Data (metrics and buckets)
-..* Each chart require more or less metrics/buckets
+  * Each chart require more or less metrics/buckets
 
 ![Screenshot](images/selectdata.png)
 
