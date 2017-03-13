@@ -48,7 +48,7 @@ Go in your browser to http://localhost:8000/ and enjoy!
 ![Screenshot](images/examplesave.png)
 
 
-### Creation of the index .vissthreed
+### Creation of the index .visthreed
 
 To save visualizations you must have created the index **.visthreed**, this is the mapping of the index (__Recommended use Sense or CURL to create it__):
 
