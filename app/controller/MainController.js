@@ -66,9 +66,11 @@ define(
         /////////////////////////////////////Una vez con el indice y el tipo podemos buscar metricas y buckets///////////////
 
         $scope.showMetricsBuckets = function(){
-          $scope.showMetricBucketsForm = true;
-          //$scope.visType = $("#typesList").val();
-					$scope.typeName = "items";
+					if($scope.visType){
+	          $scope.showMetricBucketsForm = true;
+	          //$scope.visType = $("#typesList").val();
+						$scope.typeName = "items";
+					}
         }
         $scope.hideMetricsBucketsForm = function(){
           $scope.showMetricBucketsForm = false;
@@ -660,9 +662,63 @@ define(
 
 ////////////////////////////////////////FORM CREATOR/////////////////////////////////////
 
-				function createForm(){
+				$scope.reopenFormToChangeAgg = function(indexform, ob, type){
+					console.log(indexform);
+					console.log(ob);
+
+					if(type == "bucket"){
+
+						var formBucket = '<div class="row"> \
+	            <label class="control-label col-md-2" for="aggregationBucketList">Type:</label> \
+	            <div class="col-md-4">  \
+	              <select ng-model="typeBucket" class="form-control" id="aggregationBucketList" ng-change="showFieldsOfTypeAggregation()"> \
+	                <option value="terms">Terms</option> \
+	                <option value="date_histogram">Date Histogram</option> \
+	                <option value="histogram">Histogram</option> \
+	                <option value="one">One</option> \
+	              </select> \
+	            </div> \
+	            <label class="control-label col-md-2" for="fieldBucketsList">Field:</label> \
+	            <div class="col-md-4"> \
+	              <select class="form-control" id="fieldBucketsList"> \
+	                <option ng-repeat="field in fields" value="{{field}}">{{field}}</option> \
+	              </select> \
+	            </div> \
+	          </div> \
+	          <div class="row" ng-show="typeBucket==\'terms\'"> \
+	            <label class="control-label col-md-2" for="bucketsList">Size:</label> \
+	            <div class="col-md-10"> \
+	              <input type="number" class="form-control" id="sizeValue" value="5"> \
+	            </div> \
+	          </div> \
+	          <div class="row" ng-show="typeBucket==\'date_histogram\'"> \
+	            <label class="control-label col-md-2" for="intervalDateHistogram">Interval:</label> \
+	            <div class="col-md-10"> \
+	              <select class="form-control" id="intervalDateHistogram"> \
+	                <option value="1d">Daily</option> \
+	                <option value="1w">Weekly</option> \
+	                <option value="1M">Monthly</option> \
+	                <option value="1y">Yearly</option> \
+	              </select> \
+	            </div> \
+	          </div> \
+	          <div class="row" ng-show="typeBucket==\'histogram\'"> \
+	            <label class="control-label col-md-2" for="intervalHistogram">Interval:</label> \
+	            <div class="col-md-10"> \
+	              <input type="number" class="form-control" id="intervalHistogram" value="7000"> \
+	            </div> \
+	          </div>'
+
+
+						//formBucket = '<div class="panel-body">Panel Body</div>'
+						$("#collapse" + indexform).append(formBucket);
+
+						}
+
 
 				}
+
+
 
 ///////////////////////////////////SAVE VIS////////////////////////////////////
 

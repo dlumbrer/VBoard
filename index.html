@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Testing ES API</title>
+    <title>VBoard</title>
     <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
     <script src="bower_components/jquery/dist/jquery.min.js"></script>
     <script src="bower_components/angular/angular.js"></script>
@@ -27,7 +27,7 @@
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#">ViBoard</a>
+            <a class="navbar-brand" href="#">VBoard</a>
           </div>
 
           <!-- Collect the nav links, forms, and other content for toggling -->
@@ -174,6 +174,8 @@
               <button type="button" class="col-md-6 btn btn-danger" ng-click="hideMetricsBucketsForm()">Cancel</button>
             </div>
           </div>
+
+          <br>
           <div class="row">
             <div >
               <button type="button" class="col-md-12 btn btn-success" ng-click="showHitsAggregations = !showHitsAggregations">Show response (JSON)</button>
@@ -187,12 +189,11 @@
             <div class="panel panel-default">
               <div class="panel-heading">
                 <h4 class="panel-title">
-                  <a data-toggle="collapse" href="#collapse{{ $index + 1 }}">({{ms.id}}) {{ms.type}}: {{ms.aggregationType}} - {{ms.aggregationField}}</a>
+                  <a data-toggle="collapse" href="#collapse{{ $index + 1 }}" ng-click="reopenFormToChangeAgg($index, bs, 'metric')">({{ms.id}}) {{ms.type}}: {{ms.aggregationType}} - {{ms.aggregationField}}</a>
                 </h4>
               </div>
               <div id="collapse{{ $index + 1 }}" class="panel-collapse collapse">
                 <div class="panel-body">Panel Body</div>
-                <div class="panel-footer">Panel Footer</div>
               </div>
             </div>
           </div>
@@ -204,12 +205,11 @@
             <div class="panel panel-default">
               <div class="panel-heading">
                 <h4 class="panel-title">
-                  <a data-toggle="collapse" href="#collapse{{ $index + 10 }}">({{bs.id}}) {{bs.type}}: {{bs.aggregationType}} - {{bs.aggregationField}}</a>
+                  <a data-toggle="collapse" href="#collapse{{ $index + 10 }}" ng-click="reopenFormToChangeAgg($index+10, bs, 'bucket')">({{bs.id}}) {{bs.type}}: {{bs.aggregationType}} - {{bs.aggregationField}}</a>
                 </h4>
               </div>
               <div id="collapse{{ $index + 10 }}" class="panel-collapse collapse">
-                <div class="panel-body">Panel Body</div>
-                <div class="panel-footer">Panel Footer</div>
+
               </div>
             </div>
           </div>
