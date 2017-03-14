@@ -1,7 +1,7 @@
 define(
 		['node_modules/bodybuilder/browser/bodybuilder.min'],
 		function() {
-      function MainController($scope, esFactory, ESService, ModalService) {
+      function MainController($scope, esFactory, ESService, ModalService, Notification) {
         $scope.foo = "YEAH!"
 
 				var bodybuilder = require('node_modules/bodybuilder/browser/bodybuilder.min')
@@ -226,6 +226,7 @@ define(
 									builderData.addMetric("percentiles", fieldSelected, options);
 									break;
 							default:
+									Notification.error('Impossible to add an empty metric');
 									console.log("Esta vacío")
 									return
 					}
@@ -259,6 +260,7 @@ define(
 									options = {"interval": $("#intervalHistogram").val()}
 									break;
 							default:
+									Notification.error('Impossible to add an empty bucket');
 									console.log("Esta vacío")
 									return
 
@@ -277,6 +279,12 @@ define(
 					//Añadir lo que se ha quedado marcado
 					$scope.addSubbucketForm()
 					$scope.addMetricForm()
+
+					//Comprobacion de errores
+					if(!($scope.metricsSelected && $scope.bucketsSelected)){
+						Notification.error('Error on Select Data');
+						return;
+					}
 
 					var statements = builderData.buildDataStructure().getDataStructure()
 
@@ -759,7 +767,7 @@ define(
 
 
 
-      MainController.$inject = [ '$scope', 'esFactory', 'ESService', 'ModalService'];
+      MainController.$inject = [ '$scope', 'esFactory', 'ESService', 'ModalService', 'Notification'];
 
 			return MainController;
 
