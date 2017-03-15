@@ -763,6 +763,39 @@ define(
 	        });
 				};
 
+
+
+///////////////////////////////////LOAD VIS////////////////////////////////////
+
+				$scope.openLoadModal = function() {
+
+					ModalService.showModal({
+							templateUrl: 'loadmodal.html',
+							scope: $scope,
+							controller: function($scope, close) {
+
+								//Me traigo las visualizaciones
+								var promise = ESService.client.search({
+						      index: ".visthreed",
+						      type: 'items',
+						      size: 10000,
+						      body: { "query": { "match_all": {} } }
+						    });
+
+								promise.then(function (resp) {
+									console.log("Cargadas: ", resp.hits.hits)
+									$scope.loadedvis = resp.hits.hits;
+								})
+
+							}
+					}).then(function(modal) {
+							modal.element.modal();
+							modal.close.then(function(result) {
+									console.log("modal cerrado")
+							});
+					});
+				};
+
       }
 
 
