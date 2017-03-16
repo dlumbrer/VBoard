@@ -70,6 +70,8 @@ define(
 	          $scope.showMetricBucketsForm = true;
 	          //$scope.visType = $("#typesList").val();
 						$scope.typeName = "items";
+					}else{
+						Notification.error('First select chart type');
 					}
         }
         $scope.hideMetricsBucketsForm = function(){
@@ -227,7 +229,7 @@ define(
 									break;
 							default:
 									Notification.error('Impossible to add an empty metric');
-									console.log("Esta vacío")
+									console.log("metrica vacía")
 									return
 					}
 
@@ -261,7 +263,7 @@ define(
 									break;
 							default:
 									Notification.error('Impossible to add an empty bucket');
-									console.log("Esta vacío")
+									console.log("bucket vacío")
 									return
 
 					}
@@ -732,35 +734,40 @@ define(
 
 				$scope.openSaveModal = function() {
 
-					ModalService.showModal({
-	            templateUrl: 'modal.html',
-							scope: $scope,
-	            controller: function($scope, close) {
+					if(!$scope.actualVis){
+						Notification.error("First build a visualization")
+						return
+					}
 
-								////////////////////////////////////////////////////////////ERROR AL APLANAR
-								/*var objVis = {
-									data : $scope.$parent.actualVis._data,
-									test : "JUANITO"
-								}*/
+						ModalService.showModal({
+		            templateUrl: 'modal.html',
+								scope: $scope,
+		            controller: function($scope, close) {
 
-								 $scope.save = function(result) {
-								 	console.log("Guardamos ---- ", $scope.name, $scope.description, $scope.$parent.actualVis)
+									 $scope.save = function(result) {
+									 	console.log("Guardamos ---- ", $scope.name, $scope.description, $scope.$parent.actualVis)
 
-									//console.log(JSON.stringify($scope.$parent.actualVis));
-									generatorQueries.saveVis(ESService.client, $scope.name, $scope.description, $scope.$parent.actualVis.chartType, $scope.$parent.actualVis.chartObject)
-								 };
 
-								 $scope.cancel = function(result) {
-								 	console.log("cancel")
-								 };
-								 ///////////////////////////////////////////////////////////////////////7
-							}
-	        }).then(function(modal) {
-	            modal.element.modal();
-	            modal.close.then(function(result) {
-	                console.log("modal cerrado")
-	            });
-	        });
+										var promiseSave = generatorQueries.saveVis(ESService.client, $scope.name, $scope.description, $scope.$parent.actualVis.chartType, $scope.$parent.actualVis.chartObject)
+										//ERROR GUARDANDO?
+										promiseSave.then(function(error, response){
+											alert(error)
+											console.log(error);
+										})
+
+									 };
+
+									 $scope.cancel = function(result) {
+									 	console.log("cancel")
+									 };
+									 ///////////////////////////////////////////////////////////////////////7
+								}
+		        }).then(function(modal) {
+		            modal.element.modal();
+		            modal.close.then(function(result) {
+		                console.log("modal cerrado")
+		            });
+		        });
 				};
 
 
@@ -787,11 +794,17 @@ define(
 									$scope.loadedvis = resp.hits.hits;
 								})
 
+								$scope.loadVis = function(visobject) {
+									console.log("A CARGAR", visobject);
+									//dash.removeAll();
+									//visobject.render();
+								}
+
 							}
 					}).then(function(modal) {
 							modal.element.modal();
 							modal.close.then(function(result) {
-									console.log("modal cerrado")
+									console.log("modal cerrado de carga")
 							});
 					});
 				};

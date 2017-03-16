@@ -90,7 +90,7 @@ function genES (genES) {
 
   //SUBIR VISUALIZACIÓN A ES
   genES.saveVis = function(client, nameP, descriptionP, vistype, visobjectP){
-    client.create({
+    var promise = client.create({
       index: '.visthreed',
       type: 'items',
       id: vistype + "_" + nameP,
@@ -100,9 +100,11 @@ function genES (genES) {
         name: nameP,
         visobject: visobjectP,
       }
-    }, function (error, response) {
-      console.log(error, response, "OK")
-    });
+    });// function (error, response) {
+      //console.log(error, response, "OK")
+    //});
+
+    return promise;
   }
 
 	return genES;

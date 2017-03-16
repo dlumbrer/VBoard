@@ -293,14 +293,13 @@
             </div>
             <div class="modal-body">
               <ul class="list-group">
-                <a href="#" class="list-group-item" ng-repeat="vis in loadedvis"><span class="badge">{{vis._source.chartType}}</span>
+                <a href="#" data-dismiss="modal" ng-click="loadVis(vis._source.visobject)" class="list-group-item" ng-repeat="vis in loadedvis"><span class="badge">{{vis._source.chartType}}</span>
                   <h4 class="list-group-item-heading">{{vis._source.name}}</h4>
                   <p class="list-group-item-text">{{vis._source.description}}</p>
                 </a>
               </ul>
             </div>
             <div class="modal-footer">
-              <button type="button" ng-click="save()" class="btn btn-primary" data-dismiss="modal">Save!</button>
               <button type="button" ng-click="cancel()" class="btn" data-dismiss="modal">Cancel</button>
             </div>
           </div>
