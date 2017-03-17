@@ -745,14 +745,52 @@ define(
 		            controller: function($scope, close) {
 
 									 $scope.save = function(result) {
-									 	console.log("Guardamos ---- ", $scope.name, $scope.description, $scope.$parent.actualVis)
+									 	console.log("Queremos guardar ---- ", $scope.name, $scope.description, $scope.$parent.actualVis)
 
 
-										var promiseSave = generatorQueries.saveVis(ESService.client, $scope.name, $scope.description, $scope.$parent.actualVis.chartType, $scope.$parent.actualVis.chartObject)
-										//ERROR GUARDANDO?
-										promiseSave.then(function(error, response){
-											alert(error)
-											console.log(error);
+										var promiseCheck = generatorQueries.checkVis(ESService.client, $scope.name, $scope.description, $scope.$parent.actualVis.chartType, $scope.$parent.actualVis.chartObject)
+										//ERROR GUARDANDO COMPROBAMOS SI EXISTE
+										promiseCheck.then(function(response, error){
+											if(error){
+												Notification.error("ElasticSearch error")
+											}
+
+											//SI EXISTE SE CREA DE 0, SI NO HAY QUE PREGUNTAR SI QUIERE SOBREESCRIBIRSE
+											if(response.hits.hits.length == 0){
+												var promiseSave = generatorQueries.createVis(ESService.client, $scope.name, $scope.description, $scope.$parent.actualVis.chartType, $scope.$parent.actualVis.chartObject)
+												promiseSave.then(function(response, error){
+													if(error){
+														Notification.error("Error saving visualization")
+														return
+													}
+													Notification.success("Visualization saved")
+												})
+											}else{
+												console.log("Modal of confirm");
+												//MODAL DE CONFIRMACION
+												ModalService.showModal({
+								            templateUrl: 'modalconfirm.html',
+														scope: $scope,
+								            controller: function($scope, close) {
+
+															 $scope.confirmUpdate = function(result) {
+															 	console.log("Actualizar ---- ", $scope.name, $scope.description, $scope.$parent.actualVis)
+
+															 };
+
+															 $scope.cancelUpdate = function(result) {
+															 	console.log("cancel update")
+															 };
+
+														}
+								        }).then(function(modal) {
+								            modal.element.modal();
+								            modal.close.then(function(result) {
+								                console.log("modal cerrado")
+								            });
+								        });
+												///////////////
+											}
 										})
 
 									 };

@@ -88,8 +88,28 @@ function genES (genES) {
     return promise
   }
 
-  //SUBIR VISUALIZACIÓN A ES
-  genES.saveVis = function(client, nameP, descriptionP, vistype, visobjectP){
+  //COMPROBAR VISUALIZACIÓN EN ES
+  genES.checkVis = function(client, nameP, descriptionP, vistype, visobjectP){
+
+    var promise = client.search({
+      index: '.visthreed',
+      type: 'items',
+      size: 5,
+      body: {
+        "query": {
+          "terms": {
+            "_id": [ vistype+"_"+nameP ]
+          }
+        }
+      }
+    })
+
+    return promise;
+  }
+
+  //CREAR VISUALIZACIÓN ES
+  genES.createVis = function(client, nameP, descriptionP, vistype, visobjectP){
+
     var promise = client.create({
       index: '.visthreed',
       type: 'items',
