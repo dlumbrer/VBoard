@@ -1,12 +1,12 @@
 define([
       'app/controller/TabsController',
-      'app/controller/MainController',
+      'app/controller/VisualizeController',
       'app/service/ESService'
     ],
-		 function(TabsController, MainController, ESService) {
+		 function(TabsController, VisualizeController, ESService) {
 			var app = angular.module('myApp', ['elasticsearch', 'angularModalService', 'ui-notification', 'ui.bootstrap']);
 
       app.controller('TabsController', TabsController);
-      app.controller('MainController', MainController);
+      app.controller('VisualizeController', VisualizeController);
       app.service('ESService', ESService);
 		});

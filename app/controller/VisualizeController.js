@@ -1,7 +1,7 @@
 define(
 		['node_modules/bodybuilder/browser/bodybuilder.min'],
 		function() {
-      function MainController($scope, esFactory, ESService, ModalService, Notification) {
+      function VisualizeController($scope, esFactory, ESService, ModalService, Notification) {
         $scope.foo = "YEAH!"
 
 				var bodybuilder = require('node_modules/bodybuilder/browser/bodybuilder.min')
@@ -851,8 +851,8 @@ define(
 
 
 
-      MainController.$inject = [ '$scope', 'esFactory', 'ESService', 'ModalService', 'Notification'];
+      VisualizeController.$inject = [ '$scope', 'esFactory', 'ESService', 'ModalService', 'Notification'];
 
-			return MainController;
+			return VisualizeController;
 
 });
