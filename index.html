@@ -8,6 +8,7 @@
     <script src="bower_components/jquery/dist/jquery.min.js"></script>
     <script src="bower_components/angular/angular.js"></script>
     <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="http://angular-ui.github.com/bootstrap/ui-bootstrap-tpls-0.6.0.js"></script>
     <script src="bower_components/elasticsearch/elasticsearch.angular.min.js"></script>
     <script src="bower_components/THREEDC/THREEDC.min.js"></script>
     <script src="generator_ESQueries_JS/genES.js"></script>
@@ -35,7 +36,8 @@
           <!-- Collect the nav links, forms, and other content for toggling -->
           <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav">
-              <li class="active"><a href="#">Visualize <span class="sr-only">(current)</span></a></li>
+              <li class="active"><a href="#">Visualize</a></li>
+              <li><a href="#">Panels</a></li>
             </ul>
           </div><!-- /.navbar-collapse -->
         </div><!-- /.container-fluid -->
@@ -170,6 +172,38 @@
             </div>
           </div>
           <button type="button" class="col-sm-12 btn btn-success" ng-click="addSubbucketForm()" ng-show="showAddSubBucketVisType()">Add Sub_Bucket</button>
+
+          <br>
+          <h4>Selected:</h4>
+          <hr>
+          {{metricsSelected}}
+          <div ng-repeat="ms in metricsSelected" class="panel-group">
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h4 class="panel-title">
+                  <a data-toggle="collapse" href="#collapse{{ $index + 1 }}" ng-click="reopenFormToChangeAgg($index, bs, 'metric')">({{ms.id}}) {{ms.type}}: {{ms.aggregationType}} - {{ms.aggregationField}}</a>
+                </h4>
+              </div>
+              <div id="collapse{{ $index + 1 }}" class="panel-collapse collapse">
+                <div class="panel-body">Panel Body</div>
+              </div>
+            </div>
+          </div>
+          <hr>
+          {{bucketsSelected}}
+          <div ng-repeat="bs in bucketsSelected" class="panel-group">
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h4 class="panel-title">
+                  <a data-toggle="collapse" href="#collapse{{ $index + 10 }}" ng-click="reopenFormToChangeAgg($index+10, bs, 'bucket')">({{bs.id}}) {{bs.type}}: {{bs.aggregationType}} - {{bs.aggregationField}}</a>
+                </h4>
+              </div>
+              <div id="collapse{{ $index + 10 }}" class="panel-collapse collapse">
+
+              </div>
+            </div>
+          </div>
+
           <div class="row">
             <div >
               <button type="button" class="col-md-6 btn btn-info" ng-click="showData()">Play</button>
@@ -183,38 +217,7 @@
               <button type="button" class="col-md-12 btn btn-success" ng-click="showHitsAggregations = !showHitsAggregations">Show response (JSON)</button>
             </div>
           </div>
-          <h3>Selected:</h3>
-          <hr>
-          {{metricsSelected}}
 
-          <div ng-repeat="ms in metricsSelected" class="panel-group">
-            <div class="panel panel-default">
-              <div class="panel-heading">
-                <h4 class="panel-title">
-                  <a data-toggle="collapse" href="#collapse{{ $index + 1 }}" ng-click="reopenFormToChangeAgg($index, bs, 'metric')">({{ms.id}}) {{ms.type}}: {{ms.aggregationType}} - {{ms.aggregationField}}</a>
-                </h4>
-              </div>
-              <div id="collapse{{ $index + 1 }}" class="panel-collapse collapse">
-                <div class="panel-body">Panel Body</div>
-              </div>
-            </div>
-          </div>
-
-          <hr>
-          {{bucketsSelected}}
-
-          <div ng-repeat="bs in bucketsSelected" class="panel-group">
-            <div class="panel panel-default">
-              <div class="panel-heading">
-                <h4 class="panel-title">
-                  <a data-toggle="collapse" href="#collapse{{ $index + 10 }}" ng-click="reopenFormToChangeAgg($index+10, bs, 'bucket')">({{bs.id}}) {{bs.type}}: {{bs.aggregationType}} - {{bs.aggregationField}}</a>
-                </h4>
-              </div>
-              <div id="collapse{{ $index + 10 }}" class="panel-collapse collapse">
-
-              </div>
-            </div>
-          </div>
         </div>
 
         <hr>
@@ -293,7 +296,7 @@
             </div>
             <div class="modal-body">
               <ul class="list-group">
-                <a href="#" data-dismiss="modal" ng-click="loadVis(vis._source.visobject)" class="list-group-item" ng-repeat="vis in loadedvis"><span class="badge">{{vis._source.chartType}}</span>
+                <a href="#" data-dismiss="modal" ng-click="loadVis(vis._source)" class="list-group-item" ng-repeat="vis in loadedvis"><span class="badge">{{vis._source.chartType}}</span>
                   <h4 class="list-group-item-heading">{{vis._source.name}}</h4>
                   <p class="list-group-item-text">{{vis._source.description}}</p>
                 </a>

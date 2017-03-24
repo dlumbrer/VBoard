@@ -832,8 +832,8 @@ define(
 									$scope.loadedvis = resp.hits.hits;
 								})
 
-								$scope.loadVis = function(visobject) {
-									console.log("A CARGAR", visobject);
+								$scope.loadVis = function(vis) {
+									console.log("A CARGAR", vis.visobject);
 									//dash.removeAll();
 									//visobject.render();
 								}
