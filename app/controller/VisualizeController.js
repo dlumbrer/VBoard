@@ -93,11 +93,7 @@ define(
 							case "3DBars":
 									return false;
 							case "bubbles":
-									if($scope.metricsSelected && $scope.metricsSelected.length == 1){
-										return false;
-									}else{
 										return true;
-									}
 							default:
 									return
 
@@ -116,17 +112,9 @@ define(
 							case "curve":
 									return false;
 							case "3DBars":
-									if($scope.bucketsSelected && $scope.bucketsSelected.length == 1){
-										return false;
-									}else{
 										return true;
-									}
 							case "bubbles":
-									if($scope.bucketsSelected && $scope.bucketsSelected.length == 1){
-										return false;
-									}else{
 										return true;
-									}
 							default:
 									return
 
@@ -401,6 +389,13 @@ define(
 			 }
 
 			 $scope.buildTDBarsChart = function(){
+				 //Comprobar errores
+				 if($scope.bucketsSelected.length < 2){
+					 Notification.error("Is required to select 2 buckets")
+					 return
+				 }
+
+
 				 var data = [];
 				 $scope.aggregations['agg_' + $scope.bucketsSelected[0].aggregationType + '_' + $scope.bucketsSelected[0].aggregationField].buckets.map(function(bucketx) {
 
@@ -442,6 +437,11 @@ define(
 			}
 
 			$scope.buildBubblesChart = function(){
+				if($scope.bucketsSelected.length < 2 || $scope.metricsSelected.length < 2){
+					Notification.error("Is required to select 2 buckets and 2 metrics")
+					return
+				}
+
 					 var data = [];
 					 $scope.aggregations['agg_' + $scope.bucketsSelected[0].aggregationType + '_' + $scope.bucketsSelected[0].aggregationField].buckets.map(function(bucketx) {
 
