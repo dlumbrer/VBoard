@@ -107,6 +107,25 @@ function genES (genES) {
     return promise;
   }
 
+  //Actualizar VISUALIZACIÓN ES
+  genES.updateVis = function(client, nameP, descriptionP, vistype, visobjectP){
+
+    var promise = client.update({
+      index: '.visthreed',
+      type: 'items',
+      id: vistype + "_" + nameP,
+      body: {
+        doc: {
+          chartType: vistype,
+          description: descriptionP,
+          name: nameP,
+          visobject: visobjectP,
+        }
+      }
+    });
+    return promise;
+  }
+
   //CREAR VISUALIZACIÓN ES
   genES.createVis = function(client, nameP, descriptionP, vistype, visobjectP){
 

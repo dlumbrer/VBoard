@@ -775,7 +775,14 @@ define(
 
 															 $scope.confirmUpdate = function(result) {
 															 	console.log("Actualizar ---- ", $scope.name, $scope.description, $scope.$parent.actualVis)
-
+																var promiseUpdate = generatorQueries.updateVis(ESService.client, $scope.name, $scope.description, $scope.$parent.actualVis.chartType, $scope.$parent.actualVis.chartObject)
+																promiseUpdate.then(function(response, error){
+																	if(error){
+																		Notification.error("Error updating visualization")
+																		return
+																	}
+																	Notification.success("Visualization udated")
+																})
 															 };
 
 															 $scope.cancelUpdate = function(result) {
