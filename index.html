@@ -110,9 +110,17 @@
               <hr>
                 <h3>Metrics:</h3>
                 <div class="row">
+                  <!-- uib-accordion close-others="oneAtATime">
+                    <div uib-accordion-group class="panel-default" is-open="status.open">
+                      <uib-accordion-heading>
+                        Metric - <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
+                      </uib-accordion-heading>
+                      This is just some content to illustrate fancy headings.
+                    </div>
+                  </uib-accordion -->
                   <label class="control-label col-md-2" for="metricList">Type:</label>
                   <div class="col-md-10">
-                    <select class="form-control" ng-model="metricList" id="metricList" ng-change="showFieldsOfMetricType()">
+                    <select class="form-control" ng-model="metricList[0]" id="metricList" ng-change="showFieldsOfMetricType(metricList[0], 0)">
                       <option value="count">Count</option>
                       <option value="avg">Average</option>
                       <option value="sum">Sum</option>
@@ -123,90 +131,138 @@
                       <option value="cardinality">Unique Count</option>
                     </select>
                   </div>
-                  <div class="col-md-12" ng-show="metricList!='count'">
-                    <label class="control-label col-md-2" for="fieldMetricList">Field:</label>
+                  <div class="col-md-12" ng-show="metricList[0]!='count'">
+                    <label class="control-label col-md-2" for="fieldMetricList0">Field:</label>
                     <div class="col-md-10">
-                      <select class="form-control" id="fieldMetricList">
-                        <option ng-repeat="fieldMetric in fieldsMetric" value="{{fieldMetric}}">{{fieldMetric}}</option>
+                      <select class="form-control" id="fieldMetricList0">
+                        <option ng-repeat="fieldMetric in fieldsMetric[0]" value="{{fieldMetric}}">{{fieldMetric}}</option>
                       </select>
                     </div>
                   </div>
+                  <button type="button" class="col-sm-12 btn btn-success" ng-click="addMetricForm()" ng-show="showAddMetricVisType()">Add Metric</button>
                 </div>
-                <button type="button" class="col-sm-12 btn btn-success" ng-click="addMetricForm()" ng-show="showAddMetricVisType()">Add Metric</button>
-                <br>
+
+                <div class="row" ng-show="showAddMetricVisType()">
+                  <label class="control-label col-md-2" for="metricList">Type:</label>
+                  <div class="col-md-10">
+                    <select class="form-control" ng-model="metricList[1]" id="metricList" ng-change="showFieldsOfMetricType(metricList[1], 1)">
+                      <option value="count">Count</option>
+                      <option value="avg">Average</option>
+                      <option value="sum">Sum</option>
+                      <option value="median">Median</option>
+                      <option value="max">Max</option>
+                      <option value="min">Min</option>
+                      <option value="extended_stats">Standard Deviation</option>
+                      <option value="cardinality">Unique Count</option>
+                    </select>
+                  </div>
+                  <div class="col-md-12" ng-show="metricList[1]!='count'">
+                    <label class="control-label col-md-2" for="fieldMetricList1">Field:</label>
+                    <div class="col-md-10">
+                      <select class="form-control" id="fieldMetricList1">
+                        <option ng-repeat="fieldMetric in fieldsMetric[1]" value="{{fieldMetric}}">{{fieldMetric}}</option>
+                      </select>
+                    </div>
+                  </div>
+                  <button type="button" class="col-sm-12 btn btn-success" ng-click="addMetricForm()" ng-show="showAddMetricVisType()">Add Metric</button>
+                </div>
+
+                <hr>
                 <h3>Buckets:</h3>
                 <div class="row">
-                  <label class="control-label col-md-2" for="aggregationBucketList">Type:</label>
-                  <div class="col-md-4">
-                    <select ng-model="typeBucket" class="form-control" id="aggregationBucketList" ng-change="showFieldsOfTypeAggregation()">
-                      <option value="terms">Terms</option>
-                      <option value="date_histogram">Date Histogram</option>
-                      <option value="histogram">Histogram</option>
-                      <option value="one">One</option>
-                    </select>
+                  <div class="row">
+                    <label class="control-label col-md-2" for="aggregationBucketList">Type:</label>
+                    <div class="col-md-4">
+                      <select ng-model="typesBucket[0]" class="form-control" id="aggregationBucketList" ng-change="showFieldsOfTypeAggregation(typesBucket[0], 0)">
+                        <option value="terms">Terms</option>
+                        <option value="date_histogram">Date Histogram</option>
+                        <option value="histogram">Histogram</option>
+                        <option value="one">One</option>
+                      </select>
+                    </div>
+                    <label class="control-label col-md-2" for="fieldBucketsList0">Field:</label>
+                    <div class="col-md-4">
+                      <select class="form-control" id="fieldBucketsList0">
+                        <option ng-repeat="field in fields[0]" value="{{field}}">{{field}}</option>
+                      </select>
+                    </div>
                   </div>
-                  <label class="control-label col-md-2" for="fieldBucketsList">Field:</label>
-                  <div class="col-md-4">
-                    <select class="form-control" id="fieldBucketsList">
-                      <option ng-repeat="field in fields" value="{{field}}">{{field}}</option>
-                    </select>
+                  <div class="row" ng-show="typesBucket[0]=='terms'">
+                    <label class="control-label col-md-2" for="bucketsList">Size:</label>
+                    <div class="col-md-10">
+                      <input type="number" class="form-control" id="sizeValue0" value="5">
+                    </div>
                   </div>
+                  <div class="row" ng-show="typesBucket[0]=='date_histogram'">
+                    <label class="control-label col-md-2" for="intervalDateHistogram0">Interval:</label>
+                    <div class="col-md-10">
+                      <select class="form-control" id="intervalDateHistogram0">
+                        <option value="1d">Daily</option>
+                        <option value="1w">Weekly</option>
+                        <option value="1M">Monthly</option>
+                        <option value="1y">Yearly</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="row" ng-show="typesBucket[0]=='histogram'">
+                    <label class="control-label col-md-2" for="intervalHistogram0">Interval:</label>
+                    <div class="col-md-10">
+                      <input type="number" class="form-control" id="intervalHistogram0" value="7000">
+                    </div>
+                  </div>
+                  <button type="button" class="col-sm-12 btn btn-success" ng-click="addSubbucketForm()" ng-show="showAddSubBucketVisType()">Add Sub_Bucket</button>
                 </div>
-                <div class="row" ng-show="typeBucket=='terms'">
-                  <label class="control-label col-md-2" for="bucketsList">Size:</label>
-                  <div class="col-md-10">
-                    <input type="number" class="form-control" id="sizeValue" value="5">
+
+                <div class="row" ng-show="showAddSubBucketVisType()">
+                  <div class="row">
+                    <label class="control-label col-md-2" for="aggregationBucketList">Type:</label>
+                    <div class="col-md-4">
+                      <select ng-model="typesBucket[1]" class="form-control" id="aggregationBucketList" ng-change="showFieldsOfTypeAggregation(typesBucket[1], 1)">
+                        <option value="terms">Terms</option>
+                        <option value="date_histogram">Date Histogram</option>
+                        <option value="histogram">Histogram</option>
+                        <option value="one">One</option>
+                      </select>
+                    </div>
+                    <label class="control-label col-md-2" for="fieldBucketsList1">Field:</label>
+                    <div class="col-md-4">
+                      <select class="form-control" id="fieldBucketsList1">
+                        <option ng-repeat="field in fields[1]" value="{{field}}">{{field}}</option>
+                      </select>
+                    </div>
                   </div>
-                </div>
-                <div class="row" ng-show="typeBucket=='date_histogram'">
-                  <label class="control-label col-md-2" for="intervalDateHistogram">Interval:</label>
-                  <div class="col-md-10">
-                    <select class="form-control" id="intervalDateHistogram">
-                      <option value="1d">Daily</option>
-                      <option value="1w">Weekly</option>
-                      <option value="1M">Monthly</option>
-                      <option value="1y">Yearly</option>
-                    </select>
+                  <div class="row" ng-show="typesBucket[1]=='terms'">
+                    <label class="control-label col-md-2" for="bucketsList">Size:</label>
+                    <div class="col-md-10">
+                      <input type="number" class="form-control" id="sizeValue1" value="5">
+                    </div>
                   </div>
-                </div>
-                <div class="row" ng-show="typeBucket=='histogram'">
-                  <label class="control-label col-md-2" for="intervalHistogram">Interval:</label>
-                  <div class="col-md-10">
-                    <input type="number" class="form-control" id="intervalHistogram" value="7000">
+                  <div class="row" ng-show="typesBucket[1]=='date_histogram'">
+                    <label class="control-label col-md-2" for="intervalDateHistogram1">Interval:</label>
+                    <div class="col-md-10">
+                      <select class="form-control" id="intervalDateHistogram1">
+                        <option value="1d">Daily</option>
+                        <option value="1w">Weekly</option>
+                        <option value="1M">Monthly</option>
+                        <option value="1y">Yearly</option>
+                      </select>
+                    </div>
                   </div>
+                  <div class="row" ng-show="typesBucket[1]=='histogram'">
+                    <label class="control-label col-md-2" for="intervalHistogram1">Interval:</label>
+                    <div class="col-md-10">
+                      <input type="number" class="form-control" id="intervalHistogram1" value="7000">
+                    </div>
+                  </div>
+                  <button type="button" class="col-sm-12 btn btn-success" ng-click="addSubbucketForm()" ng-show="showAddSubBucketVisType()">Add Sub_Bucket</button>
                 </div>
-                <button type="button" class="col-sm-12 btn btn-success" ng-click="addSubbucketForm()" ng-show="showAddSubBucketVisType()">Add Sub_Bucket</button>
 
                 <br>
                 <h4>Selected:</h4>
                 <hr>
                 {{metricsSelected}}
-                <div ng-repeat="ms in metricsSelected" class="panel-group">
-                  <div class="panel panel-default">
-                    <div class="panel-heading">
-                      <h4 class="panel-title">
-                        <a data-toggle="collapse" href="#collapse{{ $index + 1 }}" ng-click="reopenFormToChangeAgg($index, bs, 'metric')">({{ms.id}}) {{ms.type}}: {{ms.aggregationType}} - {{ms.aggregationField}}</a>
-                      </h4>
-                    </div>
-                    <div id="collapse{{ $index + 1 }}" class="panel-collapse collapse">
-                      <div class="panel-body">Panel Body</div>
-                    </div>
-                  </div>
-                </div>
-                <hr>
                 {{bucketsSelected}}
-                <div ng-repeat="bs in bucketsSelected" class="panel-group">
-                  <div class="panel panel-default">
-                    <div class="panel-heading">
-                      <h4 class="panel-title">
-                        <a data-toggle="collapse" href="#collapse{{ $index + 10 }}" ng-click="reopenFormToChangeAgg($index+10, bs, 'bucket')">({{bs.id}}) {{bs.type}}: {{bs.aggregationType}} - {{bs.aggregationField}}</a>
-                      </h4>
-                    </div>
-                    <div id="collapse{{ $index + 10 }}" class="panel-collapse collapse">
 
-                    </div>
-                  </div>
-                </div>
 
                 <div class="row">
                   <div >

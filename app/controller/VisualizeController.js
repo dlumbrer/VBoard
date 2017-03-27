@@ -70,6 +70,7 @@ define(
 	          $scope.showMetricBucketsForm = true;
 	          //$scope.visType = $("#typesList").val();
 						$scope.typeName = "items";
+
 					}else{
 						Notification.error('First select chart type');
 					}
@@ -137,66 +138,74 @@ define(
 				///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 				/////////////////////////////////////////////////MOSTRAR CAMPOS A ELECCION SGUN EL TIPO DE METRICA/BUCKET////////////////////////////////////////////////7
-				$scope.showFieldsOfMetricType = function(){
-					switch ($scope.metricList) {
+				$scope.showFieldsOfMetricType = function(metricType, index){
+					if(!$scope.fieldsMetric){
+						$scope.fieldsMetric = []
+					}
+
+					switch (metricType) {
 							case "avg":
 							case "sum":
 							case "extended_stats":
 							case "median":
-									$scope.fieldsMetric = [];
+									$scope.fieldsMetric[index] = [];
 									var allFields = $scope.mapping[$scope.indexName].mappings[$scope.typeName].properties;
-									Object.keys(allFields).forEach(function(key,index) {
+									Object.keys(allFields).forEach(function(key,i) {
 											if(allFields[key].type == "long"){
-												$scope.fieldsMetric.push(key)
+												$scope.fieldsMetric[index].push(key)
 											}
 									});
 									break;
 							case "max":
 							case "min":
-									$scope.fieldsMetric = [];
+									$scope.fieldsMetric[index] = [];
 									var allFields = $scope.mapping[$scope.indexName].mappings[$scope.typeName].properties;
-									Object.keys(allFields).forEach(function(key,index) {
+									Object.keys(allFields).forEach(function(key,i) {
 											if(allFields[key].type == "long" || allFields[key].type == "date"){
-												$scope.fieldsMetric.push(key)
+												$scope.fieldsMetric[index].push(key)
 											}
 									});
 									break;
 							case "cardinality":
-									$scope.fieldsMetric = Object.keys($scope.mapping[$scope.indexName].mappings[$scope.typeName].properties);
+									$scope.fieldsMetric[index] = Object.keys($scope.mapping[$scope.indexName].mappings[$scope.typeName].properties);
 									break;
 					}
 				}
-				$scope.showFieldsOfTypeAggregation = function(){
-					switch ($scope.typeBucket) {
+				$scope.showFieldsOfTypeAggregation = function(typeBucket, ind){
+					if(!$scope.fields){
+						$scope.fields = []
+					}
+
+					switch (typeBucket) {
 							case "one":
 							case "terms":
 									//$scope.fields = Object.keys($scope.mapping[$scope.indexName].mappings[$scope.typeName].properties);
-									$scope.fields = [];
+									$scope.fields[ind] = [];
 									var allFields = $scope.mapping[$scope.indexName].mappings[$scope.typeName].properties;
 									Object.keys(allFields).forEach(function(key,index) {
 											if(allFields[key].type == "text"){
-												$scope.fields.push(key + ".keyword")
+												$scope.fields[ind].push(key + ".keyword")
 											}else{
-												$scope.fields.push(key)
+												$scope.fields[ind].push(key)
 											}
 									});
 									break;
 									break;
 							case "date_histogram":
-									$scope.fields = [];
+									$scope.fields[ind] = [];
 									var allFields = $scope.mapping[$scope.indexName].mappings[$scope.typeName].properties;
 									Object.keys(allFields).forEach(function(key,index) {
 											if(allFields[key].type == "date"){
-												$scope.fields.push(key)
+												$scope.fields[ind].push(key)
 											}
 									});
 									break;
 							case "histogram":
-									$scope.fields = [];
+									$scope.fields[ind] = [];
 									var allFields = $scope.mapping[$scope.indexName].mappings[$scope.typeName].properties;
 									Object.keys(allFields).forEach(function(key,index) {
 											if(allFields[key].type == "long"){
-												$scope.fields.push(key)
+												$scope.fields[ind].push(key)
 											}
 									});
 									break;
@@ -205,13 +214,12 @@ define(
 				/////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 				/////////////////////////////////////////////CUANDO SE PULSA EN ADD METRIC/BUCKET////////////////////////////////////////////////////////////////
-				$scope.addMetricForm = function(){
-					$scope.metricSelected = $("#metricList").val();
+				$scope.addMetricForm = function(metricSelected, ind){
 					//No añadir Count por que se hace automaticamente
 					var options = {}
-					switch ($scope.metricList) {
+					switch (metricSelected) {
 							case "count":
-									builderData.addMetric($scope.metricList);
+									builderData.addMetric(metricSelected);
 									break;
 							case "avg":
 							case "sum":
@@ -219,11 +227,11 @@ define(
 							case "min":
 							case "extended_stats":
 							case "carinality":
-									var fieldSelected = $("#fieldMetricList").val();
-									builderData.addMetric($scope.metricList, fieldSelected);
+									var fieldSelected = $("#fieldMetricList" + ind).val();
+									builderData.addMetric(metricSelected, fieldSelected);
 									break;
 							case "median":
-									var fieldSelected = $("#fieldMetricList").val();
+									var fieldSelected = $("#fieldMetricList" + ind).val();
 									options = {"percents": ["50"]}
 									builderData.addMetric("percentiles", fieldSelected, options);
 									break;
@@ -236,17 +244,16 @@ define(
 					$scope.metricsSelected = builderData.metrics;
         }
 
-				$scope.addSubbucketForm = function(){
-					$scope.typeBucket = $("#aggregationBucketList").val();
-					$scope.fieldBucketSelected = $("#fieldBucketsList").val();
+				$scope.addSubbucketForm = function(typeBucket, ind){
+					$scope.fieldBucketSelected = $("#fieldBucketsList" + ind).val();
 					//$scope.sizeSelected = $("#sizeValue").val();
 
 					var options = {}
-					switch ($scope.typeBucket) {
+					switch (typeBucket) {
 							case "terms":
 									var type = "terms";
 									$scope.fieldBucketSelected = $scope.fieldBucketSelected;
-									options = {"size": $("#sizeValue").val()}
+									options = {"size": $("#sizeValue"  + ind).val()}
 									break;
 							case "one":
 									var type = "terms";
@@ -255,11 +262,11 @@ define(
 									break;
 							case "date_histogram":
 									var type = "date_histogram";
-									options = {"interval": $("#intervalDateHistogram").val()}
+									options = {"interval": $("#intervalDateHistogram"  + ind).val()}
 									break;
 							case "histogram":
 									var type = "histogram";
-									options = {"interval": $("#intervalHistogram").val()}
+									options = {"interval": $("#intervalHistogram"  + ind).val()}
 									break;
 							default:
 									Notification.error('Impossible to add an empty bucket');
@@ -279,14 +286,17 @@ define(
 				///////////////////////////////////////////////////CUANDO SE PULSA EN PLAY//////////////////////////////////////////////////////////
         $scope.showData = function(){
 					//Añadir lo que se ha quedado marcado
-					$scope.addSubbucketForm()
-					$scope.addMetricForm()
-
-					//Comprobacion de errores
-					if(!($scope.metricsSelected && $scope.bucketsSelected)){
+					if(!($scope.metricList && $scope.typesBucket)){
 						Notification.error('Error on Select Data');
 						return;
 					}
+					Object.keys($scope.metricList).forEach(function(key) {
+							$scope.addMetricForm($scope.metricList[key], key)
+					});
+					Object.keys($scope.typesBucket).forEach(function(i) {
+							$scope.addSubbucketForm($scope.typesBucket[i], i)
+					});
+
 
 					var statements = builderData.buildDataStructure().getDataStructure()
 
