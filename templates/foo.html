@@ -1,0 +1,428 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>VBoard</title>
+
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="bower_components/angular-ui-notification/dist/angular-ui-notification.min.css">
+    <link rel="stylesheet" href="css/main.css">
+    <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="bower_components/angular/angular.js"></script>
+    <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js"></script>
+    <script src="bower_components/elasticsearch/elasticsearch.angular.min.js"></script>
+    <script src="bower_components/THREEDC/THREEDC.min.js"></script>
+    <script src="generator_ESQueries_JS/genES.js"></script>
+    <script src="builder_DataStructure/builderESDS.js"></script>
+    <script src="bower_components/angular-modal-service/dst/angular-modal-service.min.js"></script>
+    <script src="bower_components/angular-ui-notification/dist/angular-ui-notification.min.js"></script>
+    <script src="bower_components/angular-route/angular-route.min.js"></script>
+    <!--script src="main.js"></script-->
+  </head>
+  <body>
+
+
+      <!-- nav class="navbar navbar-default">
+        <div class="container-fluid">
+
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">VBoard</a>
+          </div>
+
+
+          <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+              <li class="active"><a href="#">Visualize</a></li>
+              <li><a href="#">Panels</a></li>
+            </ul>
+          </div>
+        </div>
+      </nav -->
+<div ng-controller="TabsController" style="height:100%">
+      <uib-tabset type="pills" active="active">
+        <uib-tab heading="Visualize" index="1">
+          <!-- CONTENT OF VISUALIZE -->
+          <div ng-controller="VisualizeController" style="height:100%">
+            <div class="col-md-3" style="height:100%">
+              <div class="row">
+                <label class="control-label col-sm-2" for="indexesList">Index:</label>
+                <div class="col-md-10">
+                  <select class="form-control" id="indexesList">
+                    <option ng-repeat="index in indexes" value="{{index.name}}">{{index.name}}</option>
+                  </select>
+                </div>
+              </div>
+              <div class="row">
+                <div >
+                  <button type="button" class="col-sm-4 btn btn-success" ng-click="searchMappingFromIndex()">Show Mapping</button>
+                  <button type="button" class="col-sm-8 btn btn-info" ng-click="typeFromIndex()">Select chart</button>
+                </div>
+              </div>
+
+              <!--div ng-show="showTypeForm">
+              <hr>
+                <div class="row">
+                  <label class="control-label col-sm-2" for="typesList">Type:</label>
+                  <div class="col-sm-10">
+                    <select class="form-control" id="typesList">
+                      <option ng-repeat="type in types" value="{{type}}">{{type}}</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="row">
+                  <div >
+                    <button type="button" class="col-sm-6 btn btn-info" ng-click="showMetricsBuckets()">Show Metrics and Buckets</button>
+                    <button type="button" class="col-sm-6 btn btn-danger" ng-click="showTypeForm = false">Hide Type form</button>
+                  </div>
+                </div>
+              </div-->
+
+              <div ng-show="showTypeForm">
+              <hr>
+                <div class="row">
+                  <label class="control-label col-sm-2" for="typesList">VisType:</label>
+                  <div class="col-sm-10">
+                    <select class="form-control" ng-model="visType" id="typesList" ng-change="showMetricBucketsForm = false">
+                      <option value="pie">Pie</option>
+                      <option value="bars">Bars</option>
+                      <option value="line">Line</option>
+                      <option value="curve">Smooth curve</option>
+                      <option value="3DBars">3D Bars</option>
+                      <option value="bubbles">Bubbles</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="row">
+                  <div >
+                    <button type="button" class="col-sm-6 btn btn-info" ng-click="showMetricsBuckets()">Select Data</button>
+                    <button type="button" class="col-sm-6 btn btn-danger" ng-click="(showTypeForm = false) && (showMetricBucketsForm = false)">Cancel</button>
+                  </div>
+                </div>
+              </div>
+
+
+
+              <div ng-show="showMetricBucketsForm && showTypeForm">
+              <hr>
+                <h3>Metrics:</h3>
+                <div class="row">
+                  <!-- uib-accordion close-others="oneAtATime">
+                    <div uib-accordion-group class="panel-default" is-open="status.open">
+                      <uib-accordion-heading>
+                        Metric - <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
+                      </uib-accordion-heading>
+                      This is just some content to illustrate fancy headings.
+                    </div>
+                  </uib-accordion -->
+                  <label class="control-label col-md-2" for="metricList">Type:</label>
+                  <div class="col-md-10">
+                    <select class="form-control" ng-model="metricList[0]" id="metricList" ng-change="showFieldsOfMetricType(metricList[0], 0)">
+                      <option value="count">Count</option>
+                      <option value="avg">Average</option>
+                      <option value="sum">Sum</option>
+                      <option value="median">Median</option>
+                      <option value="max">Max</option>
+                      <option value="min">Min</option>
+                      <option value="extended_stats">Standard Deviation</option>
+                      <option value="cardinality">Unique Count</option>
+                    </select>
+                  </div>
+                  <div class="col-md-12" ng-show="metricList[0]!='count'">
+                    <label class="control-label col-md-2" for="fieldMetricList0">Field:</label>
+                    <div class="col-md-10">
+                      <select class="form-control" id="fieldMetricList0">
+                        <option ng-repeat="fieldMetric in fieldsMetric[0]" value="{{fieldMetric}}">{{fieldMetric}}</option>
+                      </select>
+                    </div>
+                  </div>
+
+                </div>
+
+                <br>
+
+                <div class="row" ng-show="showAddMetricVisType()">
+                  <label class="control-label col-md-2" for="metricList">Type:</label>
+                  <div class="col-md-10">
+                    <select class="form-control" ng-model="metricList[1]" id="metricList" ng-change="showFieldsOfMetricType(metricList[1], 1)">
+                      <option value="count">Count</option>
+                      <option value="avg">Average</option>
+                      <option value="sum">Sum</option>
+                      <option value="median">Median</option>
+                      <option value="max">Max</option>
+                      <option value="min">Min</option>
+                      <option value="extended_stats">Standard Deviation</option>
+                      <option value="cardinality">Unique Count</option>
+                    </select>
+                  </div>
+                  <div class="col-md-12" ng-show="metricList[1]!='count'">
+                    <label class="control-label col-md-2" for="fieldMetricList1">Field:</label>
+                    <div class="col-md-10">
+                      <select class="form-control" id="fieldMetricList1">
+                        <option ng-repeat="fieldMetric in fieldsMetric[1]" value="{{fieldMetric}}">{{fieldMetric}}</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                <button type="button" class="col-sm-12 btn btn-success" ng-click="addMetricForm()" ng-show="showAddMetricVisType()">Add Metric</button>
+
+                <hr>
+                <h3>Buckets:</h3>
+                <div class="row">
+                  <div class="row">
+                    <label class="control-label col-md-2" for="aggregationBucketList0">Type:</label>
+                    <div class="col-md-4">
+                      <select ng-model="typesBucket[0]" class="form-control" id="aggregationBucketList0" ng-change="showFieldsOfTypeAggregation(typesBucket[0], 0)">
+                        <option value="terms">Terms</option>
+                        <option value="date_histogram">Date Histogram</option>
+                        <option value="histogram">Histogram</option>
+                        <option value="one">One</option>
+                      </select>
+                    </div>
+                    <label class="control-label col-md-2" for="fieldBucketsList0">Field:</label>
+                    <div class="col-md-4">
+                      <select class="form-control" id="fieldBucketsList0">
+                        <option ng-repeat="field in fields[0]" value="{{field}}">{{field}}</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="row" ng-show="typesBucket[0]=='terms'">
+                    <label class="control-label col-md-2" for="bucketsList">Size:</label>
+                    <div class="col-md-10">
+                      <input type="number" class="form-control" id="sizeValue0" value="5">
+                    </div>
+                  </div>
+                  <div class="row" ng-show="typesBucket[0]=='date_histogram'">
+                    <label class="control-label col-md-2" for="intervalDateHistogram0">Interval:</label>
+                    <div class="col-md-10">
+                      <select class="form-control" id="intervalDateHistogram0">
+                        <option value="1d">Daily</option>
+                        <option value="1w">Weekly</option>
+                        <option value="1M">Monthly</option>
+                        <option value="1y">Yearly</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="row" ng-show="typesBucket[0]=='histogram'">
+                    <label class="control-label col-md-2" for="intervalHistogram0">Interval:</label>
+                    <div class="col-md-10">
+                      <input type="number" class="form-control" id="intervalHistogram0" value="7000">
+                    </div>
+                  </div>
+                </div>
+
+                <br>
+
+                <div class="row" ng-show="showAddSubBucketVisType()">
+                  <div class="row">
+                    <label class="control-label col-md-2" for="aggregationBucketList">Type:</label>
+                    <div class="col-md-4">
+                      <select ng-model="typesBucket[1]" class="form-control" id="aggregationBucketList" ng-change="showFieldsOfTypeAggregation(typesBucket[1], 1)">
+                        <option value="terms">Terms</option>
+                        <option value="date_histogram">Date Histogram</option>
+                        <option value="histogram">Histogram</option>
+                        <option value="one">One</option>
+                      </select>
+                    </div>
+                    <label class="control-label col-md-2" for="fieldBucketsList1">Field:</label>
+                    <div class="col-md-4">
+                      <select class="form-control" id="fieldBucketsList1">
+                        <option ng-repeat="field in fields[1]" value="{{field}}">{{field}}</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="row" ng-show="typesBucket[1]=='terms'">
+                    <label class="control-label col-md-2" for="bucketsList">Size:</label>
+                    <div class="col-md-10">
+                      <input type="number" class="form-control" id="sizeValue1" value="5">
+                    </div>
+                  </div>
+                  <div class="row" ng-show="typesBucket[1]=='date_histogram'">
+                    <label class="control-label col-md-2" for="intervalDateHistogram1">Interval:</label>
+                    <div class="col-md-10">
+                      <select class="form-control" id="intervalDateHistogram1">
+                        <option value="1d">Daily</option>
+                        <option value="1w">Weekly</option>
+                        <option value="1M">Monthly</option>
+                        <option value="1y">Yearly</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="row" ng-show="typesBucket[1]=='histogram'">
+                    <label class="control-label col-md-2" for="intervalHistogram1">Interval:</label>
+                    <div class="col-md-10">
+                      <input type="number" class="form-control" id="intervalHistogram1" value="7000">
+                    </div>
+                  </div>
+                </div>
+
+                <button type="button" class="col-sm-12 btn btn-success" ng-click="addSubbucketForm()" ng-show="showAddSubBucketVisType()">Add Sub_Bucket</button>
+
+                <br>
+                <h4>Selected:</h4>
+                <hr>
+                {{metricsSelected}}
+                {{bucketsSelected}}
+
+
+                <div class="row">
+                  <div >
+                    <button type="button" class="col-md-6 btn btn-info" ng-click="showData()">Play</button>
+                    <button type="button" class="col-md-6 btn btn-danger" ng-click="hideMetricsBucketsForm()">Cancel</button>
+                  </div>
+                </div>
+
+                <br>
+                <div class="row">
+                  <div >
+                    <button type="button" class="col-md-12 btn btn-success" ng-click="showHitsAggregations = !showHitsAggregations">Show response (JSON)</button>
+                  </div>
+                </div>
+
+              </div>
+
+              <hr>
+              <div class="row">
+                <button type="button" class="col-md-12 btn btn-info" ng-click="openSaveModal()">Save visualization</button>
+                <button type="button" class="col-md-12 btn btn-success" ng-click="openLoadModal()">Load visualization</button>
+              </div>
+            </div>
+
+            <div class="col-md-9" id="ThreeJS" class="row" style="height:100%; background-color: blue; left:0px; top:0px"></div>
+
+            <div class="row" ng-show="showHitsAggregations">
+              <div class="col-md-12">
+                <div class="col-md-6">
+                  <h2>Hits:</h2>
+                  <pre>{{hits}}</pre>
+                </div>
+                <div class="col-md-6">
+                  <h2>Aggregations:</h2>
+                  <pre>{{aggregationsToShow}}</pre>
+                </div>
+              </div>
+            </div>
+
+            <div class="row" ng-show="showMapping">
+              <div class="col-md-12">
+                <h2>Mapping of {{indexName}}:</h2>
+                <pre>{{mapping}}</pre>
+              </div>
+            </div>
+
+          </div>
+
+        </uib-tab>
+        <uib-tab heading="Panels" index="2">
+          <!-- PANELS CONTROLLER -->
+          <div ng-controller="PanelsController" ng-style="{'height': '100vh'}">
+            <div class="col-md-3" ng-style="{'height': '100%'}">
+
+              <div class="row">
+                <h4>Click to add: </h4>
+                <ul class="list-group">
+                  <a href="#" data-dismiss="modal" ng-click="loadVis(vis._source)" class="list-group-item" ng-repeat="vis in loadedvis"><span class="badge">{{vis._source.chartType}}</span>
+                    <h5 class="list-group-item-heading">{{vis._source.name}}</h5>
+                    <p class="list-group-item-text">{{vis._source.description}}</p>
+                  </a>
+                </ul>
+              </div>
+
+            </div>
+            <div class="col-md-9" ng-style="{'background-color':'green', 'height': '100%'}">
+
+            </div>
+
+            <button type="button" class="btn btn-default btn-sm" ng-click="changeTab(1)">Go to visualize</button>
+            Tab 2 content
+          </div>
+        </uib-tab>
+      </uib-tabset>
+  </div>
+
+
+    <script type="text/ng-template" id="modal.html">
+      <div class="modal fade">
+        <div class="modal-dialog modal-lg">
+         <div class="modal-content">
+           <div class="modal-header">
+             <button type="button" class="close" ng-click="close()" data-dismiss="modal" aria-hidden="true">&times;</button>
+             <h4 class="modal-title">Save visualization</h4>
+           </div>
+           <div class="modal-body">
+
+         <form class="form-horizontal" role="form">
+           <div class="form-group">
+             <label for="name" class="col-sm-2 control-label">Name</label>
+             <div class="col-sm-10">
+               <input type="text" class="form-control" ng-model="name" id="name" placeholder="Visualization Name" ng-model="name">
+             </div>
+           </div>
+           <div class="form-group">
+             <label for="age" class="col-sm-2 control-label">Description</label>
+             <div class="col-sm-10">
+               <input type="text" class="form-control" ng-model="description" id="description" placeholder="Description" ng-model="name">
+             </div>
+           </div>
+         </form>
+
+           </div>
+           <div class="modal-footer">
+             <button type="button" ng-click="save()" class="btn btn-primary" data-dismiss="modal">Save!</button>
+             <button type="button" ng-click="cancel()" class="btn" data-dismiss="modal">Cancel</button>
+           </div>
+         </div>
+        </div>
+      </div>
+     </script>
+
+     <script type="text/ng-template" id="loadmodal.html">
+       <div class="modal fade">
+         <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" ng-click="close()" data-dismiss="modal" aria-hidden="true">&times;</button>
+              <h4 class="modal-title">Choose visualization</h4>
+            </div>
+            <div class="modal-body">
+              <ul class="list-group">
+                <a href="#" data-dismiss="modal" ng-click="loadVis(vis._source)" class="list-group-item" ng-repeat="vis in loadedvis"><span class="badge">{{vis._source.chartType}}</span>
+                  <h4 class="list-group-item-heading">{{vis._source.name}}</h4>
+                  <p class="list-group-item-text">{{vis._source.description}}</p>
+                </a>
+              </ul>
+            </div>
+            <div class="modal-footer">
+              <button type="button" ng-click="cancel()" class="btn" data-dismiss="modal">Cancel</button>
+            </div>
+          </div>
+         </div>
+       </div>
+      </script>
+
+      <script type="text/ng-template" id="modalconfirm.html">
+        <div class="modal fade">
+          <div class="modal-dialog modal-lg">
+           <div class="modal-content">
+             <div class="modal-header">
+               <button type="button" class="close" ng-click="close()" data-dismiss="modal" aria-hidden="true">&times;</button>
+               <h4 class="modal-title">A visualization with this name is already saved. Are you sure to overwrite it?</h4>
+             </div>
+             <div class="modal-body text-center" >
+               <button type="button" ng-click="confirmUpdate()" class="btn btn-primary" data-dismiss="modal">Yes</button>
+               <button type="button" ng-click="cancelUpdate()" class="btn" data-dismiss="modal">No</button>
+             </div>
+           </div>
+          </div>
+        </div>
+       </script>
+  <script data-main="main" src="bower_components/requirejs/require.js"></script>
+  </body>
+</html>

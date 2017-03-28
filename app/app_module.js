@@ -5,7 +5,23 @@ define([
       'app/service/ESService'
     ],
 		 function(TabsController, VisualizeController, PanelsController, ESService) {
-			var app = angular.module('myApp', ['elasticsearch', 'angularModalService', 'ui-notification', 'ui.bootstrap']);
+			var app = angular.module('myApp', ['ngRoute', 'elasticsearch', 'angularModalService', 'ui-notification', 'ui.bootstrap']);
+
+      app.config(['$routeProvider',
+        function($routeProvider) {
+          $routeProvider.
+            when('/Visualize', {
+          		templateUrl: 'templates/visualize.html',
+          		controller: 'VisualizeController'
+      	}).
+            when('/Panels', {
+          		templateUrl: 'templates/panels.html',
+          		controller: 'PanelsController'
+            }).
+            otherwise({
+      		     redirectTo: '/Visualize'
+            });
+      }]);
 
       app.controller('TabsController', TabsController);
       app.controller('VisualizeController', VisualizeController);

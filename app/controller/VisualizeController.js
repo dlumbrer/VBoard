@@ -2,6 +2,7 @@ define(
 		['node_modules/bodybuilder/browser/bodybuilder.min'],
 		function() {
       function VisualizeController($scope, esFactory, ESService, ModalService, Notification) {
+				angular.element(document).ready(function () {
         $scope.foo = "YEAH!"
 
 				var bodybuilder = require('node_modules/bodybuilder/browser/bodybuilder.min')
@@ -584,7 +585,8 @@ define(
 			}
 
 /////////////////////////////////CONSTRUCCIÓN DE THREEDC////////////////////////////////////////////
-/*        var container, scene, camera, renderer;
+
+        var container, scene, camera, renderer;
 
         //objetc which will contain the library functions
         var dash;
@@ -602,8 +604,13 @@ define(
            ////////////
            // CAMERA //
            ////////////
+					 // attach div element to variable to contain the renderer
+					 container = document.getElementById( 'ThreeJS' );
+
            // set the view size in pixels (custom or according to window size)
-           var SCREEN_WIDTH = window.innerWidth;
+           /*var SCREEN_WIDTH = container.clientWidth;
+           var SCREEN_HEIGHT = container.clientHeight;*/
+					 var SCREEN_WIDTH = window.innerWidth;
            var SCREEN_HEIGHT = window.innerHeight;
            // camera attributes
            var VIEW_ANGLE = 45;
@@ -625,8 +632,7 @@ define(
            renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
            renderer.setClearColor( 0xd8d8d8 );
 
-           // attach div element to variable to contain the renderer
-           container = document.getElementById( 'ThreeJS' );
+
            // attach renderer to the container div
            container.appendChild( renderer.domElement );
 
@@ -679,7 +685,7 @@ define(
         function update(){
           dash.controls.update();
         }
-*/
+
 
 ///////////////////////////////////SAVE VIS////////////////////////////////////
 
@@ -805,6 +811,7 @@ define(
 					});
 				};
 
+				})
       }
 
 
