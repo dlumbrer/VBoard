@@ -3,6 +3,7 @@
   <head>
     <meta charset="utf-8">
     <title>VBoard</title>
+    <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
     <link rel="stylesheet" href="bower_components/angular-ui-notification/dist/angular-ui-notification.min.css">
     <script src="bower_components/jquery/dist/jquery.min.js"></script>
@@ -46,8 +47,8 @@
       <uib-tabset type="pills" active="active">
         <uib-tab heading="Visualize" index="1">
           <!-- CONTENT OF VISUALIZE -->
-          <div ng-controller="VisualizeController">
-            <div class="col-md-3">
+          <div ng-controller="VisualizeController" style="height:100vh">
+            <div class="col-md-3" style="height:100%">
               <div class="row">
                 <label class="control-label col-sm-2" for="indexesList">Index:</label>
                 <div class="col-md-10">
@@ -174,9 +175,9 @@
                 <h3>Buckets:</h3>
                 <div class="row">
                   <div class="row">
-                    <label class="control-label col-md-2" for="aggregationBucketList">Type:</label>
+                    <label class="control-label col-md-2" for="aggregationBucketList0">Type:</label>
                     <div class="col-md-4">
-                      <select ng-model="typesBucket[0]" class="form-control" id="aggregationBucketList" ng-change="showFieldsOfTypeAggregation(typesBucket[0], 0)">
+                      <select ng-model="typesBucket[0]" class="form-control" id="aggregationBucketList0" ng-change="showFieldsOfTypeAggregation(typesBucket[0], 0)">
                         <option value="terms">Terms</option>
                         <option value="date_histogram">Date Histogram</option>
                         <option value="histogram">Histogram</option>
@@ -292,7 +293,7 @@
               </div>
             </div>
 
-            <div class="col-md-9" id="ThreeJS" class="row" style="height:60px; left:0px; top:0px"></div>
+            <div class="col-md-9" id="ThreeJS" class="row" style="height:100%; background-color: blue; left:0px; top:0px"></div>
 
             <div class="row" ng-show="showHitsAggregations">
               <div class="col-md-12">
@@ -318,9 +319,18 @@
 
         </uib-tab>
         <uib-tab heading="Panels" index="2">
-            <button type="button" class="btn btn-default btn-sm" ng-click="changeTab(1)">Go to visualize</button>
+          <button type="button" class="btn btn-default btn-sm" ng-click="changeTab(1)">Go to visualize</button>
           Tab 2 content
 
+          <!-- PANELS CONTROLLER -->
+          <div ng-controller="PanelsController" ng-style="{'height': '100vh'}">
+            <div class="col-md-3" ng-style="{'background-color':'blue', 'height': '100%'}">
+
+            </div>
+            <div class="col-md-9" ng-style="{'background-color':'green', 'height': '100%'}">
+
+            </div>
+          </div>
         </uib-tab>
       </uib-tabset>
   </div>
