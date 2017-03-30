@@ -585,7 +585,7 @@ define(
 			}
 
 /////////////////////////////////CONSTRUCCIÓN DE THREEDC////////////////////////////////////////////
-/*
+
         var container, scene, camera, renderer;
 
         //objetc which will contain the library functions
@@ -608,10 +608,10 @@ define(
 					 container = document.getElementById( 'ThreeJS' );
 
            // set the view size in pixels (custom or according to window size)
-           //var SCREEN_WIDTH = container.clientWidth;
-           //var SCREEN_HEIGHT = container.clientHeight;
-					 var SCREEN_WIDTH = window.innerWidth;
-           var SCREEN_HEIGHT = window.innerHeight;
+           var SCREEN_WIDTH = container.clientWidth;
+           var SCREEN_HEIGHT = container.clientHeight;
+					 //var SCREEN_WIDTH = window.innerWidth;
+           //var SCREEN_HEIGHT = window.innerHeight;
            // camera attributes
            var VIEW_ANGLE = 45;
            var ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT;
@@ -685,7 +685,7 @@ define(
         function update(){
           dash.controls.update();
         }
-*/
+
 
 ///////////////////////////////////SAVE VIS////////////////////////////////////
 
