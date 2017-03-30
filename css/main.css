@@ -21,8 +21,9 @@ body, html {
     width: 100%;
 }
 
-#ThreeJS {
+#ThreeJS, #ThreeJSPanels {
   box-sizing: border-box;
   padding-left: 0px;
   padding-right: 0px;
+  background-color: blue
 }
