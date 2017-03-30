@@ -378,7 +378,9 @@ define(
 				 ////////////GUARDAR LA VISUALIACION EN EL SCOPE
 				 $scope.actualVis = {
 					 chartType: visType,
-					 chartObject: $.extend(true, {}, chart)
+					 chartObject: $.extend(true, {}, chart),
+					 bucketsSelected : $scope.bucketsSelected,
+					 metricsSelected : $scope.metricsSelected
 				 }
 				 //$scope.actualVis = $.extend(true, {}, chart);
 				 console.log("SCOPE CON LA VISUALIZACIÓN", $scope)
@@ -426,7 +428,9 @@ define(
 				////////////GUARDAR LA VISUALIACION EN EL SCOPE
 				$scope.actualVis = {
 					chartType: "3DBars",
-					chartObject: $.extend(true, {}, bars)
+					chartObject: $.extend(true, {}, bars),
+					bucketsSelected : $scope.bucketsSelected,
+					metricsSelected : $scope.metricsSelected
 				}
 				//$scope.actualVis = $.extend(true, {}, bars);
 				console.log("SCOPE CON LA VISUALIZACIÓN", $scope)
@@ -483,7 +487,9 @@ define(
 					////////////GUARDAR LA VISUALIACION EN EL SCOPE
 					$scope.actualVis = {
  					 chartType: "bubbles",
- 					 chartObject: $.extend(true, {}, bars)
+ 					 chartObject: $.extend(true, {}, bars),
+					 bucketsSelected : $scope.bucketsSelected,
+					 metricsSelected : $scope.metricsSelected
  				 }
 				 //$scope.actualVis = $.extend(true, {}, bars);
  				 console.log("SCOPE CON LA VISUALIZACIÓN", $scope)
@@ -714,7 +720,7 @@ define(
 
 											//SI EXISTE SE CREA DE 0, SI NO HAY QUE PREGUNTAR SI QUIERE SOBREESCRIBIRSE
 											if(response.hits.hits.length == 0){
-												var promiseSave = generatorQueries.createVis(ESService.client, $scope.name, $scope.description, $scope.$parent.actualVis.chartType, $scope.$parent.actualVis.chartObject)
+												var promiseSave = generatorQueries.createVis(ESService.client, $scope.name, $scope.description, $scope.$parent.actualVis.chartType, $scope.$parent.actualVis.chartObject, $scope.$parent.actualVis.metricsSelected, $scope.$parent.actualVis.bucketsSelected)
 												promiseSave.then(function(response, error){
 													if(error){
 														Notification.error("Error saving visualization")
@@ -732,7 +738,7 @@ define(
 
 															 $scope.confirmUpdate = function(result) {
 															 	console.log("Actualizar ---- ", $scope.name, $scope.description, $scope.$parent.actualVis)
-																var promiseUpdate = generatorQueries.updateVis(ESService.client, $scope.name, $scope.description, $scope.$parent.actualVis.chartType, $scope.$parent.actualVis.chartObject)
+																var promiseUpdate = generatorQueries.updateVis(ESService.client, $scope.name, $scope.description, $scope.$parent.actualVis.chartType, $scope.$parent.actualVis.chartObject, $scope.$parent.actualVis.metricsSelected, $scope.$parent.actualVis.bucketsSelected)
 																promiseUpdate.then(function(response, error){
 																	if(error){
 																		Notification.error("Error updating visualization")
@@ -797,7 +803,7 @@ define(
 								})
 
 								$scope.loadVis = function(vis) {
-									console.log("A CARGAR", vis.visobject);
+									console.log("A CARGAR", vis);
 									//dash.removeAll();
 									//visobject.render();
 								}

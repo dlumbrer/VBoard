@@ -108,7 +108,7 @@ function genES (genES) {
   }
 
   //Actualizar VISUALIZACIÓN ES
-  genES.updateVis = function(client, nameP, descriptionP, vistype, visobjectP){
+  genES.updateVis = function(client, nameP, descriptionP, vistype, visobjectP, metrics, buckets){
 
     var promise = client.update({
       index: '.visthreed',
@@ -120,6 +120,8 @@ function genES (genES) {
           description: descriptionP,
           name: nameP,
           visobject: visobjectP,
+          metricsSelected: metrics,
+          bucketsSelected: buckets,
         }
       }
     });
@@ -127,7 +129,7 @@ function genES (genES) {
   }
 
   //CREAR VISUALIZACIÓN ES
-  genES.createVis = function(client, nameP, descriptionP, vistype, visobjectP){
+  genES.createVis = function(client, nameP, descriptionP, vistype, visobjectP, metrics, buckets){
 
     var promise = client.create({
       index: '.visthreed',
@@ -138,6 +140,8 @@ function genES (genES) {
         description: descriptionP,
         name: nameP,
         visobject: visobjectP,
+        metricsSelected: metrics,
+        bucketsSelected: buckets,
       }
     });// function (error, response) {
       //console.log(error, response, "OK")
