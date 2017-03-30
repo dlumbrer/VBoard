@@ -10,6 +10,7 @@ define(
         //////////////////////////////////PRIMERO OBTENER INDICES////////////////////////////////
 				var generatorQueries = genES({})
 				var builderData = builderESDS({})
+				$scope.typeName = "items";
 
         ESService.client.cat.indices({
           h: ['index', 'docs.count']
@@ -204,7 +205,6 @@ define(
 
 				/////////////////////////////////////////////CUANDO SE PULSA EN ADD METRIC/BUCKET////////////////////////////////////////////////////////////////
 				$scope.addMetricForm = function(metricSelected, ind){
-					//No añadir Count por que se hace automaticamente
 					var options = {}
 					switch (metricSelected) {
 							case "count":
@@ -235,7 +235,6 @@ define(
 
 				$scope.addSubbucketForm = function(typeBucket, ind){
 					$scope.fieldBucketSelected = $("#fieldBucketsList" + ind).val();
-					//$scope.sizeSelected = $("#sizeValue").val();
 
 					var options = {}
 					switch (typeBucket) {
@@ -275,18 +274,22 @@ define(
 				///////////////////////////////////////////////////CUANDO SE PULSA EN PLAY//////////////////////////////////////////////////////////
         $scope.showData = function(){
 					//Añadir lo que se ha quedado marcado
-					if(!($scope.metricList && $scope.typesBucket)){
+					if(!($scope.metricList && $scope.bucketList)){
 						Notification.error('Error on Select Data');
 						return;
 					}
 					Object.keys($scope.metricList).forEach(function(key) {
 							$scope.addMetricForm($scope.metricList[key], key)
 					});
-					Object.keys($scope.typesBucket).forEach(function(i) {
-							$scope.addSubbucketForm($scope.typesBucket[i], i)
+					Object.keys($scope.bucketList).forEach(function(i) {
+							$scope.addSubbucketForm($scope.bucketList[i], i)
 					});
 
+					$scope.showDataNowBuilt();
 
+				}
+
+				$scope.showDataNowBuilt = function(){
 					var statements = builderData.buildDataStructure().getDataStructure()
 
 					var promiseSearch = generatorQueries.buildBodybuilderObject(statements, bodybuilder).buildQuery().executeSearch(ESService.client, $scope.indexName)
@@ -333,10 +336,47 @@ define(
         };
 				/////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+				///////////////////////////////////////////////CARGA DE VISUALIZACIONES Y SUS DATOS SELECCIONADOS////////////////////////////////////////////
+				$scope.loadVis = function(vis) {
+					console.log("A CARGAR", vis);
+					//Abro forms rellenos
+					$scope.showTypeForm = true;
+					$scope.showMetricBucketsForm = true;
+
+					if(!$scope.metricList){
+						$scope.metricList = {}
+					}
+					for (var i = 0; i < vis.metricsSelected.length; i++) {
+						$scope.metricList[i] = vis.metricsSelected[i].aggregationType;
+						$scope.showFieldsOfMetricType($scope.metricList[i], i)
+					}
+
+					if(!$scope.bucketList){
+						$scope.bucketList = {}
+					}
+					for (var i = 0; i < vis.bucketsSelected.length; i++) {
+						$scope.bucketList[i] = vis.bucketsSelected[i].aggregationType;
+						$scope.showFieldsOfTypeAggregation($scope.bucketList[i], i)
+					}
+
+					//Cargo los datos con los que he guardado la visualizacion
+					$scope.visType = vis.chartType;
+					$scope.metricsSelected = vis.metricsSelected
+					$scope.bucketsSelected = vis.bucketsSelected
+					builderData.metrics = vis.metricsSelected
+					builderData.buckets = vis.bucketsSelected
+
+
+					//La muestro
+					$scope.showDataNowBuilt();
+					//dash.removeAll();
+					//visobject.render();
+				}
+				/////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 
-/////////////////////////FUNCIONES DE THREDC - CONSTRUCCIÓN DE CHARTS///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////FUNCIONES DE THREEDC - CONSTRUCCIÓN DE CHARTS///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 				z = 0;
 				$scope.build2D = function(visType){
 					var data = $scope.aggregations['agg_' + $scope.bucketsSelected[0].aggregationType + '_' + $scope.bucketsSelected[0].aggregationField].buckets.map(function(bucket) {
@@ -784,6 +824,11 @@ define(
 
 				$scope.openLoadModal = function() {
 
+					if(!$scope.indexName){
+						Notification.error("First select an Index")
+						return
+					}
+
 					ModalService.showModal({
 							templateUrl: 'loadmodal.html',
 							scope: $scope,
@@ -802,11 +847,7 @@ define(
 									$scope.loadedvis = resp.hits.hits;
 								})
 
-								$scope.loadVis = function(vis) {
-									console.log("A CARGAR", vis);
-									//dash.removeAll();
-									//visobject.render();
-								}
+
 
 							}
 					}).then(function(modal) {

@@ -129,7 +129,7 @@
         <div class="row">
           <label class="control-label col-md-2" for="aggregationBucketList0">Type:</label>
           <div class="col-md-4">
-            <select ng-model="typesBucket[0]" class="form-control" id="aggregationBucketList0" ng-change="showFieldsOfTypeAggregation(typesBucket[0], 0)">
+            <select ng-model="bucketList[0]" class="form-control" id="aggregationBucketList0" ng-change="showFieldsOfTypeAggregation(bucketList[0], 0)">
               <option value="terms">Terms</option>
               <option value="date_histogram">Date Histogram</option>
               <option value="histogram">Histogram</option>
@@ -143,13 +143,13 @@
             </select>
           </div>
         </div>
-        <div class="row" ng-show="typesBucket[0]=='terms'">
+        <div class="row" ng-show="bucketList[0]=='terms'">
           <label class="control-label col-md-2" for="bucketsList">Size:</label>
           <div class="col-md-10">
             <input type="number" class="form-control" id="sizeValue0" value="5">
           </div>
         </div>
-        <div class="row" ng-show="typesBucket[0]=='date_histogram'">
+        <div class="row" ng-show="bucketList[0]=='date_histogram'">
           <label class="control-label col-md-2" for="intervalDateHistogram0">Interval:</label>
           <div class="col-md-10">
             <select class="form-control" id="intervalDateHistogram0">
@@ -160,7 +160,7 @@
             </select>
           </div>
         </div>
-        <div class="row" ng-show="typesBucket[0]=='histogram'">
+        <div class="row" ng-show="bucketList[0]=='histogram'">
           <label class="control-label col-md-2" for="intervalHistogram0">Interval:</label>
           <div class="col-md-10">
             <input type="number" class="form-control" id="intervalHistogram0" value="7000">
@@ -174,7 +174,7 @@
         <div class="row">
           <label class="control-label col-md-2" for="aggregationBucketList">Type:</label>
           <div class="col-md-4">
-            <select ng-model="typesBucket[1]" class="form-control" id="aggregationBucketList" ng-change="showFieldsOfTypeAggregation(typesBucket[1], 1)">
+            <select ng-model="bucketList[1]" class="form-control" id="aggregationBucketList" ng-change="showFieldsOfTypeAggregation(bucketList[1], 1)">
               <option value="terms">Terms</option>
               <option value="date_histogram">Date Histogram</option>
               <option value="histogram">Histogram</option>
@@ -188,13 +188,13 @@
             </select>
           </div>
         </div>
-        <div class="row" ng-show="typesBucket[1]=='terms'">
+        <div class="row" ng-show="bucketList[1]=='terms'">
           <label class="control-label col-md-2" for="bucketsList">Size:</label>
           <div class="col-md-10">
             <input type="number" class="form-control" id="sizeValue1" value="5">
           </div>
         </div>
-        <div class="row" ng-show="typesBucket[1]=='date_histogram'">
+        <div class="row" ng-show="bucketList[1]=='date_histogram'">
           <label class="control-label col-md-2" for="intervalDateHistogram1">Interval:</label>
           <div class="col-md-10">
             <select class="form-control" id="intervalDateHistogram1">
@@ -205,7 +205,7 @@
             </select>
           </div>
         </div>
-        <div class="row" ng-show="typesBucket[1]=='histogram'">
+        <div class="row" ng-show="bucketList[1]=='histogram'">
           <label class="control-label col-md-2" for="intervalHistogram1">Interval:</label>
           <div class="col-md-10">
             <input type="number" class="form-control" id="intervalHistogram1" value="7000">
@@ -313,7 +313,7 @@
         </div>
         <div class="modal-body">
           <ul class="list-group">
-            <a href="#" data-dismiss="modal" ng-click="loadVis(vis._source)" class="list-group-item" ng-repeat="vis in loadedvis"><span class="badge">{{vis._source.chartType}}</span>
+            <a href="" data-dismiss="modal" ng-click="loadVis(vis._source)" class="list-group-item" ng-repeat="vis in loadedvis"><span class="badge">{{vis._source.chartType}}</span>
               <h4 class="list-group-item-heading">{{vis._source.name}}</h4>
               <p class="list-group-item-text">{{vis._source.description}}</p>
             </a>
