@@ -83,6 +83,17 @@ define(
 
         ///////////////////////////////////////////////////////////////////////
 
+				////////////////////CUANDO SE CAMBIA DE TIPO DE GRAFICA////////////////
+				$scope.changeTypeVis = function(){
+					$scope.showMetricBucketsForm = false;
+					$scope.metricList = {}
+					$scope.bucketList = {}
+					$scope.metricsSelected = []
+					$scope.bucketsSelected = []
+					builderData.reset()
+				}
+				///////////////////////////////////////////////////////////////////////
+
 				/////////////////////////////////////////////////// MOSTRAR BOTON DE ADD METRIC/BUCKET DEPENDIENDO DEL TIPO DE VISUALIZACIÓN QUE SE HAYA ELEGDO//////////
 				$scope.showAddMetricVisType = function(){
 
@@ -300,6 +311,12 @@ define(
 						$scope.aggregations = resp.aggregations;
 						console.log("Respuesta (Agregaciones)", $scope.aggregations)
 
+						//Resetear visualizaciones
+						/*if(dash.allCharts[0]){
+							dash.allCharts[0].remove()
+						}*/
+						dash.removeAll()
+
 						switch ($scope.visType) {
 								case "pie":
 								case "bars":
@@ -393,7 +410,6 @@ define(
 				 });
 
 
-				 z += 100;
 				 switch (visType) {
 						 case "pie":
 							 chart=dash.pieChart([100,100,z])
@@ -457,7 +473,6 @@ define(
 
 				data = getOrderedDataTD(data);
 
-				z += 600;
 				bars=dash.TDbarsChart([100,100,z])
 				bars.data(data);
 				bars.width(300);
@@ -516,7 +531,6 @@ define(
 
 					data = getOrderedDataBubbles(data);
 
-					z += 600;
 					bars=dash.bubbleChart([100,100,z])
 					bars.data(data);
 					bars.width(300);
