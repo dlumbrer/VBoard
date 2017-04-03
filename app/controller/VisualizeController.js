@@ -725,7 +725,7 @@ define(
            scene.add(axes);
 
 					 //the empty object will be returned with the library functions
-           dash = THREEDC({},camera,scene,renderer,container);
+           dash = THREEDC(camera,scene,renderer,container);
 
 
            dash.renderAll();
