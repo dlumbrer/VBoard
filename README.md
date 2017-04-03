@@ -64,6 +64,8 @@ PUT .visthreed
                 "chartType" : { "type" : "text" },
                 "name" : { "type" : "text" },
                 "description" : { "type" : "text" },
+                "indexOfES" : {"type" : "text"},
+                "typeOfES" : {"type": "text"},
                 "metricsSelected" : { "type": "object" },
                 "bucketsSelected" : { "type": "object" },
                 "visobject" : { "type": "object" }

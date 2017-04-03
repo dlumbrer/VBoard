@@ -5,6 +5,7 @@ define(
 
 	        ///////////////////////////VISUALIZACIONES CARGADAS///////////////////////////
 	        //Me traigo las visualizaciones
+					$scope.editingPanel = true;
 	        var promise = ESService.client.search({
 	          index: ".visthreed",
 	          type: 'items',
@@ -26,25 +27,27 @@ define(
 					}
 
 					//////////////////////////////////////AÑADIR VIS A PANEL//////////////////////
-
-
 					$scope.addToPanel = function(vis){
 						console.log("A AÑADIR", vis);
 
 						switch (vis.chartType) {
 								case "pie":
-										dash.pieChart($scope.actualPanel).data(vis.visobject._data);
+										dash.pieChart($scope.actualPanel).data(vis.visobject._data).addCustomEvents(editVis).render();
 										break
 								case "bars":
+										dash.barsChart($scope.actualPanel).data(vis.visobject._data).render();
+										break;
 								case "line":
+										dash.lineChart($scope.actualPanel).data(vis.visobject._data).render();
+										break;
 								case "curve":
-										$scope.build2D($scope.visType);
+										dash.smoothCurveChart($scope.actualPanel).data(vis.visobject._data).render();
 										break;
 								case "3DBars":
-										$scope.buildTDBarsChart();
+										dash.TDbarsChart($scope.actualPanel).data(vis.visobject._data).gridsOn().render();
 										break;
 								case "bubbles":
-										dash.bubbleChart($scope.actualPanel).data(vis.visobject._data).gridsOn();
+										dash.bubbleChart($scope.actualPanel).data(vis.visobject._data).gridsOn().render();
 										break;
 								default:
 										console.log("Esta vacío")
@@ -52,16 +55,30 @@ define(
 
 						}
 
-						dash.renderAll()
 					}
-
-
-
-
-
 					/////////////////////////////////////////////////////////////////////////////
 
-					///////////////////////////////////////////7THREEDC/////////////////////////////////////////
+					//////////////////////////////////////EDITAR VIS DE PANEL//////////////////////
+					var editVis = function(mesh) {
+						dash.domEvents.bind(mesh, 'click', function(object3d){
+							console.log("llamada a edicion de chart")
+							//mesh.parentChart es el chart completo
+							console.log(mesh.parentChart)
+							console.log(object3d)
+							console.log($scope)
+
+							//Apply para que se apliquen los cambios al $scope
+							$scope.$apply(function(){
+								$scope.editingPanel = false;
+								$scope.editingVis = true;
+							})
+
+						});
+						console.log($scope.editingPanel)
+					}
+					/////////////////////////////////////////////////////////////////////////////
+
+					///////////////////////////////////////////THREEDC/////////////////////////////////////////
 					var container, scene, camera, renderer;
 
 	        //objetc which will contain the library functions

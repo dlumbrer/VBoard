@@ -774,7 +774,7 @@ define(
 
 											//SI EXISTE SE CREA DE 0, SI NO HAY QUE PREGUNTAR SI QUIERE SOBREESCRIBIRSE
 											if(response.hits.hits.length == 0){
-												var promiseSave = generatorQueries.createVis(ESService.client, $scope.name, $scope.description, $scope.$parent.actualVis.chartType, $scope.$parent.actualVis.chartObject, $scope.$parent.actualVis.metricsSelected, $scope.$parent.actualVis.bucketsSelected)
+												var promiseSave = generatorQueries.createVis(ESService.client, $scope.name, $scope.description, $scope.$parent.actualVis.chartType, $scope.$parent.actualVis.chartObject, $scope.$parent.indexName, $scope.$parent.typeName, $scope.$parent.actualVis.metricsSelected, $scope.$parent.actualVis.bucketsSelected)
 												promiseSave.then(function(response, error){
 													if(error){
 														Notification.error("Error saving visualization")
@@ -792,7 +792,7 @@ define(
 
 															 $scope.confirmUpdate = function(result) {
 															 	console.log("Actualizar ---- ", $scope.name, $scope.description, $scope.$parent.actualVis)
-																var promiseUpdate = generatorQueries.updateVis(ESService.client, $scope.name, $scope.description, $scope.$parent.actualVis.chartType, $scope.$parent.actualVis.chartObject, $scope.$parent.actualVis.metricsSelected, $scope.$parent.actualVis.bucketsSelected)
+																var promiseUpdate = generatorQueries.updateVis(ESService.client, $scope.name, $scope.description, $scope.$parent.actualVis.chartType, $scope.$parent.actualVis.chartObject, $scope.$parent.indexName, $scope.$parent.typeName, $scope.$parent.actualVis.metricsSelected, $scope.$parent.actualVis.bucketsSelected)
 																promiseUpdate.then(function(response, error){
 																	if(error){
 																		Notification.error("Error updating visualization")
