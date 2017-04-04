@@ -93,8 +93,8 @@ function genES () {
   genES.checkVis = function(client, nameP, descriptionP, vistype, visobjectP){
 
     var promise = client.search({
-      index: '.visthreed',
-      type: 'items',
+      index: '.vboard',
+      type: 'visthreed',
       size: 5,
       body: {
         "query": {
@@ -112,8 +112,8 @@ function genES () {
   genES.updateVis = function(client, nameP, descriptionP, vistype, visobjectP, index, type, metrics, buckets){
 
     var promise = client.update({
-      index: '.visthreed',
-      type: 'items',
+      index: '.vboard',
+      type: 'visthreed',
       id: vistype + "_" + nameP,
       body: {
         doc: {
@@ -135,8 +135,8 @@ function genES () {
   genES.createVis = function(client, nameP, descriptionP, vistype, visobjectP, index, type, metrics, buckets){
 
     var promise = client.create({
-      index: '.visthreed',
-      type: 'items',
+      index: '.vboard',
+      type: 'visthreed',
       id: vistype + "_" + nameP,
       body: {
         chartType: vistype,

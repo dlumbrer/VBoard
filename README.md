@@ -44,22 +44,22 @@ Go in your browser to http://localhost:8000/ and enjoy!
 * **Show Response (JSON)**: With this button you can see at the bottom of the page the response of ElasticSearch (Hits and Aggregations in JSON) of the data previously selected.
 ![Screenshot](images/exampleresponse.png)
 
-* **Save Visualization**: This button open a modal in order to save the visualization in ElasticSearch. The visualization will be saved in the index (**Previously created**) **.visthreed**. (See __Creation of the index .vissthreed__)
+* **Save Visualization**: This button open a modal in order to save the visualization in ElasticSearch. The visualization will be saved in the index (**Previously created**) **.vboard**. (See __Creation of the index .vissthreed__)
 ![Screenshot](images/examplesave.png)
 
 
-### Creation of the index .visthreed
+### Creation of the index .vboard
 
-To save visualizations you must have created the index **.visthreed**, this is the mapping of the index (__Recommended use Sense or CURL to create it__):
+To save visualizations you must have created the index **.vboard**, this is the mapping of the index (__Recommended use Sense or CURL to create it__):
 
 ```
-PUT .visthreed
+PUT .vboard
 {
     "settings" : {
         "number_of_shards" : 1
     },
     "mappings" : {
-        "items" : {
+        "visthreed" : {
             "properties" : {
                 "chartType" : { "type" : "text" },
                 "name" : { "type" : "text" },

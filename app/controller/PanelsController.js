@@ -11,8 +11,8 @@ define(
 	        //Me traigo las visualizaciones
 					$scope.editingPanel = true;
 	        var promise = ESService.client.search({
-	          index: ".visthreed",
-	          type: 'items',
+	          index: ".vboard",
+	          type: 'visthreed',
 	          size: 10000,
 	          body: { "query": { "match_all": {} } }
 	        });
@@ -90,7 +90,7 @@ define(
 
 	        init();
 	        animate();
-					$scope.createNewPanel([100,100,100],4,[500,500],1);
+					$scope.createNewPanel([100,100,100],4,[500,500],0.6);
 
 	        function init () {
 

@@ -856,8 +856,8 @@ define(
 
 								//Me traigo las visualizaciones
 								var promise = ESService.client.search({
-						      index: ".visthreed",
-						      type: 'items',
+						      index: ".vboard",
+						      type: 'visthreed',
 						      size: 10000,
 						      body: { "query": { "match_all": {} } }
 						    });
