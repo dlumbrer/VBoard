@@ -3,6 +3,10 @@ define(
       function PanelsController($scope, esFactory, ESService, ModalService, Notification) {
 				angular.element(document).ready(function () {
 
+					var generatorQueries = genES()
+					var builderData = builderESDS()
+					var bodybuilder = require('node_modules/bodybuilder/browser/bodybuilder.min')
+
 	        ///////////////////////////VISUALIZACIONES CARGADAS///////////////////////////
 	        //Me traigo las visualizaciones
 					$scope.editingPanel = true;

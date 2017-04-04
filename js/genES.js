@@ -1,5 +1,6 @@
-function genES (genES) {
+function genES () {
   //¿DEBO CONSTRUIR EL OBJETO PASANDOLE POR PARAMETRO EL CLIENTE Y BODYBUILDER O NO?
+  var genEs = {};
   genES.version = "0.0.1";
 
   ///////////////////////////////PRUEBAS//////////////////////////////////////

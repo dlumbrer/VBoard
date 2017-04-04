@@ -1,4 +1,6 @@
-function builderESDS (builderESDS) {
+function builderESDS () {
+
+  var builderESDS = {};
 
   builderESDS.version = "0.0.1";
 
