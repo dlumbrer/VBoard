@@ -63,6 +63,7 @@
     <hr>
       <h3>Metrics:</h3>
       <div class="row">
+        <h4>{{metricList[0].title}}</h4>
         <!-- uib-accordion close-others="oneAtATime">
           <div uib-accordion-group class="panel-default" is-open="status.open">
             <uib-accordion-heading>
@@ -73,7 +74,7 @@
         </uib-accordion -->
         <label class="control-label col-md-2" for="metricList">Type:</label>
         <div class="col-md-10">
-          <select class="form-control" ng-model="metricList[0]" id="metricList" ng-change="showFieldsOfMetricType(metricList[0], 0)">
+          <select class="form-control" ng-model="metricList[0].aggregationType" id="metricList" ng-change="showFieldsOfMetricType(metricList[0].aggregationType, 0)">
             <option value="count">Count</option>
             <option value="avg">Average</option>
             <option value="sum">Sum</option>
@@ -84,7 +85,7 @@
             <option value="cardinality">Unique Count</option>
           </select>
         </div>
-        <div class="col-md-12" ng-show="metricList[0]!='count'">
+        <div class="col-md-12" ng-show="metricList[0].aggregationType!='count'">
           <label class="control-label col-md-2" for="fieldMetricList0">Field:</label>
           <div class="col-md-10">
             <select class="form-control" id="fieldMetricList0">
@@ -98,9 +99,10 @@
       <br>
 
       <div class="row" ng-show="showAddMetricVisType()">
+        <h4>{{metricList[1].title}}</h4>
         <label class="control-label col-md-2" for="metricList">Type:</label>
         <div class="col-md-10">
-          <select class="form-control" ng-model="metricList[1]" id="metricList" ng-change="showFieldsOfMetricType(metricList[1], 1)">
+          <select class="form-control" ng-model="metricList[1].aggregationType" id="metricList" ng-change="showFieldsOfMetricType(metricList[1].aggregationType, 1)">
             <option value="count">Count</option>
             <option value="avg">Average</option>
             <option value="sum">Sum</option>
@@ -111,7 +113,7 @@
             <option value="cardinality">Unique Count</option>
           </select>
         </div>
-        <div class="col-md-12" ng-show="metricList[1]!='count'">
+        <div class="col-md-12" ng-show="metricList[1].aggregationType!='count'">
           <label class="control-label col-md-2" for="fieldMetricList1">Field:</label>
           <div class="col-md-10">
             <select class="form-control" id="fieldMetricList1">
@@ -126,10 +128,11 @@
       <hr>
       <h3>Buckets:</h3>
       <div class="row">
+        <h4>{{bucketList[0].title}}</h4>
         <div class="row">
           <label class="control-label col-md-2" for="aggregationBucketList0">Type:</label>
           <div class="col-md-4">
-            <select ng-model="bucketList[0]" class="form-control" id="aggregationBucketList0" ng-change="showFieldsOfTypeAggregation(bucketList[0], 0)">
+            <select ng-model="bucketList[0].aggregationType" class="form-control" id="aggregationBucketList0" ng-change="showFieldsOfTypeAggregation(bucketList[0].aggregationType, 0)">
               <option value="terms">Terms</option>
               <option value="date_histogram">Date Histogram</option>
               <option value="histogram">Histogram</option>
@@ -143,13 +146,13 @@
             </select>
           </div>
         </div>
-        <div class="row" ng-show="bucketList[0]=='terms'">
+        <div class="row" ng-show="bucketList[0].aggregationType=='terms'">
           <label class="control-label col-md-2" for="bucketsList">Size:</label>
           <div class="col-md-10">
             <input type="number" class="form-control" id="sizeValue0" value="5">
           </div>
         </div>
-        <div class="row" ng-show="bucketList[0]=='date_histogram'">
+        <div class="row" ng-show="bucketList[0].aggregationType=='date_histogram'">
           <label class="control-label col-md-2" for="intervalDateHistogram0">Interval:</label>
           <div class="col-md-10">
             <select class="form-control" id="intervalDateHistogram0">
@@ -160,7 +163,7 @@
             </select>
           </div>
         </div>
-        <div class="row" ng-show="bucketList[0]=='histogram'">
+        <div class="row" ng-show="bucketList[0].aggregationType=='histogram'">
           <label class="control-label col-md-2" for="intervalHistogram0">Interval:</label>
           <div class="col-md-10">
             <input type="number" class="form-control" id="intervalHistogram0" value="7000">
@@ -171,10 +174,11 @@
       <br>
 
       <div class="row" ng-show="showAddSubBucketVisType()">
+        <h4>{{bucketList[1].title}}</h4>
         <div class="row">
           <label class="control-label col-md-2" for="aggregationBucketList">Type:</label>
           <div class="col-md-4">
-            <select ng-model="bucketList[1]" class="form-control" id="aggregationBucketList" ng-change="showFieldsOfTypeAggregation(bucketList[1], 1)">
+            <select ng-model="bucketList[1].aggregationType" class="form-control" id="aggregationBucketList" ng-change="showFieldsOfTypeAggregation(bucketList[1].aggregationType, 1)">
               <option value="terms">Terms</option>
               <option value="date_histogram">Date Histogram</option>
               <option value="histogram">Histogram</option>
@@ -188,13 +192,13 @@
             </select>
           </div>
         </div>
-        <div class="row" ng-show="bucketList[1]=='terms'">
+        <div class="row" ng-show="bucketList[1].aggregationType=='terms'">
           <label class="control-label col-md-2" for="bucketsList">Size:</label>
           <div class="col-md-10">
             <input type="number" class="form-control" id="sizeValue1" value="5">
           </div>
         </div>
-        <div class="row" ng-show="bucketList[1]=='date_histogram'">
+        <div class="row" ng-show="bucketList[1].aggregationType=='date_histogram'">
           <label class="control-label col-md-2" for="intervalDateHistogram1">Interval:</label>
           <div class="col-md-10">
             <select class="form-control" id="intervalDateHistogram1">
@@ -205,7 +209,7 @@
             </select>
           </div>
         </div>
-        <div class="row" ng-show="bucketList[1]=='histogram'">
+        <div class="row" ng-show="bucketList[1].aggregationType=='histogram'">
           <label class="control-label col-md-2" for="intervalHistogram1">Interval:</label>
           <div class="col-md-10">
             <input type="number" class="form-control" id="intervalHistogram1" value="7000">

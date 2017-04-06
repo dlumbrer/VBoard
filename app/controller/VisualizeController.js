@@ -87,10 +87,49 @@ define(
 				$scope.changeTypeVis = function(){
 					$scope.showMetricBucketsForm = false;
 					$scope.metricList = {}
+					$scope.metricList[0] = {}
 					$scope.bucketList = {}
+					$scope.bucketList[0] = {}
 					$scope.metricsSelected = []
 					$scope.bucketsSelected = []
 					builderData.reset()
+					addTitles();
+
+				}
+
+				function addTitles(){
+					switch ($scope.visType) {
+							case "pie":
+							case "bars":
+							case "line":
+							case "curve":
+									$scope.metricList[0].title = "Principal metric"
+									$scope.bucketList[0].title = "Principal bucket"
+									break;
+							case "3DBars":
+									$scope.metricList[0].title = "Bars height"
+									$scope.bucketList[0].title = "X-Axis"
+									if(!$scope.bucketList[1]){
+										$scope.bucketList[1] = {}
+									}
+									$scope.bucketList[1].title = "Z-Axis"
+									break;
+							case "bubbles":
+									$scope.metricList[0].title = "Bubbles height"
+									if(!$scope.metricList[1]){
+										$scope.metricList[1] = {}
+									}
+									$scope.metricList[1].title = "Bubbles radius"
+									$scope.bucketList[0].title = "X-Axis"
+									if(!$scope.bucketList[1]){
+										$scope.bucketList[1] = {}
+									}
+									$scope.bucketList[1].title = "Z-Axis"
+									break;
+							default:
+									return
+
+					}
 				}
 				///////////////////////////////////////////////////////////////////////
 
@@ -290,10 +329,10 @@ define(
 						return;
 					}
 					Object.keys($scope.metricList).forEach(function(key) {
-							$scope.addMetricForm($scope.metricList[key], key)
+							$scope.addMetricForm($scope.metricList[key].aggregationType, key)
 					});
 					Object.keys($scope.bucketList).forEach(function(i) {
-							$scope.addSubbucketForm($scope.bucketList[i], i)
+							$scope.addSubbucketForm($scope.bucketList[i].aggregationType, i)
 					});
 
 					$scope.showDataNowBuilt();
@@ -364,16 +403,22 @@ define(
 						$scope.metricList = {}
 					}
 					for (var i = 0; i < vis.metricsSelected.length; i++) {
-						$scope.metricList[i] = vis.metricsSelected[i].aggregationType;
-						$scope.showFieldsOfMetricType($scope.metricList[i], i)
+						if(!$scope.metricList[i]){
+							$scope.metricList[i] = {}
+						}
+						$scope.metricList[i].aggregationType = vis.metricsSelected[i].aggregationType;
+						$scope.showFieldsOfMetricType($scope.metricList[i].aggregationType, i)
 					}
 
 					if(!$scope.bucketList){
 						$scope.bucketList = {}
 					}
 					for (var i = 0; i < vis.bucketsSelected.length; i++) {
-						$scope.bucketList[i] = vis.bucketsSelected[i].aggregationType;
-						$scope.showFieldsOfTypeAggregation($scope.bucketList[i], i)
+						if(!$scope.bucketList[i]){
+							$scope.bucketList[i] = {}
+						}
+						$scope.bucketList[i].aggregationType = vis.bucketsSelected[i].aggregationType;
+						$scope.showFieldsOfTypeAggregation($scope.bucketList[i].aggregationType, i)
 					}
 
 					//Cargo los datos con los que he guardado la visualizacion
@@ -383,7 +428,7 @@ define(
 					builderData.metrics = vis.metricsSelected
 					builderData.buckets = vis.bucketsSelected
 
-
+					addTitles();
 					//La muestro
 					$scope.showDataNowBuilt();
 					//dash.removeAll();
