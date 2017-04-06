@@ -88,123 +88,13 @@ define(
 						    })
 								promise.then(function (resp) {
 				          console.log("Visualiazcion a editar: ", resp.hits.hits[0])
-
 									vis = resp.hits.hits[0]._source;
-
-									////
-									$scope.showTypeForm = true;
-									$scope.showMetricBucketsForm = true;
-
-									if(!$scope.metricList){
-										$scope.metricList = {}
-									}
-									for (var i = 0; i < vis.metricsSelected.length; i++) {
-										$scope.metricList[i] = vis.metricsSelected[i].aggregationType;
-										$scope.showFieldsOfMetricType($scope.metricList[i], i)
-									}
-
-									if(!$scope.bucketList){
-										$scope.bucketList = {}
-									}
-									for (var i = 0; i < vis.bucketsSelected.length; i++) {
-										$scope.bucketList[i] = vis.bucketsSelected[i].aggregationType;
-										$scope.showFieldsOfTypeAggregation($scope.bucketList[i], i)
-									}
-
-									//Cargo los datos con los que he guardado la visualizacion
-									$scope.visType = vis.chartType;
-									$scope.metricsSelected = vis.metricsSelected
-									$scope.bucketsSelected = vis.bucketsSelected
-									builderData.metrics = vis.metricsSelected
-									builderData.buckets = vis.bucketsSelected
-									///
-
-
-									//el indice actual es el de la visualizacion a editar
-									$scope.indexName = vis.indexOfES
-									$scope.typeName = vis.typeOfES
 				        })
 
 							})
 
 						});
 						console.log($scope.editingPanel)
-					}
-					/////////////////////////////////////////////////////////////////////////////
-
-					//////////////////////////////////////FUNCIONES DE VISCONTROLLER///////////////////////////////////////
-					$scope.showFieldsOfMetricType = function(metricType, index){
-						if(!$scope.fieldsMetric){
-							$scope.fieldsMetric = []
-						}
-
-						switch (metricType) {
-								case "avg":
-								case "sum":
-								case "extended_stats":
-								case "median":
-										$scope.fieldsMetric[index] = [];
-										var allFields = $scope.mapping[$scope.indexName].mappings[$scope.typeName].properties;
-										Object.keys(allFields).forEach(function(key,i) {
-												if(allFields[key].type == "long"){
-													$scope.fieldsMetric[index].push(key)
-												}
-										});
-										break;
-								case "max":
-								case "min":
-										$scope.fieldsMetric[index] = [];
-										var allFields = $scope.mapping[$scope.indexName].mappings[$scope.typeName].properties;
-										Object.keys(allFields).forEach(function(key,i) {
-												if(allFields[key].type == "long" || allFields[key].type == "date"){
-													$scope.fieldsMetric[index].push(key)
-												}
-										});
-										break;
-								case "cardinality":
-										$scope.fieldsMetric[index] = Object.keys($scope.mapping[$scope.indexName].mappings[$scope.typeName].properties);
-										break;
-						}
-					}
-					$scope.showFieldsOfTypeAggregation = function(typeBucket, ind){
-						if(!$scope.fields){
-							$scope.fields = []
-						}
-
-						switch (typeBucket) {
-								case "one":
-								case "terms":
-										//$scope.fields = Object.keys($scope.mapping[$scope.indexName].mappings[$scope.typeName].properties);
-										$scope.fields[ind] = [];
-										var allFields = $scope.mapping[$scope.indexName].mappings[$scope.typeName].properties;
-										Object.keys(allFields).forEach(function(key,index) {
-												if(allFields[key].type == "text"){
-													$scope.fields[ind].push(key + ".keyword")
-												}else{
-													$scope.fields[ind].push(key)
-												}
-										});
-										break;
-										break;
-								case "date_histogram":
-										$scope.fields[ind] = [];
-										var allFields = $scope.mapping[$scope.indexName].mappings[$scope.typeName].properties;
-										Object.keys(allFields).forEach(function(key,index) {
-												if(allFields[key].type == "date"){
-													$scope.fields[ind].push(key)
-												}
-										});
-										break;
-								case "histogram":
-										$scope.fields[ind] = [];
-										var allFields = $scope.mapping[$scope.indexName].mappings[$scope.typeName].properties;
-										Object.keys(allFields).forEach(function(key,index) {
-												if(allFields[key].type == "long"){
-													$scope.fields[ind].push(key)
-												}
-										});
-										break;
-						}
 					}
 					/////////////////////////////////////////////////////////////////////////////
 
