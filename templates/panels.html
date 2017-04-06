@@ -6,7 +6,7 @@
         <div class="row">
           <h4>Click to add: </h4>
           <ul class="list-group">
-            <a href="" data-dismiss="modal" ng-click="addToPanel(vis._source)" class="list-group-item" ng-repeat="vis in loadedvis"><span class="badge">{{vis._source.chartType}}</span>
+            <a href="" data-dismiss="modal" ng-click="addToPanel(vis)" class="list-group-item" ng-repeat="vis in loadedvis"><span class="badge">{{vis._source.chartType}}</span>
               <h5 class="list-group-item-heading">{{vis._source.name}}</h5>
               <p class="list-group-item-text">{{vis._source.description}}</p>
             </a>

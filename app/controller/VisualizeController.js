@@ -855,12 +855,7 @@ define(
 							controller: function($scope, close) {
 
 								//Me traigo las visualizaciones
-								var promise = ESService.client.search({
-						      index: ".vboard",
-						      type: 'visthreed',
-						      size: 10000,
-						      body: { "query": { "match_all": {} } }
-						    });
+								var promise = genES.loadAllVis(ESService.client);
 
 								promise.then(function (resp) {
 									console.log("Cargadas: ", resp.hits.hits)

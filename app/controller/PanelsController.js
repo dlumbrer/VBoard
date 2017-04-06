@@ -10,13 +10,7 @@ define(
 	        ///////////////////////////VISUALIZACIONES CARGADAS///////////////////////////
 	        //Me traigo las visualizaciones
 					$scope.editingPanel = true;
-	        var promise = ESService.client.search({
-	          index: ".vboard",
-	          type: 'visthreed',
-	          size: 10000,
-	          body: { "query": { "match_all": {} } }
-	        });
-
+	        var promise = genES.loadAllVis(ESService.client)
 	        promise.then(function (resp) {
 	          console.log("Cargadas: ", resp.hits.hits)
 	          $scope.loadedvis = resp.hits.hits;
@@ -25,33 +19,36 @@ define(
 
 					$scope.createNewPanel = function(position, nchart, dimension, op){
 						$scope.actualPanel=dash.addPanel(position, nchart, dimension, op);
-
-						dash.renderAll()
+						console.log($scope.actualPanel)
+						//dash.renderAll()
 
 					}
 
 					//////////////////////////////////////AÑADIR VIS A PANEL//////////////////////
-					$scope.addToPanel = function(vis){
-						console.log("A AÑADIR", vis);
+					$scope.addToPanel = function(visall){
+						console.log("A AÑADIR", visall);
+
+						vis = visall._source;
+
 
 						switch (vis.chartType) {
 								case "pie":
-										dash.pieChart($scope.actualPanel).data(vis.visobject._data).addCustomEvents(editVis).render();
+										dash.pieChart($scope.actualPanel).data(vis.visobject._data).id(visall._id).addCustomEvents(editVis).render();
 										break
 								case "bars":
-										dash.barsChart($scope.actualPanel).data(vis.visobject._data).render();
+										dash.barsChart($scope.actualPanel).data(vis.visobject._data).id(visall._id).render();
 										break;
 								case "line":
-										dash.lineChart($scope.actualPanel).data(vis.visobject._data).render();
+										dash.lineChart($scope.actualPanel).data(vis.visobject._data).id(visall._id).render();
 										break;
 								case "curve":
-										dash.smoothCurveChart($scope.actualPanel).data(vis.visobject._data).render();
+										dash.smoothCurveChart($scope.actualPanel).data(vis.visobject._data).id(visall._id).render();
 										break;
 								case "3DBars":
-										dash.TDbarsChart($scope.actualPanel).data(vis.visobject._data).gridsOn().render();
+										dash.TDbarsChart($scope.actualPanel).data(vis.visobject._data).id(visall._id).gridsOn().render();
 										break;
 								case "bubbles":
-										dash.bubbleChart($scope.actualPanel).data(vis.visobject._data).gridsOn().render();
+										dash.bubbleChart($scope.actualPanel).data(vis.visobject._data).id(visall._id).gridsOn().render();
 										break;
 								default:
 										console.log("Esta vacío")
@@ -67,18 +64,147 @@ define(
 						dash.domEvents.bind(mesh, 'click', function(object3d){
 							console.log("llamada a edicion de chart")
 							//mesh.parentChart es el chart completo
-							console.log(mesh.parentChart)
-							console.log(object3d)
-							console.log($scope)
+							console.log("Objeto cargado", mesh.parentChart)
+							idtosearch = mesh.parentChart._id
+							//console.log(object3d)
+							//console.log($scope)
 
 							//Apply para que se apliquen los cambios al $scope
 							$scope.$apply(function(){
 								$scope.editingPanel = false;
 								$scope.editingVis = true;
+
+								var promise = ESService.client.search({
+						      index: '.vboard',
+						      type: 'visthreed',
+						      size: 5,
+						      body: {
+						        "query": {
+						          "terms": {
+						            "_id": [idtosearch]
+						          }
+						        }
+						      }
+						    })
+								promise.then(function (resp) {
+				          console.log("Visualiazcion a editar: ", resp.hits.hits[0])
+
+									vis = resp.hits.hits[0]._source;
+
+									////
+									$scope.showTypeForm = true;
+									$scope.showMetricBucketsForm = true;
+
+									if(!$scope.metricList){
+										$scope.metricList = {}
+									}
+									for (var i = 0; i < vis.metricsSelected.length; i++) {
+										$scope.metricList[i] = vis.metricsSelected[i].aggregationType;
+										$scope.showFieldsOfMetricType($scope.metricList[i], i)
+									}
+
+									if(!$scope.bucketList){
+										$scope.bucketList = {}
+									}
+									for (var i = 0; i < vis.bucketsSelected.length; i++) {
+										$scope.bucketList[i] = vis.bucketsSelected[i].aggregationType;
+										$scope.showFieldsOfTypeAggregation($scope.bucketList[i], i)
+									}
+
+									//Cargo los datos con los que he guardado la visualizacion
+									$scope.visType = vis.chartType;
+									$scope.metricsSelected = vis.metricsSelected
+									$scope.bucketsSelected = vis.bucketsSelected
+									builderData.metrics = vis.metricsSelected
+									builderData.buckets = vis.bucketsSelected
+									///
+
+
+									//el indice actual es el de la visualizacion a editar
+									$scope.indexName = vis.indexOfES
+									$scope.typeName = vis.typeOfES
+				        })
+
 							})
 
 						});
 						console.log($scope.editingPanel)
+					}
+					/////////////////////////////////////////////////////////////////////////////
+
+					//////////////////////////////////////FUNCIONES DE VISCONTROLLER///////////////////////////////////////
+					$scope.showFieldsOfMetricType = function(metricType, index){
+						if(!$scope.fieldsMetric){
+							$scope.fieldsMetric = []
+						}
+
+						switch (metricType) {
+								case "avg":
+								case "sum":
+								case "extended_stats":
+								case "median":
+										$scope.fieldsMetric[index] = [];
+										var allFields = $scope.mapping[$scope.indexName].mappings[$scope.typeName].properties;
+										Object.keys(allFields).forEach(function(key,i) {
+												if(allFields[key].type == "long"){
+													$scope.fieldsMetric[index].push(key)
+												}
+										});
+										break;
+								case "max":
+								case "min":
+										$scope.fieldsMetric[index] = [];
+										var allFields = $scope.mapping[$scope.indexName].mappings[$scope.typeName].properties;
+										Object.keys(allFields).forEach(function(key,i) {
+												if(allFields[key].type == "long" || allFields[key].type == "date"){
+													$scope.fieldsMetric[index].push(key)
+												}
+										});
+										break;
+								case "cardinality":
+										$scope.fieldsMetric[index] = Object.keys($scope.mapping[$scope.indexName].mappings[$scope.typeName].properties);
+										break;
+						}
+					}
+					$scope.showFieldsOfTypeAggregation = function(typeBucket, ind){
+						if(!$scope.fields){
+							$scope.fields = []
+						}
+
+						switch (typeBucket) {
+								case "one":
+								case "terms":
+										//$scope.fields = Object.keys($scope.mapping[$scope.indexName].mappings[$scope.typeName].properties);
+										$scope.fields[ind] = [];
+										var allFields = $scope.mapping[$scope.indexName].mappings[$scope.typeName].properties;
+										Object.keys(allFields).forEach(function(key,index) {
+												if(allFields[key].type == "text"){
+													$scope.fields[ind].push(key + ".keyword")
+												}else{
+													$scope.fields[ind].push(key)
+												}
+										});
+										break;
+										break;
+								case "date_histogram":
+										$scope.fields[ind] = [];
+										var allFields = $scope.mapping[$scope.indexName].mappings[$scope.typeName].properties;
+										Object.keys(allFields).forEach(function(key,index) {
+												if(allFields[key].type == "date"){
+													$scope.fields[ind].push(key)
+												}
+										});
+										break;
+								case "histogram":
+										$scope.fields[ind] = [];
+										var allFields = $scope.mapping[$scope.indexName].mappings[$scope.typeName].properties;
+										Object.keys(allFields).forEach(function(key,index) {
+												if(allFields[key].type == "long"){
+													$scope.fields[ind].push(key)
+												}
+										});
+										break;
+						}
 					}
 					/////////////////////////////////////////////////////////////////////////////
 

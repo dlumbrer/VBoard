@@ -89,6 +89,19 @@ function genES () {
     return promise
   }
 
+  //Cargar todas las visualizaciones
+  genES.loadAllVis = function(client){
+
+    var promise = client.search({
+      index: ".vboard",
+      type: 'visthreed',
+      size: 10000,
+      body: { "query": { "match_all": {} } }
+    });
+
+    return promise;
+  }
+
   //COMPROBAR VISUALIZACIÓN EN ES
   genES.checkVis = function(client, nameP, descriptionP, vistype, visobjectP){
 
