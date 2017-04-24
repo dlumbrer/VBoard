@@ -88,7 +88,7 @@
         <div class="col-md-12" ng-show="metricList[0].aggregationType!='count'">
           <label class="control-label col-md-2" for="fieldMetricList0">Field:</label>
           <div class="col-md-10">
-            <select class="form-control" id="fieldMetricList0">
+            <select class="form-control" id="fieldMetricList0" ng-model="metricList[0].aggregationField">
               <option ng-repeat="fieldMetric in fieldsMetric[0]" value="{{fieldMetric}}">{{fieldMetric}}</option>
             </select>
           </div>
@@ -116,7 +116,7 @@
         <div class="col-md-12" ng-show="metricList[1].aggregationType!='count'">
           <label class="control-label col-md-2" for="fieldMetricList1">Field:</label>
           <div class="col-md-10">
-            <select class="form-control" id="fieldMetricList1">
+            <select class="form-control" id="fieldMetricList1" ng-model="metricList[1].aggregationField">
               <option ng-repeat="fieldMetric in fieldsMetric[1]" value="{{fieldMetric}}">{{fieldMetric}}</option>
             </select>
           </div>
@@ -141,7 +141,7 @@
           </div>
           <label class="control-label col-md-2" for="fieldBucketsList0">Field:</label>
           <div class="col-md-4">
-            <select class="form-control" id="fieldBucketsList0">
+            <select class="form-control" id="fieldBucketsList0" ng-model="bucketList[0].aggregationField">
               <option ng-repeat="field in fields[0]" value="{{field}}">{{field}}</option>
             </select>
           </div>
@@ -187,7 +187,7 @@
           </div>
           <label class="control-label col-md-2" for="fieldBucketsList1">Field:</label>
           <div class="col-md-4">
-            <select class="form-control" id="fieldBucketsList1">
+            <select class="form-control" id="fieldBucketsList1" ng-model="bucketList[1].aggregationField">
               <option ng-repeat="field in fields[1]" value="{{field}}">{{field}}</option>
             </select>
           </div>

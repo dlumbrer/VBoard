@@ -408,6 +408,9 @@ define(
 						}
 						$scope.metricList[i].aggregationType = vis.metricsSelected[i].aggregationType;
 						$scope.showFieldsOfMetricType($scope.metricList[i].aggregationType, i)
+						if(vis.metricsSelected[i].aggregationField){
+							$scope.metricList[i].aggregationField = vis.metricsSelected[i].aggregationField;
+						}
 					}
 
 					if(!$scope.bucketList){
@@ -419,6 +422,7 @@ define(
 						}
 						$scope.bucketList[i].aggregationType = vis.bucketsSelected[i].aggregationType;
 						$scope.showFieldsOfTypeAggregation($scope.bucketList[i].aggregationType, i)
+						$scope.bucketList[i].aggregationField = vis.bucketsSelected[i].aggregationField;
 					}
 
 					//Cargo los datos con los que he guardado la visualizacion
