@@ -18,6 +18,9 @@ define(
 
 
 					$scope.createNewPanel = function(position, nchart, dimension, op){
+						if($scope.actualPanel){
+							$scope.actualPanel.remove()
+						}
 						$scope.actualPanel=dash.addPanel(position, nchart, dimension, op);
 						console.log($scope.actualPanel)
 						//dash.renderAll()
@@ -96,6 +99,34 @@ define(
 						});
 						console.log($scope.editingPanel)
 					}
+					/////////////////////////////////////////////////////////////////////////////
+
+
+					///////////////////////////////////NEW PANEL////////////////////////////////////
+
+					$scope.openNewPanelModal = function() {
+						ModalService.showModal({
+						    templateUrl: 'newpanelmodal.html',
+								scope: $scope,
+						    controller: function($scope, close) {
+
+									 $scope.confirmCreate = function(result) {
+									 	console.log("NEW PANEL TO CREATE", JSON.parse($scope.position), JSON.parse($scope.dimension))
+										$scope.createNewPanel(JSON.parse($scope.position) ,4, JSON.parse($scope.dimension), $scope.opacity);
+									 };
+
+									 $scope.cancel = function(result) {
+									 	console.log("cancel")
+									 };
+									 ///////////////////////////////////////////////////////////////////////7
+								}
+						}).then(function(modal) {
+						    modal.element.modal();
+						    modal.close.then(function(result) {
+						        console.log("modal cerrado")
+						    });
+						});
+					};
 					/////////////////////////////////////////////////////////////////////////////
 
 					///////////////////////////////////////////THREEDC/////////////////////////////////////////

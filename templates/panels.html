@@ -16,6 +16,7 @@
         <div class="row">
           <h4>Options: </h4>
           <button type="button" class="btn btn-default btn-sm" ng-click="editVis()">Switch mode</button>
+          <button type="button" class="col-md-12 btn btn-info" ng-click="openNewPanelModal()">New Panel</button>
         </div>
       </div>
 
@@ -28,6 +29,64 @@
     <div class="col-md-9" id="ThreeJSPanels" style="height:100%"></div>
 
   </div>
+
+
+  <script type="text/ng-template" id="newpanelmodal.html">
+    <div class="modal fade">
+      <div class="modal-dialog modal-lg">
+       <div class="modal-content">
+         <div class="modal-header">
+           <button type="button" class="close" ng-click="close()" data-dismiss="modal" aria-hidden="true">&times;</button>
+           <h4 class="modal-title">New Panel</h4>
+         </div>
+         <div class="modal-body">
+
+           <form class="form-horizontal" role="form">
+             <div class="form-group">
+               <label for="position" class="col-sm-2 control-label">Position</label>
+               <div class="col-sm-10">
+                 <input type="text" class="form-control" ng-model="position" id="position" placeholder="[x,y,z]" ng-model="position">
+               </div>
+             </div>
+
+             <div class="form-group">
+               <label for="rows" class="col-sm-2 control-label">Rows</label>
+               <div class="col-sm-10">
+                 <input type="number" class="form-control" ng-model="rows" id="rows" placeholder="number of rows" ng-model="rows">
+               </div>
+             </div>
+
+             <div class="form-group">
+               <label for="columns" class="col-sm-2 control-label">Columns</label>
+               <div class="col-sm-10">
+                 <input type="number" class="form-control" ng-model="columns" id="columns" placeholder="number of columns" ng-model="columns">
+               </div>
+             </div>
+
+             <div class="form-group">
+               <label for="dimension" class="col-sm-2 control-label">Dimension</label>
+               <div class="col-sm-10">
+                 <input type="text" class="form-control" ng-model="dimension" id="dimension" placeholder="[width, height]" ng-model="dimension">
+               </div>
+             </div>
+
+             <div class="form-group">
+               <label for="opacity" class="col-sm-2 control-label">Opacity</label>
+               <div class="col-sm-10">
+                 <input type="number" step="0.1" max="1" min="0" class="form-control" ng-model="opacity" id="opacity" placeholder="0..1" ng-model="opacity">
+               </div>
+             </div>
+           </form>
+         </div>
+
+         <div class="modal-footer">
+           <button type="button" ng-click="confirmCreate()" class="btn btn-primary" data-dismiss="modal">Create</button>
+           <button type="button" ng-click="cancel()" class="btn" data-dismiss="modal">Cancel</button>
+         </div>
+       </div>
+      </div>
+    </div>
+   </script>
 </div>
 
 
