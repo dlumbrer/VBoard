@@ -77,18 +77,7 @@ define(
 								$scope.editingPanel = false;
 								$scope.editingVis = true;
 
-								var promise = ESService.client.search({
-						      index: '.vboard',
-						      type: 'visthreed',
-						      size: 5,
-						      body: {
-						        "query": {
-						          "terms": {
-						            "_id": [idtosearch]
-						          }
-						        }
-						      }
-						    })
+								var promise = generatorQueries.getVis(ESService.client, idtosearch);
 								promise.then(function (resp) {
 				          console.log("Visualiazcion a editar: ", resp.hits.hits[0])
 									vis = resp.hits.hits[0]._source;
@@ -118,7 +107,6 @@ define(
 									 $scope.cancel = function(result) {
 									 	console.log("cancel")
 									 };
-									 ///////////////////////////////////////////////////////////////////////7
 								}
 						}).then(function(modal) {
 						    modal.element.modal();
@@ -128,6 +116,96 @@ define(
 						});
 					};
 					/////////////////////////////////////////////////////////////////////////////
+					///////////////////////////////////SAVE VIS////////////////////////////////////
+
+					$scope.openSavePanelModal = function() {
+
+						if(!$scope.actualPanel){
+							Notification.error("First build a panel")
+							return
+						}
+
+							ModalService.showModal({
+			            templateUrl: 'savepanelmodal.html',
+									scope: $scope,
+			            controller: function($scope, close) {
+
+										 $scope.save = function(result) {
+										 	console.log("Queremos guardar ---- ", $scope.name, $scope.description, $scope.$parent.actualPanel)
+
+
+											/*var promiseCheck = generatorQueries.checkVis(ESService.client, $scope.name, $scope.description, $scope.$parent.actualVis.chartType, $scope.$parent.actualVis.chartObject)
+											//ERROR GUARDANDO COMPROBAMOS SI EXISTE
+											promiseCheck.then(function(response, error){
+												if(error){
+													Notification.error("ElasticSearch error")
+												}
+
+												//SI EXISTE SE CREA DE 0, SI NO HAY QUE PREGUNTAR SI QUIERE SOBREESCRIBIRSE
+												if(response.hits.hits.length == 0){
+													//Meto id dentro del objeto de la visualizacion
+													$scope.$parent.actualVis.chartObject.id($scope.$parent.actualVis.chartType + "_" + $scope.name)
+													//Guardo
+													var promiseSave = generatorQueries.createVis(ESService.client, $scope.name, $scope.description, $scope.$parent.actualVis.chartType, $scope.$parent.actualVis.chartObject, $scope.$parent.indexName, $scope.$parent.typeName, $scope.$parent.actualVis.metricsSelected, $scope.$parent.actualVis.bucketsSelected)
+													promiseSave.then(function(response, error){
+														if(error){
+															Notification.error("Error saving visualization")
+															return
+														}
+														Notification.success("Visualization saved")
+													})
+												}else{
+													console.log("Modal of confirm");
+													//MODAL DE CONFIRMACION
+													ModalService.showModal({
+									            templateUrl: 'modalconfirm.html',
+															scope: $scope,
+									            controller: function($scope, close) {
+
+																 $scope.confirmUpdate = function(result) {
+																 	console.log("Actualizar ---- ", $scope.name, $scope.description, $scope.$parent.actualVis)
+																	//Meto id dentro del objeto de la visualizacion
+																	$scope.$parent.actualVis.chartObject.id($scope.$parent.actualVis.chartType + "_" + $scope.name)
+																	//Guardo
+																	var promiseUpdate = generatorQueries.updateVis(ESService.client, $scope.name, $scope.description, $scope.$parent.actualVis.chartType, $scope.$parent.actualVis.chartObject, $scope.$parent.indexName, $scope.$parent.typeName, $scope.$parent.actualVis.metricsSelected, $scope.$parent.actualVis.bucketsSelected)
+																	promiseUpdate.then(function(response, error){
+																		if(error){
+																			Notification.error("Error updating visualization")
+																			return
+																		}
+																		Notification.success("Visualization udated")
+																	})
+																 };
+
+																 $scope.cancelUpdate = function(result) {
+																 	console.log("cancel update")
+																 };
+
+															}
+									        }).then(function(modal) {
+									            modal.element.modal();
+									            modal.close.then(function(result) {
+									                console.log("modal cerrado")
+									            });
+									        });
+													///////////////
+												}
+											})
+											*/
+										 };
+
+										 $scope.cancel = function(result) {
+										 	console.log("cancel")
+										 };
+										 ///////////////////////////////////////////////////////////////////////7
+									}
+			        }).then(function(modal) {
+			            modal.element.modal();
+			            modal.close.then(function(result) {
+			                console.log("modal cerrado")
+			            });
+			        });
+					};
 
 					///////////////////////////////////////////THREEDC/////////////////////////////////////////
 					var container, scene, camera, renderer;

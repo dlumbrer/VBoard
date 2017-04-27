@@ -103,7 +103,7 @@ function genES () {
   }
 
   //COMPROBAR VISUALIZACIÓN EN ES
-  genES.checkVis = function(client, nameP, descriptionP, vistype, visobjectP){
+  genES.checkVis = function(client, nameP, descriptionP){
 
     var promise = client.search({
       index: '.vboard',
@@ -113,6 +113,25 @@ function genES () {
         "query": {
           "terms": {
             "_id": [ vistype+"_"+nameP ]
+          }
+        }
+      }
+    })
+
+    return promise;
+  }
+
+  //Cargar Visualizacion
+  genES.getVis = function(client, idtosearch){
+
+    var promise = client.search({
+      index: '.vboard',
+      type: 'visthreed',
+      size: 5,
+      body: {
+        "query": {
+          "terms": {
+            "_id": [ idtosearch ]
           }
         }
       }

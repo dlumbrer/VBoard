@@ -16,7 +16,9 @@
         <div class="row">
           <h4>Options: </h4>
           <button type="button" class="btn btn-default btn-sm" ng-click="editVis()">Switch mode</button>
-          <button type="button" class="col-md-12 btn btn-info" ng-click="openNewPanelModal()">New Panel</button>
+          <button type="button" class="col-md-12 btn btn-default" ng-click="openNewPanelModal()">New Panel</button>
+          <button type="button" class="col-md-12 btn btn-success" ng-click="openSavePanelModal()">Save Panel</button>
+          <button type="button" class="col-md-12 btn btn-primary" ng-click="openLoadPanelModal()">Load Panel</button>
         </div>
       </div>
 
@@ -87,6 +89,58 @@
       </div>
     </div>
    </script>
+
+   <script type="text/ng-template" id="savepanelmodal.html">
+     <div class="modal fade">
+       <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" ng-click="close()" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h4 class="modal-title">Save Panel</h4>
+          </div>
+          <div class="modal-body">
+
+        <form class="form-horizontal" role="form">
+          <div class="form-group">
+            <label for="name" class="col-sm-2 control-label">Name</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" ng-model="name" id="name" placeholder="Panel Name" ng-model="name">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="age" class="col-sm-2 control-label">Description</label>
+            <div class="col-sm-10">
+              <input type="text" class="form-control" ng-model="description" id="description" placeholder="Description" ng-model="name">
+            </div>
+          </div>
+        </form>
+
+          </div>
+          <div class="modal-footer">
+            <button type="button" ng-click="save()" class="btn btn-primary" data-dismiss="modal">Save!</button>
+            <button type="button" ng-click="cancel()" class="btn" data-dismiss="modal">Cancel</button>
+          </div>
+        </div>
+       </div>
+     </div>
+    </script>
+
+    <script type="text/ng-template" id="updatepanelmodalconfirm.html">
+      <div class="modal fade">
+        <div class="modal-dialog modal-lg">
+         <div class="modal-content">
+           <div class="modal-header">
+             <button type="button" class="close" ng-click="close()" data-dismiss="modal" aria-hidden="true">&times;</button>
+             <h4 class="modal-title">A panel with this name is already saved. Are you sure to overwrite it?</h4>
+           </div>
+           <div class="modal-body text-center" >
+             <button type="button" ng-click="confirmUpdate()" class="btn btn-primary" data-dismiss="modal">Yes</button>
+             <button type="button" ng-click="cancelUpdate()" class="btn" data-dismiss="modal">No</button>
+           </div>
+         </div>
+        </div>
+      </div>
+     </script>
 </div>
 
 
