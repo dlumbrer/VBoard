@@ -134,46 +134,56 @@ define(
 										 	console.log("Queremos guardar ---- ", $scope.name, $scope.description, $scope.$parent.actualPanel)
 
 
-											/*var promiseCheck = generatorQueries.checkVis(ESService.client, $scope.name, $scope.description, $scope.$parent.actualVis.chartType, $scope.$parent.actualVis.chartObject)
+											//TODO: Cambiar filas y columnas por nueva versión de adrian
+											var arrayChartsToSave = [];
+											for (var i = 0; i < $scope.$parent.actualPanel.charts.length; i++) {
+												var c = {
+													row: 0,
+													column: 0,
+													id : $scope.$parent.actualPanel.charts[i]._id
+												}
+												arrayChartsToSave.push(c)
+											}
+
+											var positionPanel = "[" + $scope.$parent.actualPanel.coords.x + "," + $scope.$parent.actualPanel.coords.y + "," + $scope.$parent.actualPanel.coords.z + "]";
+
+
+											var promiseCheck = generatorQueries.checkPanel(ESService.client, $scope.name)
 											//ERROR GUARDANDO COMPROBAMOS SI EXISTE
 											promiseCheck.then(function(response, error){
 												if(error){
 													Notification.error("ElasticSearch error")
 												}
 
-												//SI EXISTE SE CREA DE 0, SI NO HAY QUE PREGUNTAR SI QUIERE SOBREESCRIBIRSE
+												//SI NO EXISTE SE CREA DE 0, SI NO HAY QUE PREGUNTAR SI QUIERE SOBREESCRIBIRSE
 												if(response.hits.hits.length == 0){
-													//Meto id dentro del objeto de la visualizacion
-													$scope.$parent.actualVis.chartObject.id($scope.$parent.actualVis.chartType + "_" + $scope.name)
 													//Guardo
-													var promiseSave = generatorQueries.createVis(ESService.client, $scope.name, $scope.description, $scope.$parent.actualVis.chartType, $scope.$parent.actualVis.chartObject, $scope.$parent.indexName, $scope.$parent.typeName, $scope.$parent.actualVis.metricsSelected, $scope.$parent.actualVis.bucketsSelected)
-													promiseSave.then(function(response, error){
+													var promise = generatorQueries.createPanel(ESService.client, $scope.name, $scope.description, positionPanel, "0", "0", "[500,500]", "0", arrayChartsToSave);
+													promise.then(function(response, error){
 														if(error){
-															Notification.error("Error saving visualization")
+															Notification.error("Error creating panel")
 															return
 														}
-														Notification.success("Visualization saved")
+														Notification.success("Panel created")
 													})
 												}else{
 													console.log("Modal of confirm");
 													//MODAL DE CONFIRMACION
 													ModalService.showModal({
-									            templateUrl: 'modalconfirm.html',
+									            templateUrl: 'updatepanelmodalconfirm.html',
 															scope: $scope,
 									            controller: function($scope, close) {
 
 																 $scope.confirmUpdate = function(result) {
-																 	console.log("Actualizar ---- ", $scope.name, $scope.description, $scope.$parent.actualVis)
-																	//Meto id dentro del objeto de la visualizacion
-																	$scope.$parent.actualVis.chartObject.id($scope.$parent.actualVis.chartType + "_" + $scope.name)
+																 	console.log("Actualizar ---- ", $scope.name, $scope.description, $scope.$parent.actualPanel)
 																	//Guardo
-																	var promiseUpdate = generatorQueries.updateVis(ESService.client, $scope.name, $scope.description, $scope.$parent.actualVis.chartType, $scope.$parent.actualVis.chartObject, $scope.$parent.indexName, $scope.$parent.typeName, $scope.$parent.actualVis.metricsSelected, $scope.$parent.actualVis.bucketsSelected)
+																	var promiseUpdate = generatorQueries.updatePanel(ESService.client, $scope.name, $scope.description, positionPanel, "0", "0", "[500,500]", "0", arrayChartsToSave);
 																	promiseUpdate.then(function(response, error){
 																		if(error){
-																			Notification.error("Error updating visualization")
+																			Notification.error("Error updating panel")
 																			return
 																		}
-																		Notification.success("Visualization udated")
+																		Notification.success("Panel updated")
 																	})
 																 };
 
@@ -191,7 +201,7 @@ define(
 													///////////////
 												}
 											})
-											*/
+
 										 };
 
 										 $scope.cancel = function(result) {
@@ -206,6 +216,41 @@ define(
 			            });
 			        });
 					};
+
+
+					/////////////////////////////LOAD VIS/////////////////////////////////////////
+					$scope.openLoadPanelModal = function() {
+
+						/*if(!$scope.indexName){
+							Notification.error("First select an Index")
+							return
+						}*/
+
+						ModalService.showModal({
+								templateUrl: 'loadpanelmodal.html',
+								scope: $scope,
+								controller: function($scope, close) {
+
+									//Me traigo las visualizaciones
+									var promise = genES.loadAllPanels(ESService.client);
+
+									promise.then(function (resp) {
+										console.log("Cargadas: ", resp.hits.hits)
+										$scope.loadedpanels = resp.hits.hits;
+									})
+
+
+
+								}
+						}).then(function(modal) {
+								modal.element.modal();
+								modal.close.then(function(result) {
+										console.log("modal cerrado de carga")
+								});
+						});
+					};
+					//////////////////////////////////////////////////////////////////////////////
+
 
 					///////////////////////////////////////////THREEDC/////////////////////////////////////////
 					var container, scene, camera, renderer;

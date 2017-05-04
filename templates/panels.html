@@ -15,7 +15,7 @@
 
         <div class="row">
           <h4>Options: </h4>
-          <button type="button" class="btn btn-default btn-sm" ng-click="editVis()">Switch mode</button>
+          <!-- button type="button" class="btn btn-default btn-sm" ng-click="editVis()">Switch mode</button-->
           <button type="button" class="col-md-12 btn btn-default" ng-click="openNewPanelModal()">New Panel</button>
           <button type="button" class="col-md-12 btn btn-success" ng-click="openSavePanelModal()">Save Panel</button>
           <button type="button" class="col-md-12 btn btn-primary" ng-click="openLoadPanelModal()">Load Panel</button>
@@ -141,6 +141,30 @@
         </div>
       </div>
      </script>
+
+     <script type="text/ng-template" id="loadpanelmodal.html">
+       <div class="modal fade">
+         <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" ng-click="close()" data-dismiss="modal" aria-hidden="true">&times;</button>
+              <h4 class="modal-title">Choose panel</h4>
+            </div>
+            <div class="modal-body">
+              <ul class="list-group">
+                <a href="" data-dismiss="modal" ng-click="loadPanel(panel._source)" class="list-group-item" ng-repeat="panel in loadedpanels"><span class="badge">{{panel._source.rows}}x{{panel._source.columns}} - {{panel._source.charts.length}} charts</span>
+                  <h4 class="list-group-item-heading">{{panel._source.name}}</h4>
+                  <p class="list-group-item-text">{{panel._source.description}}</p>
+                </a>
+              </ul>
+            </div>
+            <div class="modal-footer">
+              <button type="button" ng-click="cancel()" class="btn" data-dismiss="modal">Cancel</button>
+            </div>
+          </div>
+         </div>
+       </div>
+      </script>
 </div>
 
 

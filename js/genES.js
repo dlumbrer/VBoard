@@ -102,6 +102,19 @@ function genES () {
     return promise;
   }
 
+  //Cargar todos los paneles
+  genES.loadAllPanels = function(client){
+
+    var promise = client.search({
+      index: ".vboard",
+      type: 'panelthreedc',
+      size: 10000,
+      body: { "query": { "match_all": {} } }
+    });
+
+    return promise;
+  }
+
   //COMPROBAR VISUALIZACIÓN EN ES
   genES.checkVis = function(client, nameP, descriptionP){
 
@@ -113,6 +126,25 @@ function genES () {
         "query": {
           "terms": {
             "_id": [ vistype+"_"+nameP ]
+          }
+        }
+      }
+    })
+
+    return promise;
+  }
+
+  //COMPROBAR PANEL EN ES
+  genES.checkPanel = function(client, nameP){
+
+    var promise = client.search({
+      index: '.vboard',
+      type: 'panelthreedc',
+      size: 5,
+      body: {
+        "query": {
+          "terms": {
+            "_id": [ nameP ]
           }
         }
       }
@@ -163,6 +195,29 @@ function genES () {
     return promise;
   }
 
+  //Actualizar PANEL ES
+  genES.updatePanel = function(client, nameP, descriptionP, positionP, rowsP, columnsP, dim, op, chartsP){
+
+    var promise = client.update({
+      index: '.vboard',
+      type: 'panelthreedc',
+      id: nameP,
+      body: {
+        doc: {
+          description: descriptionP,
+          name: nameP,
+          postion: positionP,
+          rows: rowsP,
+          columns: columnsP,
+          dimension: dim,
+          opacity: op,
+          charts: chartsP,
+        }
+      }
+    });
+    return promise;
+  }
+
   //CREAR VISUALIZACIÓN ES
   genES.createVis = function(client, nameP, descriptionP, vistype, visobjectP, index, type, metrics, buckets){
 
@@ -183,9 +238,30 @@ function genES () {
     });// function (error, response) {
       //console.log(error, response, "OK")
     //});
-
     return promise;
   }
+
+  //CREAR PANEL ES
+  genES.createPanel = function(client, nameP, descriptionP, positionP, rowsP, columnsP, dim, op, chartsP){
+
+    var promise = client.create({
+      index: '.vboard',
+      type: 'panelthreedc',
+      id: nameP,
+      body: {
+        description: descriptionP,
+        name: nameP,
+        postion: positionP,
+        rows: rowsP,
+        columns: columnsP,
+        dimension: dim,
+        opacity: op,
+        charts: chartsP,
+      }
+    });
+
+  return promise;
+}
 
 	return genES;
 }

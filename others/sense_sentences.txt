@@ -1,0 +1,68 @@
+PUT .vboard
+{
+    "settings" : {
+        "number_of_shards" : 1
+    },
+    "mappings" : {
+        "visthreed" : {
+            "properties" : {
+                "chartType" : { "type" : "text" },
+                "name" : { "type" : "text" },
+                "description" : { "type" : "text" },
+                "indexOfES" : {"type" : "text"},
+                "typeOfES" : {"type": "text"},
+                "metricsSelected" : { "type": "object" },
+                "bucketsSelected" : { "type": "object" },
+                "visobject" : { "type": "object" }
+            }
+        }
+    }
+}
+
+PUT .vboard/_mapping/panelthreed
+{
+  "properties": {
+    "position" : { "type" : "text" },
+    "rows" : { "type" : "text" },
+    "columns" : { "type" : "text" },
+    "dimension" : { "type" : "text" },
+    "opacity" : { "type" : "text" },
+    "charts" : { "type" : "object" },
+    "name" : { "type" : "text" },
+    "description" : { "type" : "text" }
+  }
+}
+
+
+
+
+
+
+/////OLD/////
+
+PUT .visthreed
+{
+    "settings" : {
+        "number_of_shards" : 1
+    },
+    "mappings" : {
+        "items" : {
+            "properties" : {
+                "chartType" : { "type" : "text" },
+                "name" : { "type" : "text" },
+                "description" : { "type" : "text" },
+                "indexOfES" : {"type" : "text"},
+                "typeOfES" : {"type": "text"},
+                "metricsSelected" : { "type": "object" },
+                "bucketsSelected" : { "type": "object" },
+                "visobject" : { "type": "object" }
+            }
+        }
+    }
+}
+
+GET .visthreed/items/pie_tarta0
+
+GET .visthreed/items/bubbles_bubbles0
+
+GET .visthreed/items/bubbles_burbujas
