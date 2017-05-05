@@ -116,7 +116,7 @@ function genES () {
   }
 
   //COMPROBAR VISUALIZACIÓN EN ES
-  genES.checkVis = function(client, nameP, descriptionP){
+  genES.checkVis = function(client, nameP, descriptionP, vistype){
 
     var promise = client.search({
       index: '.vboard',

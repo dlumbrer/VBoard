@@ -350,11 +350,9 @@ define(
 						$scope.aggregations = resp.aggregations;
 						console.log("Respuesta (Agregaciones)", $scope.aggregations)
 
-						//Resetear visualizaciones
-						/*if(dash.allCharts[0]){
-							dash.allCharts[0].remove()
-						}*/
-						dash.removeAll()
+
+						dash.removeAllCharts();
+
 
 						switch ($scope.visType) {
 								case "pie":
@@ -461,19 +459,19 @@ define(
 
 				 switch (visType) {
 						 case "pie":
-							 chart=dash.pieChart([100,100,z])
+							 chart=THREEDC.pieChart()
 							 chart.gridsOn();
 							 break;
 						 case "bars":
-							 chart=dash.barsChart([100,100,z])
+							 chart=THREEDC.barsChart()
 							 chart.gridsOn();
 							 break;
 						 case "line":
-							 chart=dash.lineChart([100,100,z])
+							 chart=THREEDC.lineChart()
 							 chart.gridsOn();
 							 break;
 						 case "curve":
-							 chart=dash.smoothCurveChart([100,100,z])
+							 chart=THREEDC.smoothCurveChart()
 							 chart.gridsOn();
 							 break;
 				 }
@@ -490,9 +488,11 @@ define(
 				 //$scope.actualVis = $.extend(true, {}, chart);
 				 console.log("SCOPE CON LA VISUALIZACIÓN", $scope)
 
-				 for (var i = 0; i < dash.allCharts.length; i++) {
+				 /*for (var i = 0; i < dash.allCharts.length; i++) {
 				 		dash.allCharts[i].reBuild()
-				 }
+				 }*/
+
+				 dash.addChart(chart, {x:100, y:100, z:100})
 				 //pie.render();
 			 }
 
@@ -522,7 +522,7 @@ define(
 
 				data = getOrderedDataTD(data);
 
-				bars=dash.TDbarsChart([100,100,z])
+				bars=THREEDC.TDbarsChart();
 				bars.data(data);
 				bars.width(300);
 				bars.height(400);
@@ -539,10 +539,12 @@ define(
 				//$scope.actualVis = $.extend(true, {}, bars);
 				console.log("SCOPE CON LA VISUALIZACIÓN", $scope)
 
-				for (var i = 0; i < dash.allCharts.length; i++) {
+				/*for (var i = 0; i < dash.allCharts.length; i++) {
 					 dash.allCharts[i].reBuild()
-				}
+				}*/
 				//bars.render();
+
+				dash.addChart(bars, {x:100, y:100, z:100})
 			}
 
 			$scope.buildBubblesChart = function(){
@@ -580,27 +582,29 @@ define(
 
 					data = getOrderedDataBubbles(data);
 
-					bars=dash.bubbleChart([100,100,z])
-					bars.data(data);
-					bars.width(300);
-					bars.height(400);
-					bars.depth(500);
-					bars.gridsOn();
+					bubbles=THREEDC.bubbleChart()
+					bubbles.data(data);
+					bubbles.width(300);
+					bubbles.height(400);
+					bubbles.depth(500);
+					bubbles.gridsOn();
 
 					////////////GUARDAR LA VISUALIACION EN EL SCOPE
 					$scope.actualVis = {
  					 chartType: "bubbles",
- 					 chartObject: $.extend(true, {}, bars),
+ 					 chartObject: $.extend(true, {}, bubbles),
 					 bucketsSelected : $scope.bucketsSelected,
 					 metricsSelected : $scope.metricsSelected
  				 }
-				 //$scope.actualVis = $.extend(true, {}, bars);
+				 //$scope.actualVis = $.extend(true, {}, bubbles);
  				 console.log("SCOPE CON LA VISUALIZACIÓN", $scope)
 
-					for (var i = 0; i < dash.allCharts.length; i++) {
+					/*for (var i = 0; i < dash.allCharts.length; i++) {
 						 dash.allCharts[i].reBuild()
-					}
-					//bars.render();
+					}*/
+					//bubbles.render();
+
+					dash.addChart(bubbles, {x:100, y:100, z:100})
 			}
 
 
@@ -695,105 +699,11 @@ define(
 
 /////////////////////////////////CONSTRUCCIÓN DE THREEDC////////////////////////////////////////////
 
-        var container, scene, camera, renderer;
+        var container = document.getElementById( 'ThreeJS' );
 
-        //objetc which will contain the library functions
-        var dash;
-
-        init();
-        animate();
-
-        function init () {
-
-           ///////////
-           // SCENE //
-           ///////////
-           scene = new THREE.Scene();
-
-           ////////////
-           // CAMERA //
-           ////////////
-					 // attach div element to variable to contain the renderer
-					 container = document.getElementById( 'ThreeJS' );
-
-           // set the view size in pixels (custom or according to window size)
-           var SCREEN_WIDTH = container.clientWidth;
-           var SCREEN_HEIGHT = container.clientHeight;
-					 //var SCREEN_WIDTH = window.innerWidth;
-           //var SCREEN_HEIGHT = window.innerHeight;
-           // camera attributes
-           var VIEW_ANGLE = 45;
-           var ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT;
-           var NEAR = 0.1;
-           var FAR = 20000;
-              // set up camera
-           camera = new THREE.PerspectiveCamera( VIEW_ANGLE, ASPECT, NEAR, FAR);
-           // add the camera to the scene
-           scene.add(camera);
-           // the camera defaults to position (0,0,0)
-           //    so pull it back (z = 400) and up (y = 100) and set the angle towards the scene origin
-           camera.position.set(-553,584,868);
-
-           //////////////
-           // RENDERER //
-           //////////////
-           renderer = new THREE.WebGLRenderer( {antialias:true} );
-           renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
-           renderer.setClearColor( 0xd8d8d8 );
+				var dash = THREEDC.dashBoard(container);
 
 
-           // attach renderer to the container div
-           container.appendChild( renderer.domElement );
-
-          ////////////
-          // EVENTS //
-          ////////////
-
-
-          // automatically resize renderer
-          THREEx.WindowResize(renderer, camera);
-
-           ///////////
-           // LIGHTS //
-           ///////////
-           var light1 = new THREE.PointLight(0xffffff,0.8);
-           light1.position.set(0,2500,2500);
-           scene.add(light1);
-
-           var light2 = new THREE.PointLight(0xffffff,0.8);
-           light2.position.set(-2500,2500,-2500);
-           scene.add(light2);
-
-           var light3 = new THREE.PointLight(0xffffff,0.8);
-           light3.position.set(2500,2500,-2500);
-           scene.add(light3);
-
-           // create a set of coordinate axes to help orient user
-           //    specify length in pixels in each direction
-           var axes = new THREE.AxisHelper(1000);
-           scene.add(axes);
-
-					 //the empty object will be returned with the library functions
-           dash = THREEDC(camera,scene,renderer,container);
-
-
-           dash.renderAll();
-
-        }
-
-        function animate(){
-           requestAnimationFrame( animate );
-           render();
-           update();
-        }
-
-        function render(){
-           renderer.render( scene, camera );
-        }
-
-        function update(){
-          dash.controls.update();
-        }
 
 
 ///////////////////////////////////SAVE VIS////////////////////////////////////
