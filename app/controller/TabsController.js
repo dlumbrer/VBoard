@@ -14,6 +14,9 @@ define(
 				$scope.loadPanels = function () {
 					$location.url('/Panels');
 				};
+				$scope.loadDashboard = function () {
+					$location.url('/Dashboard');
+				};
 
 
       }
