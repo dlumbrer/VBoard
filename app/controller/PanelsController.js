@@ -40,27 +40,27 @@ define(
 
 						switch (vis.chartType) {
 								case "pie":
-										var chart = THREEDC.pieChart($scope.actualPanel).data(vis.visobject._data).id(visall._id).addCustomEvents(editVis);
+										var chart = THREEDC.pieChart().data(vis.visobject._data).id(visall._id).addCustomEvents(editVis);
 										$scope.actualPanel.addChart(chart, {row:1, column: 1})
 										break
 								case "bars":
-										var chart = THREEDC.barsChart($scope.actualPanel).data(vis.visobject._data).id(visall._id);
+										var chart = THREEDC.barsChart().data(vis.visobject._data).id(visall._id);
 										$scope.actualPanel.addChart(chart, {row:1, column: 2})
 										break;
 								case "line":
-										var chart = THREEDC.lineChart($scope.actualPanel).data(vis.visobject._data).id(visall._id);
+										var chart = THREEDC.lineChart().data(vis.visobject._data).id(visall._id);
 										$scope.actualPanel.addChart(chart, {row:2, column: 1})
 										break;
 								case "curve":
-										var chart = THREEDC.smoothCurveChart($scope.actualPanel).data(vis.visobject._data).id(visall._id);
+										var chart = THREEDC.smoothCurveChart().data(vis.visobject._data).id(visall._id);
 										$scope.actualPanel.addChart(chart, {row:2, column: 2})
 										break;
 								case "3DBars":
-										var chart = THREEDC.TDbarsChart($scope.actualPanel).data(vis.visobject._data).id(visall._id).gridsOn();
+										var chart = THREEDC.TDbarsChart().data(vis.visobject._data).id(visall._id).gridsOn();
 										$scope.actualPanel.addChart(chart, {row:2, column: 3})
 										break;
 								case "bubbles":
-										var chart = THREEDC.bubbleChart($scope.actualPanel).data(vis.visobject._data).id(visall._id).gridsOn();
+										var chart = THREEDC.bubbleChart().data(vis.visobject._data).id(visall._id).gridsOn();
 										$scope.actualPanel.addChart(chart, {row:3, column: 2})
 										break;
 								default:
