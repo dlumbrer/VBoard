@@ -148,8 +148,8 @@ define(
 											var arrayChartsToSave = [];
 											for (var i = 0; i < $scope.$parent.actualPanel.charts.length; i++) {
 												var c = {
-													row: 0,
-													column: 0,
+													row: $scope.$parent.actualPanel.charts[i].panelPosition.row,
+													column: $scope.$parent.actualPanel.charts[i].panelPosition.column,
 													id : $scope.$parent.actualPanel.charts[i]._id
 												}
 												arrayChartsToSave.push(c)

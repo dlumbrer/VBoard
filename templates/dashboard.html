@@ -5,22 +5,22 @@
       <div ng-show="true">
         <div class="row">
           <h4>Click to add vis: </h4>
-          <!--ul class="list-group">
-            <a href="" data-dismiss="modal" ng-click="addToPanel(vis)" class="list-group-item" ng-repeat="vis in loadedvis"><span class="badge">{{vis._source.chartType}}</span>
+          <ul class="list-group">
+            <a href="" data-dismiss="modal" ng-click="addVisToDash(vis)" class="list-group-item" ng-repeat="vis in loadedvis"><span class="badge">{{vis._source.chartType}}</span>
               <h5 class="list-group-item-heading">{{vis._source.name}}</h5>
               <p class="list-group-item-text">{{vis._source.description}}</p>
             </a>
-          </ul-->
+          </ul>
         </div>
 
         <div class="row">
           <h4>Click to add panel: </h4>
-          <!--ul class="list-group">
-            <a href="" data-dismiss="modal" ng-click="addToPanel(vis)" class="list-group-item" ng-repeat="vis in loadedvis"><span class="badge">{{vis._source.chartType}}</span>
-              <h5 class="list-group-item-heading">{{vis._source.name}}</h5>
-              <p class="list-group-item-text">{{vis._source.description}}</p>
+          <ul class="list-group">
+            <a href="" data-dismiss="modal" ng-click="addPanelToDash(panel._source)" class="list-group-item" ng-repeat="panel in loadedpanels"><span class="badge">{{panel._source.rows}}x{{panel._source.columns}} - {{panel._source.charts.length}} charts</span>
+              <h4 class="list-group-item-heading">{{panel._source.name}}</h4>
+              <p class="list-group-item-text">{{panel._source.description}}</p>
             </a>
-          </ul-->
+          </ul>
         </div>
 
       </div>
