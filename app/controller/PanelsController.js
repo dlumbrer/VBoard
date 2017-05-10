@@ -32,7 +32,7 @@ define(
 					}
 
 					//////////////////////////////////////AÑADIR VIS A PANEL//////////////////////
-					$scope.addToPanel = function(visall){
+					$scope.addToPanel = function(visall, row, column){
 						console.log("A AÑADIR", visall);
 
 						vis = visall._source;
@@ -41,27 +41,27 @@ define(
 						switch (vis.chartType) {
 								case "pie":
 										var chart = THREEDC.pieChart().data(vis.visobject._data).id(visall._id).addCustomEvents(editVis);
-										$scope.actualPanel.addChart(chart, {row:1, column: 1})
+										$scope.actualPanel.addChart(chart, {row:row, column: column})
 										break
 								case "bars":
 										var chart = THREEDC.barsChart().data(vis.visobject._data).id(visall._id);
-										$scope.actualPanel.addChart(chart, {row:1, column: 2})
+										$scope.actualPanel.addChart(chart, {row:row, column: column})
 										break;
 								case "line":
 										var chart = THREEDC.lineChart().data(vis.visobject._data).id(visall._id);
-										$scope.actualPanel.addChart(chart, {row:2, column: 1})
+										$scope.actualPanel.addChart(chart, {row:row, column: column})
 										break;
 								case "curve":
 										var chart = THREEDC.smoothCurveChart().data(vis.visobject._data).id(visall._id);
-										$scope.actualPanel.addChart(chart, {row:2, column: 2})
+										$scope.actualPanel.addChart(chart, {row:row, column: column})
 										break;
 								case "3DBars":
 										var chart = THREEDC.TDbarsChart().data(vis.visobject._data).id(visall._id).gridsOn();
-										$scope.actualPanel.addChart(chart, {row:2, column: 3})
+										$scope.actualPanel.addChart(chart, {row:row, column: column})
 										break;
 								case "bubbles":
 										var chart = THREEDC.bubbleChart().data(vis.visobject._data).id(visall._id).gridsOn();
-										$scope.actualPanel.addChart(chart, {row:3, column: 2})
+										$scope.actualPanel.addChart(chart, {row:row, column: column})
 										break;
 								default:
 										console.log("Esta vacío")
@@ -256,6 +256,46 @@ define(
 								modal.element.modal();
 								modal.close.then(function(result) {
 										console.log("modal cerrado de carga")
+								});
+						});
+					};
+					//////////////////////////////////////////////////////////////////////////////
+
+					//////////////////////////////MODAL PARA ELEGIR LA POSICION DE LA VIS EN EL PANEL/////////////////////////////////////////
+					$scope.openAddToPanelModal = function(visall) {
+
+
+						ModalService.showModal({
+								templateUrl: 'positionvismodal.html',
+								scope: $scope,
+								controller: function($scope, close) {
+
+									$scope.acceptAdd = function(result) {
+										console.log($scope.$parent.actualPanel.anchorPoints)
+
+										//Comprobar que no se sale del panel
+										if($scope.row > $scope.$parent.actualPanel.grid.numberOfRows || $scope.column > $scope.$parent.actualPanel.grid.numberOfColumns){
+											Notification.error("Invalid position: out of panel");
+											return;
+										}
+
+										//Comprobar que no está relleno
+										for (var i = 0; i < $scope.$parent.actualPanel.anchorPoints.length; i++) {
+											if($scope.row == $scope.$parent.actualPanel.anchorPoints[i].row && $scope.column == $scope.$parent.actualPanel.anchorPoints[i].column && $scope.$parent.actualPanel.anchorPoints[i].filled){
+												Notification.error("Invalid position: this position is already filled");
+												return;
+											}
+										}
+
+										$scope.addToPanel(visall, $scope.row, $scope.column);
+									}
+
+
+								}
+						}).then(function(modal) {
+								modal.element.modal();
+								modal.close.then(function(result) {
+										console.log("modal cerrado de position")
 								});
 						});
 					};

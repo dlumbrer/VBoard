@@ -22,9 +22,8 @@ define(
 					})
 					////////////////////////////////////////////////
 
-					//////////////////////////////////////AÑADIR VIS A PANEL//////////////////////
-					var posx = 100;
-					$scope.addVisToDash = function(visall){
+					//////////////////////////////////////AÑADIR VIS A DASHBOARD//////////////////////
+					$scope.addVisToDash = function(visall, posx, posy, posz){
 						console.log("A AÑADIR", visall);
 
 						vis = visall._source;
@@ -33,32 +32,32 @@ define(
 						switch (vis.chartType) {
 								case "pie":
 										var chart = THREEDC.pieChart().data(vis.visobject._data).id(visall._id);
-										dash.addChart(chart, {x:posx, y:100, z:100})
+										dash.addChart(chart, {x:posx, y:posy, z:posz})
 										posx += 150;
 										break
 								case "bars":
 										var chart = THREEDC.barsChart().data(vis.visobject._data).id(visall._id);
-										dash.addChart(chart, {x:posx, y:100, z:100})
+										dash.addChart(chart, {x:posx, y:posy, z:posz})
 										posx += 150;
 										break;
 								case "line":
 										var chart = THREEDC.lineChart().data(vis.visobject._data).id(visall._id);
-										dash.addChart(chart, {x:posx, y:100, z:100})
+										dash.addChart(chart, {x:posx, y:posy, z:posz})
 										posx += 150;
 										break;
 								case "curve":
 										var chart = THREEDC.smoothCurveChart().data(vis.visobject._data).id(visall._id);
-										dash.addChart(chart, {x:posx, y:100, z:100})
+										dash.addChart(chart, {x:posx, y:posy, z:posz})
 										posx += 150;
 										break;
 								case "3DBars":
 										var chart = THREEDC.TDbarsChart().data(vis.visobject._data).id(visall._id).gridsOn();
-										dash.addChart(chart, {x:posx, y:100, z:100})
+										dash.addChart(chart, {x:posx, y:posy, z:posz})
 										posx += 150;
 										break;
 								case "bubbles":
 										var chart = THREEDC.bubbleChart().data(vis.visobject._data).id(visall._id).gridsOn();
-										dash.addChart(chart, {x:posx, y:100, z:100})
+										dash.addChart(chart, {x:posx, y:posy, z:posz})
 										posx += 150;
 										break;
 								default:
@@ -70,16 +69,15 @@ define(
 
 					}////////////////////////////////////////////////
 
-					//////////////////////////////////////AÑADIR VIS A PANEL//////////////////////
-					var posx = 100;
-					$scope.addPanelToDash = function(paneltoadd){
+					//////////////////////////////////////AÑADIR PANEL A DASHBOARD//////////////////////
+					$scope.addPanelToDash = function(paneltoadd, posx, posy, posz){
 						console.log("A AÑADIR", paneltoadd);
 
 						var dimension = "[" + paneltoadd._source.dimension + "]"
 
 						var panel = THREEDC.Panel({numberOfRows:parseInt(paneltoadd._source.rows), numberOfColumns:paneltoadd._source.columns}, JSON.parse(dimension), JSON.parse(paneltoadd._source.opacity));
 
-						dash.addPanel(panel, {x:posx, y:100, z:100})
+						dash.addPanel(panel, {x:posx, y:posy, z:posz})
 						posx += 200;
 
 						for (var i = 0; i < paneltoadd._source.charts.length; i++) {
@@ -135,6 +133,35 @@ define(
 					}
 
 					////////////////////////////////////////////////
+
+					/////////////////////////////MODAL PARA ELEGIR LA POSICION DE LA VIS O EL PANEL EN EL DASHBOARD/////////////////////////////
+					$scope.openAddToDashModal = function(item, isPanel) {
+
+
+						ModalService.showModal({
+								templateUrl: 'positionvispanelmodal.html',
+								scope: $scope,
+								controller: function($scope, close) {
+
+									$scope.acceptAdd = function(result) {
+
+										if(isPanel){
+											$scope.addPanelToDash(item, $scope.x, $scope.y, $scope.z);
+										}else{
+											$scope.addVisToDash(item, $scope.x, $scope.y, $scope.z);
+										}
+									}
+
+
+								}
+						}).then(function(modal) {
+								modal.element.modal();
+								modal.close.then(function(result) {
+										console.log("modal cerrado de position")
+								});
+						});
+					};
+					///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 					///////////////////////////////////////////THREEDC/////////////////////////////////////////
