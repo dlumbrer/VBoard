@@ -13,7 +13,9 @@ python -m SimpleHTTPServer
 Go in your browser to http://localhost:8000/ and enjoy!
 
 
-## Steps to build a a visualization
+## Tab Visualize (to build a chart)
+
+Follow this steps to build a a visualization:
 
 * Select the index of your ElasticSearch (the index should have a type called "items")
 
@@ -36,7 +38,7 @@ Go in your browser to http://localhost:8000/ and enjoy!
 ![Screenshot](images/example3.png)
 
 
-## Others options
+### Options
 
 * **Show Mapping**: With this button you can see at the bottom of the page the mapping of the index.
 ![Screenshot](images/examplemapping.png)
@@ -47,8 +49,33 @@ Go in your browser to http://localhost:8000/ and enjoy!
 * **Save Visualization**: This button open a modal in order to save the visualization in ElasticSearch. The visualization will be saved in the index (**Previously created**) **.vboard**. (See __Creation of the index .vissthreed__)
 ![Screenshot](images/examplesave.png)
 
+* **Load Visualization**: This button open a modal in order to load a visualization.
+![Screenshot](images/exampleload.png)
 
-### Creation of the index .vboard
+
+## Tab Panels (to build a panels with charts)
+
+Work in progress..
+
+### Options
+
+* **New Panel**:
+
+* **Save Panel**:
+
+* **Load Panel**:
+
+
+## Tab Dashboard (to build a dashboard with charts and panels)
+
+Work in progress..
+
+### Options
+
+Work in progress..
+
+
+## Creation of the index .vboard
 
 To save visualizations you must have created the index **.vboard**, this is the mapping of the index (__Recommended use Sense or CURL to create it__):
 
@@ -73,9 +100,18 @@ PUT .vboard
         }
     }
 }
+
+PUT .vboard/_mapping/panelthreed
+{
+  "properties": {
+    "position" : { "type" : "text" },
+    "rows" : { "type" : "text" },
+    "columns" : { "type" : "text" },
+    "dimension" : { "type" : "text" },
+    "opacity" : { "type" : "text" },
+    "charts" : { "type" : "object" },
+    "name" : { "type" : "text" },
+    "description" : { "type" : "text" }
+  }
+}
 ```
-
-## Next Features
-
-* Option to load visualizations previously saved
-* Add **Dashboard** tab in order to build dashboards with multiple visualizations.
