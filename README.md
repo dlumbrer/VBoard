@@ -35,7 +35,6 @@ Follow this steps to build a a visualization:
 
 ![Screenshot](images/example1.png)
 ![Screenshot](images/example2.png)
-![Screenshot](images/example3.png)
 
 
 ### Options
@@ -55,16 +54,24 @@ Follow this steps to build a a visualization:
 
 ## Tab Panels (to build a panels with charts)
 
-Work in progress..
+First, you will see a default panel with 3 rows, 3 columns, [500,500] of dimension and 0.6 of opacity. Click on the list on the left to add a previously saved chart, you will se this modal:
+![Screenshot](images/exampleaddvistopanel.png)
+
+After, you will see the chart selected in the panel:
+![Screenshot](images/examplepanelbubbles.png)
+![Screenshot](images/examplepanel2.png)
+
 
 ### Options
 
-* **New Panel**:
+* **New Panel**: Open a modal to build a new panel form scratch.
+![Screenshot](images/newpanelmodal.png)
 
-* **Save Panel**:
+* **Save Panel**: Open a modal in order to save the Panel in ElasticSearch. The panel will be saved in the index (**Previously created**) **.vboard**. (See __Creation of the index .vissthreed__)
+![Screenshot](images/savepanelmodal.png)
 
-* **Load Panel**:
-
+* **Load Panel**: Open a modal in order to load a Panel previously saved in ElasticSearch.
+![Screenshot](images/loadpanelmodal.png)
 
 ## Tab Dashboard (to build a dashboard with charts and panels)
 
