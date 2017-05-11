@@ -206,7 +206,7 @@ function genES () {
         doc: {
           description: descriptionP,
           name: nameP,
-          postion: positionP,
+          position: positionP,
           rows: rowsP,
           columns: columnsP,
           dimension: dim,
@@ -251,7 +251,7 @@ function genES () {
       body: {
         description: descriptionP,
         name: nameP,
-        postion: positionP,
+        position: positionP,
         rows: rowsP,
         columns: columnsP,
         dimension: dim,

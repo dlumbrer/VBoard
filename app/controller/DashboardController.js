@@ -78,7 +78,6 @@ define(
 						var panel = THREEDC.Panel({numberOfRows:parseInt(paneltoadd._source.rows), numberOfColumns:paneltoadd._source.columns}, JSON.parse(dimension), JSON.parse(paneltoadd._source.opacity));
 
 						dash.addPanel(panel, {x:posx, y:posy, z:posz})
-						posx += 200;
 
 						for (var i = 0; i < paneltoadd._source.charts.length; i++) {
 							addVisToPanel(panel, paneltoadd._source.charts[i])

@@ -228,7 +228,7 @@ define(
 					};
 
 
-					/////////////////////////////LOAD VIS/////////////////////////////////////////
+					/////////////////////////////LOAD PANEL/////////////////////////////////////////
 					$scope.openLoadPanelModal = function() {
 
 						/*if(!$scope.indexName){
@@ -259,6 +259,64 @@ define(
 								});
 						});
 					};
+
+					$scope.loadPanel = function(paneltoadd){
+						console.log("cargar panel:", paneltoadd);
+
+						var dimension = "[" + paneltoadd._source.dimension + "]"
+
+						var position = JSON.parse(paneltoadd._source.position)
+
+						$scope.createNewPanel({x:position[0],y:position[1],z:position[2]},parseInt(paneltoadd._source.rows),parseInt(paneltoadd._source.columns),JSON.parse(dimension),JSON.parse(paneltoadd._source.opacity));
+
+						for (var i = 0; i < paneltoadd._source.charts.length; i++) {
+							addVisToPanel($scope.actualPanel, paneltoadd._source.charts[i])
+						}
+					}
+
+					var addVisToPanel = function(panel, visall){
+						console.log("Hay que meter esta vis en el panel", visall);
+
+						var rowchart = visall.row;
+						var rowcolumn = visall.column;
+
+						var promise = generatorQueries.getVis(ESService.client, visall.id);
+						promise.then(function (resp) {
+							vis = resp.hits.hits[0]._source;
+
+							switch (vis.chartType) {
+									case "pie":
+											var chart = THREEDC.pieChart().data(vis.visobject._data).id(visall.id);
+											panel.addChart(chart, {row:rowchart, column: rowcolumn})
+											break
+									case "bars":
+											var chart = THREEDC.barsChart().data(vis.visobject._data).id(visall.id);
+											panel.addChart(chart, {row:rowchart, column: rowcolumn})
+											break;
+									case "line":
+											var chart = THREEDC.lineChart().data(vis.visobject._data).id(visall.id);
+											panel.addChart(chart, {row:rowchart, column: rowcolumn})
+											break;
+									case "curve":
+											var chart = THREEDC.smoothCurveChart().data(vis.visobject._data).id(visall.id);
+											panel.addChart(chart, {row:rowchart, column: rowcolumn})
+											break;
+									case "3DBars":
+											var chart = THREEDC.TDbarsChart().data(vis.visobject._data).id(visall.id).gridsOn();
+											panel.addChart(chart, {row:rowchart, column: rowcolumn})
+											break;
+									case "bubbles":
+											var chart = THREEDC.bubbleChart().data(vis.visobject._data).id(visall.id).gridsOn();
+											panel.addChart(chart, {row:rowchart, column: rowcolumn})
+											break;
+									default:
+											console.log("Esta vacío")
+											return
+
+							}
+						})
+					}
+
 					//////////////////////////////////////////////////////////////////////////////
 
 					//////////////////////////////MODAL PARA ELEGIR LA POSICION DE LA VIS EN EL PANEL/////////////////////////////////////////
