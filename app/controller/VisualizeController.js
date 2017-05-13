@@ -734,7 +734,7 @@ define(
 											//SI EXISTE SE CREA DE 0, SI NO HAY QUE PREGUNTAR SI QUIERE SOBREESCRIBIRSE
 											if(response.hits.hits.length == 0){
 												//Meto id dentro del objeto de la visualizacion
-												$scope.$parent.actualVis.chartObject.id($scope.$parent.actualVis.chartType + "_" + $scope.name)
+												$scope.$parent.actualVis.chartObject.setId($scope.$parent.actualVis.chartType + "_" + $scope.name)
 												//Guardo
 												var promiseSave = generatorQueries.createVis(ESService.client, $scope.name, $scope.description, $scope.$parent.actualVis.chartType, $scope.$parent.actualVis.chartObject, $scope.$parent.indexName, $scope.$parent.typeName, $scope.$parent.actualVis.metricsSelected, $scope.$parent.actualVis.bucketsSelected)
 												promiseSave.then(function(response, error){
@@ -755,7 +755,7 @@ define(
 															 $scope.confirmUpdate = function(result) {
 															 	console.log("Actualizar ---- ", $scope.name, $scope.description, $scope.$parent.actualVis)
 																//Meto id dentro del objeto de la visualizacion
-																$scope.$parent.actualVis.chartObject.id($scope.$parent.actualVis.chartType + "_" + $scope.name)
+																$scope.$parent.actualVis.chartObject.setId($scope.$parent.actualVis.chartType + "_" + $scope.name)
 																//Guardo
 																var promiseUpdate = generatorQueries.updateVis(ESService.client, $scope.name, $scope.description, $scope.$parent.actualVis.chartType, $scope.$parent.actualVis.chartObject, $scope.$parent.indexName, $scope.$parent.typeName, $scope.$parent.actualVis.metricsSelected, $scope.$parent.actualVis.bucketsSelected)
 																promiseUpdate.then(function(response, error){
