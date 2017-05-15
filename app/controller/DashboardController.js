@@ -75,7 +75,7 @@ define(
 
 						var dimension = "[" + paneltoadd._source.dimension + "]"
 
-						var panel = THREEDC.Panel({numberOfRows:parseInt(paneltoadd._source.rows), numberOfColumns:paneltoadd._source.columns}, JSON.parse(dimension), JSON.parse(paneltoadd._source.opacity));
+						var panel = THREEDC.Panel({numberOfRows:parseInt(paneltoadd._source.rows), numberOfColumns:paneltoadd._source.columns}, JSON.parse(dimension), JSON.parse(paneltoadd._source.opacity)).setId(paneltoadd._id);;
 
 						dash.addPanel(panel, {x:posx, y:posy, z:posz})
 
@@ -163,10 +163,127 @@ define(
 					///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
+					///////////////////////////////////SAVE PANEL////////////////////////////////////
+
+					$scope.openSaveDashboardModal = function() {
+
+						if(!$scope.actualDashboard){
+							Notification.error("First build a Dashboard")
+							return
+						}
+
+							ModalService.showModal({
+			            templateUrl: 'savedashboardmodal.html',
+									scope: $scope,
+			            controller: function($scope, close) {
+
+										 $scope.save = function(result) {
+										 	console.log("Queremos guardar ---- ", $scope.name, $scope.description, $scope.$parent.actualDashboard)
+
+
+											var arrayChartsToSave = [];
+											var arrayPanelsToSave = [];
+
+											for (var i = 0; i < $scope.$parent.actualDashboard.panels.length; i++) {
+												var c = {
+													x: $scope.$parent.actualDashboard.panels[i].coords.x,
+													y: $scope.$parent.actualDashboard.panels[i].coords.y,
+													z: $scope.$parent.actualDashboard.panels[i].coords.z,
+													id : $scope.$parent.actualDashboard.panels[i]._id
+												}
+												arrayPanelsToSave.push(c)
+											}
+
+											for (var i = 0; i < $scope.$parent.actualDashboard.charts.length; i++) {
+												//Si no esta en panel
+												if(!$scope.$parent.actualDashboard.charts[i].panel){
+													var c = {
+														x: $scope.$parent.actualDashboard.charts[i].coords.x,
+														y: $scope.$parent.actualDashboard.charts[i].coords.y,
+														z: $scope.$parent.actualDashboard.charts[i].coords.z,
+														id : $scope.$parent.actualDashboard.charts[i]._id
+													}
+
+												}
+												arrayChartsToSave.push(c)
+											}
+
+
+
+											var promiseCheck = generatorQueries.checkDashboard(ESService.client, $scope.name)
+											//ERROR GUARDANDO COMPROBAMOS SI EXISTE
+											promiseCheck.then(function(response, error){
+												if(error){
+													Notification.error("ElasticSearch error")
+												}
+
+												//SI NO EXISTE SE CREA DE 0, SI NO HAY QUE PREGUNTAR SI QUIERE SOBREESCRIBIRSE
+												if(response.hits.hits.length == 0){
+													//Guardo
+													var promise = generatorQueries.createDashboard(ESService.client, $scope.name, $scope.description, arrayChartsToSave, arrayPanelsToSave);
+													promise.then(function(response, error){
+														if(error){
+															Notification.error("Error creating dash")
+															return
+														}
+														Notification.success("Dashboard created")
+													})
+												}else{
+													console.log("Modal of confirm");
+													//MODAL DE CONFIRMACION
+													ModalService.showModal({
+									            templateUrl: 'updatedashboardmodalconfirm.html',
+															scope: $scope,
+									            controller: function($scope, close) {
+
+																 $scope.confirmUpdate = function(result) {
+																 	console.log("Actualizar ---- ", $scope.name, $scope.description, $scope.$parent.actualDashboard)
+																	//Guardo
+																	var promiseUpdate = generatorQueries.updateDashboard(ESService.client, $scope.name, $scope.description, arrayChartsToSave, arrayPanelsToSave);
+																	promiseUpdate.then(function(response, error){
+																		if(error){
+																			Notification.error("Error updating dash")
+																			return
+																		}
+																		Notification.success("Dashboard updated")
+																	})
+																 };
+
+																 $scope.cancelUpdate = function(result) {
+																 	console.log("cancel update")
+																 };
+
+															}
+									        }).then(function(modal) {
+									            modal.element.modal();
+									            modal.close.then(function(result) {
+									                console.log("modal cerrado")
+									            });
+									        });
+													///////////////
+												}
+											})
+
+										 };
+
+										 $scope.cancel = function(result) {
+										 	console.log("cancel")
+										 };
+										 ///////////////////////////////////////////////////////////////////////7
+									}
+			        }).then(function(modal) {
+			            modal.element.modal();
+			            modal.close.then(function(result) {
+			                console.log("modal cerrado")
+			            });
+			        });
+					};
+
 					///////////////////////////////////////////THREEDC/////////////////////////////////////////
 					var container = document.getElementById( 'ThreeJSDashboard' );
 
 					var dash = THREEDC.dashBoard(container);
+					$scope.actualDashboard = dash;
 
 
 

@@ -107,7 +107,20 @@ function genES () {
 
     var promise = client.search({
       index: ".vboard",
-      type: 'panelthreedc',
+      type: 'panelthreed',
+      size: 10000,
+      body: { "query": { "match_all": {} } }
+    });
+
+    return promise;
+  }
+
+  //Cargar todos los dashboards
+  genES.loadAllDashboards = function(client){
+
+    var promise = client.search({
+      index: ".vboard",
+      type: 'dashthreed',
       size: 10000,
       body: { "query": { "match_all": {} } }
     });
@@ -139,7 +152,26 @@ function genES () {
 
     var promise = client.search({
       index: '.vboard',
-      type: 'panelthreedc',
+      type: 'panelthreed',
+      size: 5,
+      body: {
+        "query": {
+          "terms": {
+            "_id": [ nameP ]
+          }
+        }
+      }
+    })
+
+    return promise;
+  }
+
+  //COMPROBAR PANEL EN ES
+  genES.checkDashboard = function(client, nameP){
+
+    var promise = client.search({
+      index: '.vboard',
+      type: 'dashthreed',
       size: 5,
       body: {
         "query": {
@@ -200,7 +232,7 @@ function genES () {
 
     var promise = client.update({
       index: '.vboard',
-      type: 'panelthreedc',
+      type: 'panelthreed',
       id: nameP,
       body: {
         doc: {
@@ -212,6 +244,25 @@ function genES () {
           dimension: dim,
           opacity: op,
           charts: chartsP,
+        }
+      }
+    });
+    return promise;
+  }
+
+  //Actualizar DASHBOARD ES
+  genES.updateDashboard = function(client, nameP, descriptionP, chartsP, panelsP){
+
+    var promise = client.update({
+      index: '.vboard',
+      type: 'dashthreed',
+      id: nameP,
+      body: {
+        doc: {
+          description: descriptionP,
+          name: nameP,
+          charts: chartsP,
+          panels: panelsP,
         }
       }
     });
@@ -246,7 +297,7 @@ function genES () {
 
     var promise = client.create({
       index: '.vboard',
-      type: 'panelthreedc',
+      type: 'panelthreed',
       id: nameP,
       body: {
         description: descriptionP,
@@ -262,6 +313,24 @@ function genES () {
 
   return promise;
 }
+
+  //CREAR DASHBOARD ES
+  genES.createDashboard = function(client, nameP, descriptionP, chartsP, panelsP){
+
+    var promise = client.create({
+      index: '.vboard',
+      type: 'dashthreed',
+      id: nameP,
+      body: {
+        description: descriptionP,
+        name: nameP,
+        charts: chartsP,
+        panels: panelsP,
+      }
+    });
+
+    return promise;
+  }
 
 	return genES;
 }

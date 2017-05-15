@@ -144,7 +144,7 @@ define(
 										 	console.log("Queremos guardar ---- ", $scope.name, $scope.description, $scope.$parent.actualPanel)
 
 
-											//TODO: Cambiar filas y columnas por nueva versión de adrian
+											//TODO: Cambiar filas y columnas por nueva versión de adrian- OK
 											var arrayChartsToSave = [];
 											for (var i = 0; i < $scope.$parent.actualPanel.charts.length; i++) {
 												var c = {
