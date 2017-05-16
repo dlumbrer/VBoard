@@ -204,6 +204,44 @@ function genES () {
     return promise;
   }
 
+  //Cargar Panel
+  genES.getPanel = function(client, idtosearch){
+
+    var promise = client.search({
+      index: '.vboard',
+      type: 'panelthreed',
+      size: 5,
+      body: {
+        "query": {
+          "terms": {
+            "_id": [ idtosearch ]
+          }
+        }
+      }
+    })
+
+    return promise;
+  }
+
+  //Cargar Dashboard
+  genES.getDash = function(client, idtosearch){
+
+    var promise = client.search({
+      index: '.vboard',
+      type: 'dashthreed',
+      size: 5,
+      body: {
+        "query": {
+          "terms": {
+            "_id": [ idtosearch ]
+          }
+        }
+      }
+    })
+
+    return promise;
+  }
+
   //Actualizar VISUALIZACIÓN ES
   genES.updateVis = function(client, nameP, descriptionP, vistype, visobjectP, index, type, metrics, buckets){
 

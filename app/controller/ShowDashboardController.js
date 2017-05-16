@@ -1,14 +1,45 @@
 define(
 		function() {
-      function DashboardController($scope, esFactory, ESService, ModalService, Notification) {
+      function ShowDashboardController($scope, $route, $routeParams, esFactory, ESService, ModalService, Notification) {
 				angular.element(document).ready(function () {
 
+					console.log("ID DEL DASHBOARD A CARGAR: ", $routeParams.name)
 					var generatorQueries = genES()
 					var builderData = builderESDS()
 					var bodybuilder = require('node_modules/bodybuilder/browser/bodybuilder.min')
 
+
+					//CARGAR Y PINTAR DASHBOARD//////////////////////////////////////////////////////////
+					var promise = genES.getDash(ESService.client, $routeParams.name)
+	        promise.then(function (resp) {
+	          console.log("Cargado dash: ", resp.hits.hits)
+	          $scope.actualLoadDashboard = resp.hits.hits[0];
+
+
+						for (var i = 0; i < $scope.actualLoadDashboard._source.panels.length; i++) {
+							var promise = genES.getPanel(ESService.client, $scope.actualLoadDashboard._source.panels[i].id)
+							var actuali = i;
+			        promise.then(function (resp) {
+			          console.log("Cargado panel: ", resp.hits.hits[0])
+			          var panel = resp.hits.hits[0];
+								$scope.addPanelToDash(panel, $scope.actualLoadDashboard._source.panels[actuali].x, $scope.actualLoadDashboard._source.panels[actuali].y, $scope.actualLoadDashboard._source.panels[actuali].z);
+			        })
+						}
+
+						for (var i = 0; i < $scope.actualLoadDashboard._source.charts.length; i++) {
+							var promise = genES.getVis(ESService.client, $scope.actualLoadDashboard._source.charts[i].id)
+							var actuali = i;
+			        promise.then(function (resp) {
+			          console.log("Cargado chart: ", resp.hits.hits[0])
+			          var panel = resp.hits.hits[0];
+								$scope.addVisToDash(panel, $scope.actualLoadDashboard._source.charts[actuali].x, $scope.actualLoadDashboard._source.charts[actuali].y, $scope.actualLoadDashboard._source.charts[actuali].z);
+			        })
+						}
+	        })
+
+
 					//////////////////LOAD ALL VIS ALL PANELS//////////////////
-					var promise = genES.loadAllVis(ESService.client)
+					/*var promise = genES.loadAllVis(ESService.client)
 	        promise.then(function (resp) {
 	          console.log("Cargadas: ", resp.hits.hits)
 	          $scope.loadedvis = resp.hits.hits;
@@ -19,7 +50,7 @@ define(
 					promise.then(function (resp) {
 						console.log("Cargadas: ", resp.hits.hits)
 						$scope.loadedpanels = resp.hits.hits;
-					})
+					})*/
 					////////////////////////////////////////////////
 
 					//////////////////////////////////////AÑADIR VIS A DASHBOARD//////////////////////
@@ -134,7 +165,7 @@ define(
 					////////////////////////////////////////////////
 
 					/////////////////////////////MODAL PARA ELEGIR LA POSICION DE LA VIS O EL PANEL EN EL DASHBOARD/////////////////////////////
-					$scope.openAddToDashModal = function(item, isPanel) {
+					/*$scope.openAddToDashModal = function(item, isPanel) {
 
 
 						ModalService.showModal({
@@ -159,12 +190,12 @@ define(
 										console.log("modal cerrado de position")
 								});
 						});
-					};
+					};*/
 					///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
 					///////////////////////////////////SAVE PANEL////////////////////////////////////
-
+					/*
 					$scope.openSaveDashboardModal = function() {
 
 						if(!$scope.actualDashboard){
@@ -203,9 +234,9 @@ define(
 														z: $scope.$parent.actualDashboard.charts[i].coords.z,
 														id : $scope.$parent.actualDashboard.charts[i]._id
 													}
-													arrayChartsToSave.push(c)
-												}
 
+												}
+												arrayChartsToSave.push(c)
 											}
 
 
@@ -277,10 +308,10 @@ define(
 			                console.log("modal cerrado")
 			            });
 			        });
-					};
+					};*/
 
 					///////////////////////////////////////////THREEDC/////////////////////////////////////////
-					var container = document.getElementById( 'ThreeJSDashboard' );
+					var container = document.getElementById( 'ThreeJSShow' );
 
 					var dash = THREEDC.dashBoard(container);
 					$scope.actualDashboard = dash;
@@ -292,8 +323,8 @@ define(
 				});
       }
 
-      DashboardController.$inject = [ '$scope', 'esFactory', 'ESService', 'ModalService', 'Notification'];
+      ShowDashboardController.$inject = [ '$scope', '$route', '$routeParams', 'esFactory', 'ESService', 'ModalService', 'Notification'];
 
-			return DashboardController;
+			return ShowDashboardController;
 
 });
