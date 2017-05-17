@@ -265,8 +265,8 @@ define(
 							case "max":
 							case "min":
 							case "extended_stats":
-							case "carinality":
-									var fieldSelected = $("#fieldMetricList" + ind).val();
+							case "cardinality":
+									var fieldSelected = $("#fieldMetricList" + ind).val() + ".keyword";
 									builderData.addMetric(metricSelected, fieldSelected);
 									break;
 							case "median":

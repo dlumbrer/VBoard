@@ -27,3 +27,11 @@ body, html {
   padding-right: 0px;
   background-color: blue
 }
+
+#ThreeJSShow {
+  box-sizing: border-box;
+  padding-left: 0px;
+  padding-right: 0px;
+  background-color: blue;
+  position: absolute;
+}

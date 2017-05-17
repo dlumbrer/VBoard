@@ -22,8 +22,8 @@
   </head>
   <body>
 
-
-      <nav class="navbar navbar-default" ng-controller="TabsController">
+    <div ng-controller="TabsController">
+      <nav class="navbar navbar-default" ng-hide="navVisible">
         <div class="container-fluid">
 
           <div class="navbar-header">
@@ -46,6 +46,7 @@
           </div>
         </div>
       </nav >
+    </div>
     <!--div class="navbar">
       <ul class="nav navbar-nav" ng-controller="TabsController">
         <li ng-class="navClass('Visualize')"><a href='' ng-click="loadVisualize()">Visualize</a></li>

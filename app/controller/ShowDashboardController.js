@@ -3,6 +3,10 @@ define(
       function ShowDashboardController($scope, $route, $routeParams, esFactory, ESService, ModalService, Notification) {
 				angular.element(document).ready(function () {
 
+					/////////////////Eliminar navbar
+					$scope.$parent.navVisible = true;
+					$(".contain").css("padding-top", "0px")
+					/////////////////
 					console.log("ID DEL DASHBOARD A CARGAR: ", $routeParams.name)
 					var generatorQueries = genES()
 					var builderData = builderESDS()
@@ -18,11 +22,15 @@ define(
 
 						for (var i = 0; i < $scope.actualLoadDashboard._source.panels.length; i++) {
 							var promise = genES.getPanel(ESService.client, $scope.actualLoadDashboard._source.panels[i].id)
-							var actuali = i;
-			        promise.then(function (resp) {
+			        promise.then(function (resp, i) {
 			          console.log("Cargado panel: ", resp.hits.hits[0])
 			          var panel = resp.hits.hits[0];
-								$scope.addPanelToDash(panel, $scope.actualLoadDashboard._source.panels[actuali].x, $scope.actualLoadDashboard._source.panels[actuali].y, $scope.actualLoadDashboard._source.panels[actuali].z);
+								for (var i = 0; i < $scope.actualLoadDashboard._source.panels.length; i++) {
+									if($scope.actualLoadDashboard._source.panels[i].id == panel._id){
+										$scope.addPanelToDash(panel, $scope.actualLoadDashboard._source.panels[i].x, $scope.actualLoadDashboard._source.panels[i].y, $scope.actualLoadDashboard._source.panels[i].z);
+									}
+								}
+
 			        })
 						}
 
@@ -31,27 +39,19 @@ define(
 							var actuali = i;
 			        promise.then(function (resp) {
 			          console.log("Cargado chart: ", resp.hits.hits[0])
-			          var panel = resp.hits.hits[0];
-								$scope.addVisToDash(panel, $scope.actualLoadDashboard._source.charts[actuali].x, $scope.actualLoadDashboard._source.charts[actuali].y, $scope.actualLoadDashboard._source.charts[actuali].z);
+			          var chart = resp.hits.hits[0];
+
+								for (var i = 0; i < $scope.actualLoadDashboard._source.charts.length; i++) {
+									if($scope.actualLoadDashboard._source.charts[i].id == chart._id){
+										$scope.addVisToDash(chart, $scope.actualLoadDashboard._source.charts[i].x, $scope.actualLoadDashboard._source.charts[i].y, $scope.actualLoadDashboard._source.charts[i].z);
+									}
+								}
+
 			        })
 						}
 	        })
 
 
-					//////////////////LOAD ALL VIS ALL PANELS//////////////////
-					/*var promise = genES.loadAllVis(ESService.client)
-	        promise.then(function (resp) {
-	          console.log("Cargadas: ", resp.hits.hits)
-	          $scope.loadedvis = resp.hits.hits;
-	        })
-
-					//Me traigo las visualizaciones
-					var promise = genES.loadAllPanels(ESService.client);
-					promise.then(function (resp) {
-						console.log("Cargadas: ", resp.hits.hits)
-						$scope.loadedpanels = resp.hits.hits;
-					})*/
-					////////////////////////////////////////////////
 
 					//////////////////////////////////////AÑADIR VIS A DASHBOARD//////////////////////
 					$scope.addVisToDash = function(visall, posx, posy, posz){
@@ -163,152 +163,6 @@ define(
 					}
 
 					////////////////////////////////////////////////
-
-					/////////////////////////////MODAL PARA ELEGIR LA POSICION DE LA VIS O EL PANEL EN EL DASHBOARD/////////////////////////////
-					/*$scope.openAddToDashModal = function(item, isPanel) {
-
-
-						ModalService.showModal({
-								templateUrl: 'positionvispanelmodal.html',
-								scope: $scope,
-								controller: function($scope, close) {
-
-									$scope.acceptAdd = function(result) {
-
-										if(isPanel){
-											$scope.addPanelToDash(item, $scope.x, $scope.y, $scope.z);
-										}else{
-											$scope.addVisToDash(item, $scope.x, $scope.y, $scope.z);
-										}
-									}
-
-
-								}
-						}).then(function(modal) {
-								modal.element.modal();
-								modal.close.then(function(result) {
-										console.log("modal cerrado de position")
-								});
-						});
-					};*/
-					///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-					///////////////////////////////////SAVE PANEL////////////////////////////////////
-					/*
-					$scope.openSaveDashboardModal = function() {
-
-						if(!$scope.actualDashboard){
-							Notification.error("First build a Dashboard")
-							return
-						}
-
-							ModalService.showModal({
-			            templateUrl: 'savedashboardmodal.html',
-									scope: $scope,
-			            controller: function($scope, close) {
-
-										 $scope.save = function(result) {
-										 	console.log("Queremos guardar ---- ", $scope.name, $scope.description, $scope.$parent.actualDashboard)
-
-
-											var arrayChartsToSave = [];
-											var arrayPanelsToSave = [];
-
-											for (var i = 0; i < $scope.$parent.actualDashboard.panels.length; i++) {
-												var c = {
-													x: $scope.$parent.actualDashboard.panels[i].coords.x,
-													y: $scope.$parent.actualDashboard.panels[i].coords.y,
-													z: $scope.$parent.actualDashboard.panels[i].coords.z,
-													id : $scope.$parent.actualDashboard.panels[i]._id
-												}
-												arrayPanelsToSave.push(c)
-											}
-
-											for (var i = 0; i < $scope.$parent.actualDashboard.charts.length; i++) {
-												//Si no esta en panel
-												if(!$scope.$parent.actualDashboard.charts[i].panel){
-													var c = {
-														x: $scope.$parent.actualDashboard.charts[i].coords.x,
-														y: $scope.$parent.actualDashboard.charts[i].coords.y,
-														z: $scope.$parent.actualDashboard.charts[i].coords.z,
-														id : $scope.$parent.actualDashboard.charts[i]._id
-													}
-
-												}
-												arrayChartsToSave.push(c)
-											}
-
-
-
-											var promiseCheck = generatorQueries.checkDashboard(ESService.client, $scope.name)
-											//ERROR GUARDANDO COMPROBAMOS SI EXISTE
-											promiseCheck.then(function(response, error){
-												if(error){
-													Notification.error("ElasticSearch error")
-												}
-
-												//SI NO EXISTE SE CREA DE 0, SI NO HAY QUE PREGUNTAR SI QUIERE SOBREESCRIBIRSE
-												if(response.hits.hits.length == 0){
-													//Guardo
-													var promise = generatorQueries.createDashboard(ESService.client, $scope.name, $scope.description, arrayChartsToSave, arrayPanelsToSave);
-													promise.then(function(response, error){
-														if(error){
-															Notification.error("Error creating dash")
-															return
-														}
-														Notification.success("Dashboard created")
-													})
-												}else{
-													console.log("Modal of confirm");
-													//MODAL DE CONFIRMACION
-													ModalService.showModal({
-									            templateUrl: 'updatedashboardmodalconfirm.html',
-															scope: $scope,
-									            controller: function($scope, close) {
-
-																 $scope.confirmUpdate = function(result) {
-																 	console.log("Actualizar ---- ", $scope.name, $scope.description, $scope.$parent.actualDashboard)
-																	//Guardo
-																	var promiseUpdate = generatorQueries.updateDashboard(ESService.client, $scope.name, $scope.description, arrayChartsToSave, arrayPanelsToSave);
-																	promiseUpdate.then(function(response, error){
-																		if(error){
-																			Notification.error("Error updating dash")
-																			return
-																		}
-																		Notification.success("Dashboard updated")
-																	})
-																 };
-
-																 $scope.cancelUpdate = function(result) {
-																 	console.log("cancel update")
-																 };
-
-															}
-									        }).then(function(modal) {
-									            modal.element.modal();
-									            modal.close.then(function(result) {
-									                console.log("modal cerrado")
-									            });
-									        });
-													///////////////
-												}
-											})
-
-										 };
-
-										 $scope.cancel = function(result) {
-										 	console.log("cancel")
-										 };
-										 ///////////////////////////////////////////////////////////////////////7
-									}
-			        }).then(function(modal) {
-			            modal.element.modal();
-			            modal.close.then(function(result) {
-			                console.log("modal cerrado")
-			            });
-			        });
-					};*/
 
 					///////////////////////////////////////////THREEDC/////////////////////////////////////////
 					var container = document.getElementById( 'ThreeJSShow' );
