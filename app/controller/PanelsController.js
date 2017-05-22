@@ -40,27 +40,27 @@ define(
 
 						switch (vis.chartType) {
 								case "pie":
-										var chart = THREEDC.pieChart().data(vis.visobject._data).setId(visall._id).addCustomEvents(editVis);
+										var chart = THREEDC.pieChart().data(vis.data).setId(visall._id).addCustomEvents(editVis);
 										$scope.actualPanel.addChart(chart, {row:row, column: column})
 										break
 								case "bars":
-										var chart = THREEDC.barsChart().data(vis.visobject._data).setId(visall._id);
+										var chart = THREEDC.barsChart().data(vis.data).setId(visall._id);
 										$scope.actualPanel.addChart(chart, {row:row, column: column})
 										break;
 								case "line":
-										var chart = THREEDC.lineChart().data(vis.visobject._data).setId(visall._id);
+										var chart = THREEDC.lineChart().data(vis.data).setId(visall._id);
 										$scope.actualPanel.addChart(chart, {row:row, column: column})
 										break;
 								case "curve":
-										var chart = THREEDC.smoothCurveChart().data(vis.visobject._data).setId(visall._id);
+										var chart = THREEDC.smoothCurveChart().data(vis.data).setId(visall._id);
 										$scope.actualPanel.addChart(chart, {row:row, column: column})
 										break;
 								case "3DBars":
-										var chart = THREEDC.TDbarsChart().data(vis.visobject._data).setId(visall._id).gridsOn();
+										var chart = THREEDC.TDbarsChart().data(vis.data).setId(visall._id).gridsOn();
 										$scope.actualPanel.addChart(chart, {row:row, column: column})
 										break;
 								case "bubbles":
-										var chart = THREEDC.bubbleChart().data(vis.visobject._data).setId(visall._id).gridsOn();
+										var chart = THREEDC.bubbleChart().data(vis.data).setId(visall._id).gridsOn();
 										$scope.actualPanel.addChart(chart, {row:row, column: column})
 										break;
 								default:
@@ -286,27 +286,27 @@ define(
 
 							switch (vis.chartType) {
 									case "pie":
-											var chart = THREEDC.pieChart().data(vis.visobject._data).setId(visall.id);
+											var chart = THREEDC.pieChart().data(vis.data).setId(visall.id);
 											panel.addChart(chart, {row:rowchart, column: rowcolumn})
 											break
 									case "bars":
-											var chart = THREEDC.barsChart().data(vis.visobject._data).setId(visall.id);
+											var chart = THREEDC.barsChart().data(vis.data).setId(visall.id);
 											panel.addChart(chart, {row:rowchart, column: rowcolumn})
 											break;
 									case "line":
-											var chart = THREEDC.lineChart().data(vis.visobject._data).setId(visall.id);
+											var chart = THREEDC.lineChart().data(vis.data).setId(visall.id);
 											panel.addChart(chart, {row:rowchart, column: rowcolumn})
 											break;
 									case "curve":
-											var chart = THREEDC.smoothCurveChart().data(vis.visobject._data).setId(visall.id);
+											var chart = THREEDC.smoothCurveChart().data(vis.data).setId(visall.id);
 											panel.addChart(chart, {row:rowchart, column: rowcolumn})
 											break;
 									case "3DBars":
-											var chart = THREEDC.TDbarsChart().data(vis.visobject._data).setId(visall.id).gridsOn();
+											var chart = THREEDC.TDbarsChart().data(vis.data).setId(visall.id).gridsOn();
 											panel.addChart(chart, {row:rowchart, column: rowcolumn})
 											break;
 									case "bubbles":
-											var chart = THREEDC.bubbleChart().data(vis.visobject._data).setId(visall.id).gridsOn();
+											var chart = THREEDC.bubbleChart().data(vis.data).setId(visall.id).gridsOn();
 											panel.addChart(chart, {row:rowchart, column: rowcolumn})
 											break;
 									default:

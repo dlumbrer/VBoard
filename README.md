@@ -102,7 +102,7 @@ PUT .vboard
                 "typeOfES" : {"type": "text"},
                 "metricsSelected" : { "type": "object" },
                 "bucketsSelected" : { "type": "object" },
-                "visobject" : { "type": "object" }
+                "data" : { "type": "object" }
             }
         }
     }
@@ -119,6 +119,14 @@ PUT .vboard/_mapping/panelthreed
     "charts" : { "type" : "object" },
     "name" : { "type" : "text" },
     "description" : { "type" : "text" }
+  }
+}
+
+PUT .vboard/_mapping/dashthreed
+{
+  "properties": {
+    "panels" : { "type" : "object" },
+    "charts" : { "type" : "object" }
   }
 }
 ```

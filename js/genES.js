@@ -243,7 +243,7 @@ function genES () {
   }
 
   //Actualizar VISUALIZACIÓN ES
-  genES.updateVis = function(client, nameP, descriptionP, vistype, visobjectP, index, type, metrics, buckets){
+  genES.updateVis = function(client, nameP, descriptionP, vistype, dataP, index, type, metrics, buckets){
 
     var promise = client.update({
       index: '.vboard',
@@ -254,7 +254,7 @@ function genES () {
           chartType: vistype,
           description: descriptionP,
           name: nameP,
-          visobject: visobjectP,
+          data: dataP,
           indexOfES: index,
           typeOfES: type,
           metricsSelected: metrics,
@@ -308,7 +308,7 @@ function genES () {
   }
 
   //CREAR VISUALIZACIÓN ES
-  genES.createVis = function(client, nameP, descriptionP, vistype, visobjectP, index, type, metrics, buckets){
+  genES.createVis = function(client, nameP, descriptionP, vistype, dataP, index, type, metrics, buckets){
 
     var promise = client.create({
       index: '.vboard',
@@ -318,7 +318,7 @@ function genES () {
         chartType: vistype,
         description: descriptionP,
         name: nameP,
-        visobject: visobjectP,
+        data: dataP,
         indexOfES: index,
         typeOfES: type,
         metricsSelected: metrics,
