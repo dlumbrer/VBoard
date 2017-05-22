@@ -351,7 +351,12 @@ define(
 						console.log("Respuesta (Agregaciones)", $scope.aggregations)
 
 
-						dash.removeAllCharts();
+						console.log("CHARTS:", dash.allCharts())
+						chartsInScene = dash.allCharts();
+						for (var i = 0; i < chartsInScene.length; i++) {
+							chartsInScene[i].parentEl.removeChild(chartsInScene[i])
+						}
+						//dash.removeAllCharts();
 
 
 						switch ($scope.visType) {
@@ -433,8 +438,6 @@ define(
 					addTitles();
 					//La muestro
 					$scope.showDataNowBuilt();
-					//dash.removeAll();
-					//visobject.render();
 				}
 				/////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -459,24 +462,17 @@ define(
 
 				 switch (visType) {
 						 case "pie":
-							 chart=THREEDC.pieChart()
-							 chart.gridsOn();
+							 chart = aframedc.pieChart().data(data).depth(1);
 							 break;
 						 case "bars":
-							 chart=THREEDC.barsChart()
-							 chart.gridsOn();
-							 break;
-						 case "line":
-							 chart=THREEDC.lineChart()
-							 chart.gridsOn();
+							 chart=aframedc.barChart().data(data)
 							 break;
 						 case "curve":
-							 chart=THREEDC.smoothCurveChart()
-							 chart.gridsOn();
+							 chart=aframedc.smoothCurveChart().data(data)
 							 break;
 				 }
 
-				 chart.data(data)
+				 //chart.data(data)
 
 				 ////////////GUARDAR LA VISUALIACION EN EL SCOPE
 				 $scope.actualVis = {
@@ -492,7 +488,7 @@ define(
 				 		dash.allCharts[i].reBuild()
 				 }*/
 
-				 dash.addChart(chart, {x:100, y:100, z:100})
+				 dash.addChart(chart, {x:0, y:-3, z:-10})
 				 //pie.render();
 			 }
 
@@ -522,12 +518,12 @@ define(
 
 				data = getOrderedDataTD(data);
 
-				bars=THREEDC.TDbarsChart();
-				bars.data(data);
-				bars.width(300);
+				bars=aframedc.barChart3d().data(data);
+				//bars.data(data);
+				/*bars.width(300);
 				bars.height(400);
 				bars.depth(500);
-				bars.gridsOn();
+				bars.gridsOn();*/
 
 				////////////GUARDAR LA VISUALIACION EN EL SCOPE
 				$scope.actualVis = {
@@ -536,15 +532,10 @@ define(
 					bucketsSelected : $scope.bucketsSelected,
 					metricsSelected : $scope.metricsSelected
 				}
-				//$scope.actualVis = $.extend(true, {}, bars);
 				console.log("SCOPE CON LA VISUALIZACIÓN", $scope)
 
-				/*for (var i = 0; i < dash.allCharts.length; i++) {
-					 dash.allCharts[i].reBuild()
-				}*/
-				//bars.render();
 
-				dash.addChart(bars, {x:100, y:100, z:100})
+				dash.addChart(bars, {x:0, y:-3, z:-7})
 			}
 
 			$scope.buildBubblesChart = function(){
@@ -697,12 +688,19 @@ define(
 			  return finalData;
 			}
 
-/////////////////////////////////CONSTRUCCIÓN DE THREEDC////////////////////////////////////////////
+/////////////////////////////////CONSTRUCCIÓN DE AFRAME////////////////////////////////////////////
 
-        var container = document.getElementById( 'ThreeJS' );
 
-				var dash = THREEDC.dashBoard(container);
-
+				var scenediv = document.getElementById("Aframediv");
+				// 1
+				dash = aframedc.dashboard(scenediv);
+				// 2
+				/*var myPieChart = aframedc.pieChart();
+				// Common
+				var data = [{ key: 'bla', value: 85 }, { key: 'bla2', value: 21 }, { key: 'bla2', value: 10 },
+						{ key: 'bla2', value: 5 }, { key: 'bla2', value: 38 }, { key: 'bla2', value: 200 }];
+				myPieChart = myPieChart.data(data).depth(1);
+				myDashboard.addChart(myPieChart);*/
 
 
 
