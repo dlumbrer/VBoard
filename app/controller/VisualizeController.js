@@ -354,7 +354,9 @@ define(
 						console.log("CHARTS:", dash.allCharts())
 						chartsInScene = dash.allCharts();
 						for (var i = 0; i < chartsInScene.length; i++) {
-							chartsInScene[i].parentEl.removeChild(chartsInScene[i])
+							if(chartsInScene[i].parentEl){
+								chartsInScene[i].parentEl.removeChild(chartsInScene[i])
+							}
 						}
 						//dash.removeAllCharts();
 
@@ -573,12 +575,12 @@ define(
 
 					data = getOrderedDataBubbles(data);
 
-					bubbles=THREEDC.bubbleChart()
-					bubbles.data(data);
+					bubbles=aframedc.bubbleChart().data(data)
+					/*bubbles.data(data);
 					bubbles.width(300);
 					bubbles.height(400);
 					bubbles.depth(500);
-					bubbles.gridsOn();
+					bubbles.gridsOn();*/
 
 					////////////GUARDAR LA VISUALIACION EN EL SCOPE
 					$scope.actualVis = {
@@ -595,7 +597,7 @@ define(
 					}*/
 					//bubbles.render();
 
-					dash.addChart(bubbles, {x:100, y:100, z:100})
+					dash.addChart(bubbles, {x:0, y:-3, z:-10})
 			}
 
 
