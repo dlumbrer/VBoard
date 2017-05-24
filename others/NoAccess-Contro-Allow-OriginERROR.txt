@@ -1,0 +1,18 @@
+No 'Access-Control-Allow-Origin' header is present on the requested resource
+
+
+Solution: add this lines into elasticsearch-5xx/config/elasticsearh.yml
+
+http.cors.enabled: true
+http.cors.allow-origin: "*"
+
+
+
+
+
+
+
+
+
+
+link: https://github.com/elastic/elasticsearch/issues/9031
