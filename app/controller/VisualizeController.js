@@ -10,7 +10,7 @@ define(
         //////////////////////////////////PRIMERO OBTENER INDICES////////////////////////////////
 				var generatorQueries = genES()
 				var builderData = builderESDS()
-				$scope.typeName = "items";
+
 
         ESService.client.cat.indices({
           h: ['index', 'docs.count']
@@ -34,13 +34,12 @@ define(
         $scope.searchMappingFromIndex = function(){
           $scope.showMapping = !$scope.showMapping;
 					if($scope.showMapping){
-	          $scope.indexName = $("#indexesList").val();
 	          ESService.client.indices.getMapping({index: $scope.indexName}, function(error, resp) {
 	            if (error) {
 	                console.log(error);
 	            } else {
 	                console.log(resp);
-	                $scope.mapping = JSON.stringify(resp, undefined, 2);
+	                $scope.mappingToShow = JSON.stringify(resp, undefined, 2);
 	            }
 	          });
 					}
@@ -48,10 +47,7 @@ define(
         ///////////////////////////////////////////////////////////////////////////////////////
 
         /////////////////////////////////////TRAER MAPPING PARA PODER ELEGIR LUEGO LOS CAMPO SEGUN LA METRICA/BUCKET///////////////////
-        $scope.typeFromIndex = function(){
-          $scope.showTypeForm = true;
-
-          $scope.indexName = $("#indexesList").val();
+				$scope.selectType = function(){
           ESService.client.indices.getMapping({index: $scope.indexName}, function(error, resp) {
             if (error) {
                 console.log(error);
@@ -63,6 +59,17 @@ define(
             }
           });
         }
+
+        $scope.typeFromIndex = function(){
+
+					if(!$scope.typeName || !$scope.indexName){
+						Notification.error('You must select Index and Type to search');
+						$scope.showTypeForm = false;
+						return;
+					}
+					$scope.showTypeForm = true;
+
+        }
         //////////////////////////////////////////////////////////////////////
 
         /////////////////////////////////////Una vez con el indice y el tipo podemos buscar metricas y buckets///////////////
@@ -70,8 +77,6 @@ define(
         $scope.showMetricsBuckets = function(){
 					if($scope.visType){
 	          $scope.showMetricBucketsForm = true;
-	          //$scope.visType = $("#typesList").val();
-						$scope.typeName = "items";
 
 					}else{
 						Notification.error('First select chart type');
@@ -349,7 +354,7 @@ define(
 				$scope.showDataNowBuilt = function(){
 					var statements = builderData.buildDataStructure().getDataStructure()
 
-					var promiseSearch = generatorQueries.buildBodybuilderObject(statements, bodybuilder).buildQuery().executeSearch(ESService.client, $scope.indexName)
+					var promiseSearch = generatorQueries.buildBodybuilderObject(statements, bodybuilder).buildQuery().executeSearch(ESService.client, $scope.indexName, $scope.typeName)
 					//PROMESA
 					promiseSearch.then(function (resp) {
 						$scope.hits = JSON.stringify(resp.hits, undefined, 2);

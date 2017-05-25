@@ -4,8 +4,14 @@
     <div class="row">
       <label class="control-label col-sm-2" for="indexesList">Index:</label>
       <div class="col-md-10">
-        <select class="form-control" id="indexesList">
+        <select class="form-control" ng-model="indexName" id="indexesList" ng-change="selectType()">
           <option ng-repeat="index in indexes" value="{{index.name}}">{{index.name}}</option>
+        </select>
+      </div>
+      <label class="control-label col-sm-2" for="typesList">Type:</label>
+      <div class="col-sm-10">
+        <select class="form-control" ng-model="typeName" id="typesList">
+          <option ng-repeat="type in types"  value="{{type}}">{{type}}</option>
         </select>
       </div>
     </div>
@@ -17,12 +23,11 @@
     </div>
 
     <!--div ng-show="showTypeForm">
-    <hr>
       <div class="row">
         <label class="control-label col-sm-2" for="typesList">Type:</label>
         <div class="col-sm-10">
           <select class="form-control" id="typesList">
-            <option ng-repeat="type in types" value="{{type}}">{{type}}</option>
+            <option ng-repeat="type in types" ng-model="typeName" value="{{type}}">{{type}}</option>
           </select>
         </div>
       </div>
@@ -268,7 +273,7 @@
 <div class="row" ng-show="showMapping">
   <div class="col-md-12">
     <h2>Mapping of {{indexName}}:</h2>
-    <pre>{{mapping}}</pre>
+    <pre>{{mappingToShow}}</pre>
   </div>
 </div>
 
