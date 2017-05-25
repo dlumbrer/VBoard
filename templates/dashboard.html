@@ -25,7 +25,8 @@
 
         <div class="row">
           <h4>Options: </h4>
-          <button type="button" class="col-md-12 btn btn-success" ng-click="openSaveDashboardModal()">Save Panel</button>
+          <button type="button" class="col-md-12 btn btn-success" ng-click="openSaveDashboardModal()">Save Dashboard</button>
+          <button type="button" class="col-md-12 btn btn-primary" ng-click="openLoadDashboardModal()">Load Dashboard</button>
         </div>
 
       </div>
@@ -129,6 +130,30 @@
         </div>
        </script>
 
+
+       <script type="text/ng-template" id="loaddashmodal.html">
+         <div class="modal fade">
+           <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" ng-click="close()" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Choose dashboard</h4>
+              </div>
+              <div class="modal-body">
+                <ul class="list-group">
+                  <a href="" data-dismiss="modal" ng-click="loadDash(dash)" class="list-group-item" ng-repeat="dash in loadeddashboards"><span class="badge">{{dash._source.panels.length}} panels & {{panel._source.charts.length}} charts</span>
+                    <h4 class="list-group-item-heading">{{dash._source.name}}</h4>
+                    <p class="list-group-item-text">{{dash._source.description}}</p>
+                  </a>
+                </ul>
+              </div>
+              <div class="modal-footer">
+                <button type="button" ng-click="cancel()" class="btn" data-dismiss="modal">Cancel</button>
+              </div>
+            </div>
+           </div>
+         </div>
+        </script>
 
   </div>
 
