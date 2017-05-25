@@ -7,79 +7,84 @@ define(
 
 				var bodybuilder = require('node_modules/bodybuilder/browser/bodybuilder.min')
 
-        //////////////////////////////////PRIMERO OBTENER INDICES////////////////////////////////
+				//////////////////////////////////PRIMERO OBTENER INDICES////////////////////////////////
 				var generatorQueries = genES()
 				var builderData = builderESDS()
-				$scope.typeName = "items";
 
-        ESService.client.cat.indices({
-          h: ['index', 'docs.count']
-        }).then(function (body) {
-          let lines = body.split('\n');
-          let indices = lines.map(function (line) {
-            let row = line.split(' ');
-            return {name: row[0], count: row[1]};
-          });
-          indices.pop(); //the last line is empty by default
-          $scope.indexes = indices;
-          console.log("INDICES", indices)
-        }, function (err) {
-		        return "ERROR"
-		        console.trace(err.message);
-		    });
+
+				ESService.client.cat.indices({
+					h: ['index', 'docs.count']
+				}).then(function (body) {
+					let lines = body.split('\n');
+					let indices = lines.map(function (line) {
+						let row = line.split(' ');
+						return {name: row[0], count: row[1]};
+					});
+					indices.pop(); //the last line is empty by default
+					$scope.indexes = indices;
+					console.log("INDICES", indices)
+				}, function (err) {
+						return "ERROR"
+						console.trace(err.message);
+				});
 				/////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-        /////////////////////////////SHOW MAPPING OF THE INDEX SELECTED IF YOU WANT////////////////////////////
-        $scope.searchMappingFromIndex = function(){
-          $scope.showMapping = !$scope.showMapping;
+				/////////////////////////////SHOW MAPPING OF THE INDEX SELECTED IF YOU WANT////////////////////////////
+				$scope.searchMappingFromIndex = function(){
+					$scope.showMapping = !$scope.showMapping;
 					if($scope.showMapping){
-	          $scope.indexName = $("#indexesList").val();
-	          ESService.client.indices.getMapping({index: $scope.indexName}, function(error, resp) {
-	            if (error) {
-	                console.log(error);
-	            } else {
-	                console.log(resp);
-	                $scope.mapping = JSON.stringify(resp, undefined, 2);
-	            }
-	          });
+						ESService.client.indices.getMapping({index: $scope.indexName}, function(error, resp) {
+							if (error) {
+									console.log(error);
+							} else {
+									console.log(resp);
+									$scope.mappingToShow = JSON.stringify(resp, undefined, 2);
+							}
+						});
 					}
-        }
-        ///////////////////////////////////////////////////////////////////////////////////////
+				}
+				///////////////////////////////////////////////////////////////////////////////////////
 
-        /////////////////////////////////////TRAER MAPPING PARA PODER ELEGIR LUEGO LOS CAMPO SEGUN LA METRICA/BUCKET///////////////////
-        $scope.typeFromIndex = function(){
-          $scope.showTypeForm = true;
+				/////////////////////////////////////TRAER MAPPING PARA PODER ELEGIR LUEGO LOS CAMPO SEGUN LA METRICA/BUCKET///////////////////
+				$scope.selectType = function(){
+					ESService.client.indices.getMapping({index: $scope.indexName}, function(error, resp) {
+						if (error) {
+								console.log(error);
+						} else {
+								//console.log(resp);
+								$scope.mapping = resp;
+								$scope.types = Object.keys($scope.mapping[$scope.indexName].mappings);
+								console.log("MAPPING", $scope.mapping[$scope.indexName].mappings);
+						}
+					});
+				}
 
-          $scope.indexName = $("#indexesList").val();
-          ESService.client.indices.getMapping({index: $scope.indexName}, function(error, resp) {
-            if (error) {
-                console.log(error);
-            } else {
-                //console.log(resp);
-                $scope.mapping = resp;
-                $scope.types = Object.keys($scope.mapping[$scope.indexName].mappings);
-                console.log("MAPPING", $scope.mapping[$scope.indexName].mappings);
-            }
-          });
-        }
-        //////////////////////////////////////////////////////////////////////
+				$scope.typeFromIndex = function(){
 
-        /////////////////////////////////////Una vez con el indice y el tipo podemos buscar metricas y buckets///////////////
+					if(!$scope.typeName || !$scope.indexName){
+						Notification.error('You must select Index and Type to search');
+						$scope.showTypeForm = false;
+						return;
+					}
+					$scope.showTypeForm = true;
 
-        $scope.showMetricsBuckets = function(){
+				}
+				//////////////////////////////////////////////////////////////////////
+
+				/////////////////////////////////////Una vez con el indice y el tipo podemos buscar metricas y buckets///////////////
+
+				$scope.showMetricsBuckets = function(){
 					if($scope.visType){
-	          $scope.showMetricBucketsForm = true;
-	          //$scope.visType = $("#typesList").val();
-						$scope.typeName = "items";
+						$scope.showMetricBucketsForm = true;
 
 					}else{
 						Notification.error('First select chart type');
 					}
-        }
-        $scope.hideMetricsBucketsForm = function(){
-          $scope.showMetricBucketsForm = false;
-        }
+				}
+				$scope.hideMetricsBucketsForm = function(){
+					$scope.showMetricBucketsForm = false;
+				}
 
         ///////////////////////////////////////////////////////////////////////
 

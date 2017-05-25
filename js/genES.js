@@ -79,10 +79,10 @@ function genES () {
 
 
   //Este metodo devuelve una promesa por que esta haciendo una búsqueda externa
-  genES.executeSearch = function(client, indexName){
+  genES.executeSearch = function(client, indexName, typeName){
     var promise = client.search({
       index: indexName,
-      type: 'items',
+      type: typeName,
       size: 5,
       body: genES.query
     })
