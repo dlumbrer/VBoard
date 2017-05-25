@@ -279,6 +279,79 @@ define(
 			        });
 					};
 
+
+										///////////////////////////////////LOAD DASHBOARD////////////////////////////////////
+
+										$scope.openLoadDashboardModal = function() {
+
+											ModalService.showModal({
+													templateUrl: 'loaddashmodal.html',
+													scope: $scope,
+													controller: function($scope, close) {
+
+														//Me traigo las visualizaciones
+														var promise = genES.loadAllDashboards(ESService.client);
+
+														promise.then(function (resp) {
+															console.log("Dashboards cargados: ", resp.hits.hits)
+															$scope.loadeddashboards = resp.hits.hits;
+														})
+
+
+
+													}
+											}).then(function(modal) {
+													modal.element.modal();
+													modal.close.then(function(result) {
+															console.log("modal cerrado de carga")
+													});
+											});
+										};
+
+										$scope.loadDash = function(dashtoadd){
+											console.log("cargar dash:", dashtoadd);
+
+											//Borrar todo
+											$scope.actualDashboard.removeAllCharts();
+											if($scope.actualDashboard.panels){
+												for (var i = 0; i < $scope.actualDashboard.panels.length; i++) {
+													$scope.actualDashboard.panels[i].remove();
+												}
+											}
+
+											//Pintar visualizaciones
+											for (var i = 0; i < dashtoadd._source.panels.length; i++) {
+												var promise = genES.getPanel(ESService.client, dashtoadd._source.panels[i].id)
+												promise.then(function (resp, i) {
+													console.log("Cargado panel: ", resp.hits.hits[0])
+													var panel = resp.hits.hits[0];
+													for (var i = 0; i < dashtoadd._source.panels.length; i++) {
+														if(dashtoadd._source.panels[i].id == panel._id){
+															$scope.addPanelToDash(panel, dashtoadd._source.panels[i].x, dashtoadd._source.panels[i].y, dashtoadd._source.panels[i].z);
+														}
+													}
+
+												})
+											}
+
+											for (var i = 0; i < dashtoadd._source.charts.length; i++) {
+												var promise = genES.getVis(ESService.client, dashtoadd._source.charts[i].id)
+												var actuali = i;
+												promise.then(function (resp) {
+													console.log("Cargado chart: ", resp.hits.hits[0])
+													var chart = resp.hits.hits[0];
+
+													for (var i = 0; i < dashtoadd._source.charts.length; i++) {
+														if(dashtoadd._source.charts[i].id == chart._id){
+															$scope.addVisToDash(chart, dashtoadd._source.charts[i].x, dashtoadd._source.charts[i].y, dashtoadd._source.charts[i].z);
+														}
+													}
+
+												})
+											}
+
+										}
+
 					///////////////////////////////////////////THREEDC/////////////////////////////////////////
 					var container = document.getElementById( 'ThreeJSDashboard' );
 

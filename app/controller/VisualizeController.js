@@ -207,7 +207,15 @@ define(
 									});
 									break;
 							case "cardinality":
-									$scope.fieldsMetric[index] = Object.keys($scope.mapping[$scope.indexName].mappings[$scope.typeName].properties);
+									$scope.fieldsMetric[index] = [];
+									var allFields = $scope.mapping[$scope.indexName].mappings[$scope.typeName].properties;
+									Object.keys(allFields).forEach(function(key,index) {
+											if(allFields[key].type == "text"){
+												$scope.fieldsMetric[index].push(key + ".keyword")
+											}else{
+												$scope.fieldsMetric[index].push(key)
+											}
+									});
 									break;
 					}
 				}
@@ -229,7 +237,6 @@ define(
 												$scope.fields[ind].push(key)
 											}
 									});
-									break;
 									break;
 							case "date_histogram":
 									$scope.fields[ind] = [];
@@ -266,7 +273,7 @@ define(
 							case "min":
 							case "extended_stats":
 							case "cardinality":
-									var fieldSelected = $("#fieldMetricList" + ind).val() + ".keyword";
+									var fieldSelected = $("#fieldMetricList" + ind).val();
 									builderData.addMetric(metricSelected, fieldSelected);
 									break;
 							case "median":
