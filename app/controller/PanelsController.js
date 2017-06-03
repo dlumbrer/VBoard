@@ -365,7 +365,7 @@ define(
 
 					var dash = THREEDC.dashBoard(container);
 
-					$scope.createNewPanel({x:100,y:100,z:100},3,3,[500,500],0.6);
+					$scope.createNewPanel({x:0,y:0,z:0},3,3,[500,500],0.6);
 
 
 					/////////////////////////////////////////////////////////////////////////////////////
