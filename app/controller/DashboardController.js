@@ -289,7 +289,7 @@ define(
 								scope: $scope,
 								controller: function($scope, close) {
 
-									//Me traigo las visualizaciones
+									//Me traigo los dashboards
 									var promise = genES.loadAllDashboards(ESService.client);
 
 									promise.then(function (resp) {

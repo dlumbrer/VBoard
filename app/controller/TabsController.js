@@ -17,6 +17,9 @@ define(
 				$scope.loadDashboard = function () {
 					$location.url('/Dashboard');
 				};
+				$scope.loadShow = function () {
+					$location.url('/Show');
+				};
 
 
       }
