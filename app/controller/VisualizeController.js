@@ -1,7 +1,7 @@
 define(
 		['node_modules/bodybuilder/browser/bodybuilder.min'],
 		function() {
-      function VisualizeController($scope, esFactory, ESService, ModalService, Notification) {
+      function VisualizeController($scope, $rootScope, esFactory, ESService, ModalService, Notification) {
 				angular.element(document).ready(function () {
         $scope.foo = "YEAH!"
 
@@ -715,6 +715,7 @@ define(
 
 				var dash = THREEDC.dashBoard(container);
 
+				$rootScope.actualdash = dash;
 
 
 
@@ -849,7 +850,7 @@ define(
 
 
 
-      VisualizeController.$inject = [ '$scope', 'esFactory', 'ESService', 'ModalService', 'Notification'];
+      VisualizeController.$inject = [ '$scope',  '$rootScope', 'esFactory', 'ESService', 'ModalService', 'Notification'];
 
 			return VisualizeController;
 

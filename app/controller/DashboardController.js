@@ -1,6 +1,6 @@
 define(
 		function() {
-      function DashboardController($scope, esFactory, ESService, ModalService, Notification) {
+      function DashboardController($scope, $rootScope, esFactory, ESService, ModalService, Notification) {
 				angular.element(document).ready(function () {
 
 					var generatorQueries = genES()
@@ -357,6 +357,7 @@ define(
 
 					var dash = THREEDC.dashBoard(container);
 					$scope.actualDashboard = dash;
+					$rootScope.actualdash = dash;
 
 
 
@@ -365,7 +366,7 @@ define(
 				});
       }
 
-      DashboardController.$inject = [ '$scope', 'esFactory', 'ESService', 'ModalService', 'Notification'];
+      DashboardController.$inject = [ '$scope', '$rootScope', 'esFactory', 'ESService', 'ModalService', 'Notification'];
 
 			return DashboardController;
 

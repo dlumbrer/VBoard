@@ -1,6 +1,6 @@
 define(
 		function() {
-      function PanelsController($scope, esFactory, ESService, ModalService, Notification) {
+      function PanelsController($scope, $rootScope, esFactory, ESService, ModalService, Notification) {
 				angular.element(document).ready(function () {
 
 					var generatorQueries = genES()
@@ -367,13 +367,15 @@ define(
 
 					$scope.createNewPanel({x:0,y:0,z:0},3,3,[500,500],0.6);
 
+					$rootScope.actualdash = dash;
+
 
 					/////////////////////////////////////////////////////////////////////////////////////
 
 				});
       }
 
-      PanelsController.$inject = [ '$scope', 'esFactory', 'ESService', 'ModalService', 'Notification'];
+      PanelsController.$inject = [ '$scope', '$rootScope', 'esFactory', 'ESService', 'ModalService', 'Notification'];
 
 			return PanelsController;
 
