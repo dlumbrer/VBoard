@@ -289,7 +289,7 @@ function genES () {
   }
 
   //Actualizar DASHBOARD ES
-  genES.updateDashboard = function(client, nameP, descriptionP, chartsP, panelsP){
+  genES.updateDashboard = function(client, nameP, descriptionP, chartsP, panelsP, backgroundP){
 
     var promise = client.update({
       index: '.vboard',
@@ -297,6 +297,7 @@ function genES () {
       id: nameP,
       body: {
         doc: {
+          background: backgroundP,
           description: descriptionP,
           name: nameP,
           charts: chartsP,
@@ -353,13 +354,14 @@ function genES () {
 }
 
   //CREAR DASHBOARD ES
-  genES.createDashboard = function(client, nameP, descriptionP, chartsP, panelsP){
+  genES.createDashboard = function(client, nameP, descriptionP, chartsP, panelsP, backgroundP){
 
     var promise = client.create({
       index: '.vboard',
       type: 'dashthreed',
       id: nameP,
       body: {
+        background: backgroundP,
         description: descriptionP,
         name: nameP,
         charts: chartsP,

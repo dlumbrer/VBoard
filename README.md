@@ -141,8 +141,11 @@ PUT .vboard/_mapping/panelthreed
 PUT .vboard/_mapping/dashthreed
 {
   "properties": {
+    "background": { "type": "text"},
     "panels" : { "type" : "object" },
-    "charts" : { "type" : "object" }
+    "charts" : { "type" : "object" },
+    "name" : { "type" : "text" },
+    "description" : { "type" : "text" }
   }
 }
 ```

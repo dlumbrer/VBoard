@@ -220,7 +220,7 @@ define(
 												//SI NO EXISTE SE CREA DE 0, SI NO HAY QUE PREGUNTAR SI QUIERE SOBREESCRIBIRSE
 												if(response.hits.hits.length == 0){
 													//Guardo
-													var promise = generatorQueries.createDashboard(ESService.client, $scope.name, $scope.description, arrayChartsToSave, arrayPanelsToSave);
+													var promise = generatorQueries.createDashboard(ESService.client, $scope.name, $scope.description, arrayChartsToSave, arrayPanelsToSave, $rootScope.prefixActualBackground);
 													promise.then(function(response, error){
 														if(error){
 															Notification.error("Error creating dash")
@@ -239,7 +239,7 @@ define(
 																 $scope.confirmUpdate = function(result) {
 																 	console.log("Actualizar ---- ", $scope.name, $scope.description, $scope.$parent.actualDashboard)
 																	//Guardo
-																	var promiseUpdate = generatorQueries.updateDashboard(ESService.client, $scope.name, $scope.description, arrayChartsToSave, arrayPanelsToSave);
+																	var promiseUpdate = generatorQueries.updateDashboard(ESService.client, $scope.name, $scope.description, arrayChartsToSave, arrayPanelsToSave, $rootScope.prefixActualBackground);
 																	promiseUpdate.then(function(response, error){
 																		if(error){
 																			Notification.error("Error updating dash")
