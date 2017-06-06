@@ -100,27 +100,27 @@ define(
 
 							switch (vis.chartType) {
 									case "pie":
-											var chart = THREEDC.pieChart().data(vis.data).setId(visall.id);
+											var chart = THREEDC.pieChart().data(vis.data).setId(visall.id).radius(visall.width);
 											panel.addChart(chart, {row:rowchart, column: rowcolumn})
 											break
 									case "bars":
-											var chart = THREEDC.barsChart().data(vis.data).setId(visall.id);
+											var chart = THREEDC.barsChart().data(vis.data).setId(visall.id).width(visall.width).height(visall.height);
 											panel.addChart(chart, {row:rowchart, column: rowcolumn})
 											break;
 									case "line":
-											var chart = THREEDC.lineChart().data(vis.data).setId(visall.id);
+											var chart = THREEDC.lineChart().data(vis.data).setId(visall.id).width(visall.width).height(visall.height);
 											panel.addChart(chart, {row:rowchart, column: rowcolumn})
 											break;
 									case "curve":
-											var chart = THREEDC.smoothCurveChart().data(vis.data).setId(visall.id);
+											var chart = THREEDC.smoothCurveChart().data(vis.data).setId(visall.id).width(visall.width).height(visall.height);
 											panel.addChart(chart, {row:rowchart, column: rowcolumn})
 											break;
 									case "3DBars":
-											var chart = THREEDC.TDbarsChart().data(vis.data).setId(visall.id).gridsOn();
+											var chart = THREEDC.TDbarsChart().data(vis.data).setId(visall.id).width(visall.width).height(visall.height).depth(visall.depth).gridsOn();
 											panel.addChart(chart, {row:rowchart, column: rowcolumn})
 											break;
 									case "bubbles":
-											var chart = THREEDC.bubbleChart().data(vis.data).setId(visall.id).gridsOn();
+											var chart = THREEDC.bubbleChart().data(vis.data).setId(visall.id).width(visall.width).height(visall.height).depth(visall.depth).gridsOn();
 											panel.addChart(chart, {row:rowchart, column: rowcolumn})
 											break;
 									default:

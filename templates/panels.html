@@ -191,6 +191,25 @@
                  <input type="number" min="1" class="form-control" id="column" placeholder="column" ng-model="column">
                </div>
              </div>
+             <hr>
+             <div class="form-group">
+               <label for="age" class="col-sm-2 control-label">Width</label>
+               <div class="col-sm-10">
+                 <input type="number" min="1" class="form-control" placeholder="Chart Width" ng-model="width">
+               </div>
+             </div>
+             <div class="form-group" ng-show="showHeight">
+               <label for="age" class="col-sm-2 control-label">Height</label>
+               <div class="col-sm-10">
+                 <input type="number" min="1" class="form-control" placeholder="Chart Height" ng-model="height">
+               </div>
+             </div>
+             <div class="form-group" ng-show="showDepth">
+               <label for="age" class="col-sm-2 control-label">Depth</label>
+               <div class="col-sm-10">
+                 <input type="number" min="1" class="form-control" placeholder="Chart Depth" ng-model="depth">
+               </div>
+             </div>
            </form>
 
              </div>

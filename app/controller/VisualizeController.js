@@ -504,7 +504,7 @@ define(
 				 		dash.allCharts[i].reBuild()
 				 }*/
 
-				 dash.addChart(chart, {x:100, y:100, z:100})
+				 dash.addChart(chart, {x:0, y:0, z:0})
 				 //pie.render();
 			 }
 
