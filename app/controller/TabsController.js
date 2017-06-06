@@ -28,8 +28,8 @@ define(
 				$scope.idcurrentbackground = 0;
 
 				$scope.switchBackground = function (){
-					if($scope.skyBox){
-						$rootScope.actualdash.scene.remove($scope.skyBox);
+					if($rootScope.skyBox){
+						$rootScope.actualdash.scene.remove($rootScope.skyBox);
 					}
 
 					var arrayPrefix = ["dawnmountain-", "DarkSea-", "moondust-", "nebula-", "skycubemap-"]
@@ -51,8 +51,8 @@ define(
 									side: THREE.BackSide
 							}));
 					var skyMaterial = new THREE.MeshFaceMaterial( materialArray );
-					$scope.skyBox = new THREE.Mesh( skyGeometry, skyMaterial );
-					$rootScope.actualdash.scene.add( $scope.skyBox );
+					$rootScope.skyBox = new THREE.Mesh( skyGeometry, skyMaterial );
+					$rootScope.actualdash.scene.add( $rootScope.skyBox );
 					$rootScope.prefixActualBackground = arrayPrefix[$scope.idcurrentbackground];
 
 					$scope.idcurrentbackground++;

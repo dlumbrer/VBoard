@@ -319,6 +319,26 @@ define(
 							}
 						}
 
+						//Fondo///////////////
+						if(dashtoadd._source.background && dashtoadd._source.background != "none"){
+							var imagePrefix = "../../images/backgrounds/" + dashtoadd._source.background;
+							var directions  = ["xpos", "xneg", "ypos", "yneg", "zpos", "zneg"];
+							var imageSuffix = ".png";
+							var skyGeometry = new THREE.CubeGeometry( 5000, 5000, 5000 );
+
+							var materialArray = [];
+							for (var i = 0; i < 6; i++)
+									materialArray.push( new THREE.MeshBasicMaterial({
+											map: THREE.ImageUtils.loadTexture( imagePrefix + directions[i] + imageSuffix ),
+											side: THREE.BackSide
+									}));
+							var skyMaterial = new THREE.MeshFaceMaterial( materialArray );
+							$rootScope.skyBox = new THREE.Mesh( skyGeometry, skyMaterial );
+							$rootScope.actualdash.scene.add( $rootScope.skyBox );
+							$rootScope.prefixActualBackground = dashtoadd._source.background;
+						}
+						///////////////
+
 						//Pintar visualizaciones
 						for (var i = 0; i < dashtoadd._source.panels.length; i++) {
 							var promise = genES.getPanel(ESService.client, dashtoadd._source.panels[i].id)
