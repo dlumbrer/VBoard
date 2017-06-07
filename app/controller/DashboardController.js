@@ -100,7 +100,7 @@ define(
 
 							switch (vis.chartType) {
 									case "pie":
-											var chart = THREEDC.pieChart().data(vis.data).setId(visall.id).radius(visall.width);
+											var chart = THREEDC.pieChart().data(vis.data).setId(visall.id).radius(visall.width/2);
 											panel.addChart(chart, {row:rowchart, column: rowcolumn})
 											break
 									case "bars":

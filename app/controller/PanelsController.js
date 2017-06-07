@@ -40,7 +40,7 @@ define(
 
 						switch (vis.chartType) {
 								case "pie":
-										var chart = THREEDC.pieChart().data(vis.data).setId(visall._id).radius(width).addCustomEvents(editVis);
+										var chart = THREEDC.pieChart().data(vis.data).setId(visall._id).radius(width/2).addCustomEvents(editVis);
 										$scope.actualPanel.addChart(chart, {row:row, column: column})
 										break
 								case "bars":
@@ -289,7 +289,7 @@ define(
 
 							switch (vis.chartType) {
 									case "pie":
-											var chart = THREEDC.pieChart().data(vis.data).setId(visall.id).radius(visall.width);
+											var chart = THREEDC.pieChart().data(vis.data).setId(visall.id).radius(visall.width/2);
 											panel.addChart(chart, {row:rowchart, column: rowcolumn})
 											break
 									case "bars":
