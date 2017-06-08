@@ -4,9 +4,10 @@ define([
       'app/controller/PanelsController',
       'app/controller/DashboardController',
       'app/controller/ShowDashboardController',
+      'app/controller/ShowListController',
       'app/service/ESService'
     ],
-		 function(TabsController, VisualizeController, PanelsController, DashboardController, ShowDashboardController, ESService) {
+		 function(TabsController, VisualizeController, PanelsController, DashboardController, ShowDashboardController, ShowListController, ESService) {
 			var app = angular.module('myApp', ['ngRoute', 'elasticsearch', 'angularModalService', 'ui-notification', 'ui.bootstrap']);
 
       app.config(['$routeProvider',
@@ -24,6 +25,10 @@ define([
           		templateUrl: 'templates/dashboard.html',
           		controller: 'DashboardController'
             }).
+            when('/Show', {
+          		templateUrl: 'templates/showlist.html',
+          		controller: 'ShowListController'
+            }).
             when('/Show/:name*', {
           		templateUrl: 'templates/show.html',
           		controller: 'ShowDashboardController'
@@ -38,5 +43,6 @@ define([
       app.controller('PanelsController', PanelsController);
       app.controller('DashboardController', DashboardController);
       app.controller('ShowDashboardController', ShowDashboardController);
+      app.controller('ShowListController', ShowListController);
       app.service('ESService', ESService);
 		});
