@@ -188,6 +188,7 @@ define(
 
 					var dash = THREEDC.dashBoard(container);
 					$scope.actualDashboard = dash;
+					$rootScope.actualdash = dash;
 
 
 
