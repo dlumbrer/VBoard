@@ -17,7 +17,7 @@ Go in your browser to http://localhost:8000/ and enjoy!
 
 Follow this steps to build a a visualization:
 
-* Select the index of your ElasticSearch (the index should have a type called "items")
+* Select the index and the type of your ElasticSearch
 
 ![Screenshot](images/selectindex.png)
 
@@ -45,7 +45,7 @@ Follow this steps to build a a visualization:
 * **Show Response (JSON)**: With this button you can see at the bottom of the page the response of ElasticSearch (Hits and Aggregations in JSON) of the data previously selected.
 ![Screenshot](images/exampleresponse.png)
 
-* **Save Visualization**: This button open a modal in order to save the visualization in ElasticSearch. The visualization will be saved in the index (**Previously created**) **.vboard**. (See __Creation of the index .vissthreed__)
+* **Save Visualization**: This button open a modal in order to save the visualization in ElasticSearch. The visualization will be saved in the index (**Previously created**) **.vboard**. (See __Creation of the index .vboard__)
 ![Screenshot](images/examplesave.png)
 
 * **Load Visualization**: This button open a modal in order to load a visualization.
@@ -67,7 +67,7 @@ After, you will see the chart selected in the panel:
 * **New Panel**: Open a modal to build a new panel form scratch.
 ![Screenshot](images/newpanelmodal.png)
 
-* **Save Panel**: Open a modal in order to save the Panel in ElasticSearch. The panel will be saved in the index (**Previously created**) **.vboard**. (See __Creation of the index .vissthreed__)
+* **Save Panel**: Open a modal in order to save the Panel in ElasticSearch. The panel will be saved in the index (**Previously created**) **.vboard**. (See __Creation of the index .vboard__)
 ![Screenshot](images/savepanelmodal.png)
 
 * **Load Panel**: Open a modal in order to load a Panel previously saved in ElasticSearch.
@@ -75,12 +75,28 @@ After, you will see the chart selected in the panel:
 
 ## Tab Dashboard (to build a dashboard with charts and panels)
 
-Work in progress..
+First, you will see a default scene without charts/panels. Click on the list on the left to add a previously saved chart/panel, you will se this modal:
+![Screenshot](images/exampleaddvistodash.png)
+
+After, you will see the items selected in the dashboard:
+![Screenshot](images/exampledashboard.png)
 
 ### Options
 
-Work in progress..
+* **Save Dashboard**: This button open a modal in order to save the dashboard in ElasticSearch. The visualization will be saved in the index (**Previously created**) **.vboard**. (See __Creation of the index .vboard__)
+![Screenshot](images/examplesavedash.png)
 
+* **Load Dashboard**: This button open a modal in order to load a dashboard.
+![Screenshot](images/exampleloaddash.png)
+
+
+## Tab Show (to show a dashboard standalone)
+
+First, select the dashboard you will want to see:
+![Screenshot](images/exampleshow.png)
+
+When you click, yo will go redirected to /Show/*id* where you will see the dashboard standalone
+![Screenshot](images/examplestandalone.png)
 
 ## Creation of the index .vboard
 
@@ -125,8 +141,11 @@ PUT .vboard/_mapping/panelthreed
 PUT .vboard/_mapping/dashthreed
 {
   "properties": {
+    "background": { "type": "text"},
     "panels" : { "type" : "object" },
-    "charts" : { "type" : "object" }
+    "charts" : { "type" : "object" },
+    "name" : { "type" : "text" },
+    "description" : { "type" : "text" }
   }
 }
 ```
