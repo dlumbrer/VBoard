@@ -4,21 +4,23 @@
     <meta charset="utf-8">
     <title>VBoard</title>
 
-    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
-    <link rel="stylesheet" href="bower_components/angular-ui-notification/dist/angular-ui-notification.min.css">
+    <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="node_modules/angular-ui-notification/dist/angular-ui-notification.min.css">
     <link rel="stylesheet" href="css/main.css">
-    <script src="bower_components/jquery/dist/jquery.min.js"></script>
-    <script src="bower_components/angular/angular.js"></script>
-    <script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="node_modules/requirejs/require.js"></script>
+    <script src="node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="node_modules/angular/angular.js"></script>
+    <script src="node_modules/bootstrap/dist/js/bootstrap.js"></script>
     <script src="node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js"></script>
-    <script src="bower_components/elasticsearch/elasticsearch.angular.min.js"></script>
+    
+    <script src="node_modules/elasticsearch-browser/elasticsearch.angular.js"></script>
     <script src="js/THREEDC.min.js"></script>
     <script src="js/genES.js"></script>
     <script src="js/builderESDS.js"></script>
-    <script src="bower_components/angular-modal-service/dst/angular-modal-service.min.js"></script>
-    <script src="bower_components/angular-ui-notification/dist/angular-ui-notification.min.js"></script>
-    <script src="bower_components/angular-route/angular-route.min.js"></script>
-    <!--script src="main.js"></script-->
+    <script src="node_modules/angular-modal-service/dst/angular-modal-service.js"></script>
+    <script src="node_modules/angular-ui-notification/dist/angular-ui-notification.min.js"></script>
+    <script src="node_modules/angular-route/angular-route.min.js"></script>
+    <script src="main.js"></script>
   </head>
   <body>
 
@@ -60,6 +62,6 @@
     <div class="contain" ng-view> </div>
 
 
-  <script data-main="main" src="bower_components/requirejs/require.js"></script>
+  
   </body>
 </html>
