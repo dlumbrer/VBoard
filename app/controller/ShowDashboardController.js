@@ -1,6 +1,6 @@
 define(
 		function() {
-      function ShowDashboardController($scope, $route, $routeParams, esFactory, ESService, ModalService, Notification) {
+      function ShowDashboardController($scope, $rootScope, $route, $routeParams, esFactory, ESService, ModalService, Notification) {
 				angular.element(document).ready(function () {
 
 					/////////////////Eliminar navbar
@@ -18,6 +18,25 @@ define(
 	        promise.then(function (resp) {
 	          console.log("Cargado dash: ", resp.hits.hits)
 	          $scope.actualLoadDashboard = resp.hits.hits[0];
+
+						//Fondo///////////////
+						if($scope.actualLoadDashboard._source.background && $scope.actualLoadDashboard._source.background != "none"){
+							var imagePrefix = "../../images/backgrounds/" + $scope.actualLoadDashboard._source.background;
+							var directions  = ["xpos", "xneg", "ypos", "yneg", "zpos", "zneg"];
+							var imageSuffix = ".png";
+							var skyGeometry = new THREE.CubeGeometry( 5000, 5000, 5000 );
+
+							var materialArray = [];
+							for (var i = 0; i < 6; i++)
+									materialArray.push( new THREE.MeshBasicMaterial({
+											map: THREE.ImageUtils.loadTexture( imagePrefix + directions[i] + imageSuffix ),
+											side: THREE.BackSide
+									}));
+							var skyMaterial = new THREE.MeshFaceMaterial( materialArray );
+							var skyBox = new THREE.Mesh( skyGeometry, skyMaterial );
+							$scope.actualDashboard.scene.add( skyBox );
+						}
+						///////////////
 
 
 						for (var i = 0; i < $scope.actualLoadDashboard._source.panels.length; i++) {
@@ -131,27 +150,27 @@ define(
 
 							switch (vis.chartType) {
 									case "pie":
-											var chart = THREEDC.pieChart().data(vis.data).setId(visall.id);
+											var chart = THREEDC.pieChart().data(vis.data).setId(visall.id).radius(visall.width/2);
 											panel.addChart(chart, {row:rowchart, column: rowcolumn})
 											break
 									case "bars":
-											var chart = THREEDC.barsChart().data(vis.data).setId(visall.id);
+											var chart = THREEDC.barsChart().data(vis.data).setId(visall.id).width(visall.width).height(visall.height);
 											panel.addChart(chart, {row:rowchart, column: rowcolumn})
 											break;
 									case "line":
-											var chart = THREEDC.lineChart().data(vis.data).setId(visall.id);
+											var chart = THREEDC.lineChart().data(vis.data).setId(visall.id).width(visall.width).height(visall.height);
 											panel.addChart(chart, {row:rowchart, column: rowcolumn})
 											break;
 									case "curve":
-											var chart = THREEDC.smoothCurveChart().data(vis.data).setId(visall.id);
+											var chart = THREEDC.smoothCurveChart().data(vis.data).setId(visall.id).width(visall.width).height(visall.height);
 											panel.addChart(chart, {row:rowchart, column: rowcolumn})
 											break;
 									case "3DBars":
-											var chart = THREEDC.TDbarsChart().data(vis.data).setId(visall.id).gridsOn();
+											var chart = THREEDC.TDbarsChart().data(vis.data).setId(visall.id).width(visall.width).height(visall.height).depth(visall.depth).gridsOn();
 											panel.addChart(chart, {row:rowchart, column: rowcolumn})
 											break;
 									case "bubbles":
-											var chart = THREEDC.bubbleChart().data(vis.data).setId(visall.id).gridsOn();
+											var chart = THREEDC.bubbleChart().data(vis.data).setId(visall.id).width(visall.width).height(visall.height).depth(visall.depth).gridsOn();
 											panel.addChart(chart, {row:rowchart, column: rowcolumn})
 											break;
 									default:
@@ -169,6 +188,7 @@ define(
 
 					var dash = THREEDC.dashBoard(container);
 					$scope.actualDashboard = dash;
+					$rootScope.actualdash = dash;
 
 
 
@@ -177,7 +197,7 @@ define(
 				});
       }
 
-      ShowDashboardController.$inject = [ '$scope', '$route', '$routeParams', 'esFactory', 'ESService', 'ModalService', 'Notification'];
+      ShowDashboardController.$inject = [ '$scope', '$rootScope', '$route', '$routeParams', 'esFactory', 'ESService', 'ModalService', 'Notification'];
 
 			return ShowDashboardController;
 

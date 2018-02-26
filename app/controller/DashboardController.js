@@ -1,6 +1,6 @@
 define(
 		function() {
-      function DashboardController($scope, esFactory, ESService, ModalService, Notification) {
+      function DashboardController($scope, $rootScope, esFactory, ESService, ModalService, Notification) {
 				angular.element(document).ready(function () {
 
 					var generatorQueries = genES()
@@ -100,27 +100,27 @@ define(
 
 							switch (vis.chartType) {
 									case "pie":
-											var chart = THREEDC.pieChart().data(vis.data).setId(visall.id);
+											var chart = THREEDC.pieChart().data(vis.data).setId(visall.id).radius(visall.width/2);
 											panel.addChart(chart, {row:rowchart, column: rowcolumn})
 											break
 									case "bars":
-											var chart = THREEDC.barsChart().data(vis.data).setId(visall.id);
+											var chart = THREEDC.barsChart().data(vis.data).setId(visall.id).width(visall.width).height(visall.height);
 											panel.addChart(chart, {row:rowchart, column: rowcolumn})
 											break;
 									case "line":
-											var chart = THREEDC.lineChart().data(vis.data).setId(visall.id);
+											var chart = THREEDC.lineChart().data(vis.data).setId(visall.id).width(visall.width).height(visall.height);
 											panel.addChart(chart, {row:rowchart, column: rowcolumn})
 											break;
 									case "curve":
-											var chart = THREEDC.smoothCurveChart().data(vis.data).setId(visall.id);
+											var chart = THREEDC.smoothCurveChart().data(vis.data).setId(visall.id).width(visall.width).height(visall.height);
 											panel.addChart(chart, {row:rowchart, column: rowcolumn})
 											break;
 									case "3DBars":
-											var chart = THREEDC.TDbarsChart().data(vis.data).setId(visall.id).gridsOn();
+											var chart = THREEDC.TDbarsChart().data(vis.data).setId(visall.id).width(visall.width).height(visall.height).depth(visall.depth).gridsOn();
 											panel.addChart(chart, {row:rowchart, column: rowcolumn})
 											break;
 									case "bubbles":
-											var chart = THREEDC.bubbleChart().data(vis.data).setId(visall.id).gridsOn();
+											var chart = THREEDC.bubbleChart().data(vis.data).setId(visall.id).width(visall.width).height(visall.height).depth(visall.depth).gridsOn();
 											panel.addChart(chart, {row:rowchart, column: rowcolumn})
 											break;
 									default:
@@ -163,7 +163,7 @@ define(
 					///////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-					///////////////////////////////////SAVE PANEL////////////////////////////////////
+					///////////////////////////////////SAVE DASHBOARD////////////////////////////////////
 
 					$scope.openSaveDashboardModal = function() {
 
@@ -220,7 +220,7 @@ define(
 												//SI NO EXISTE SE CREA DE 0, SI NO HAY QUE PREGUNTAR SI QUIERE SOBREESCRIBIRSE
 												if(response.hits.hits.length == 0){
 													//Guardo
-													var promise = generatorQueries.createDashboard(ESService.client, $scope.name, $scope.description, arrayChartsToSave, arrayPanelsToSave);
+													var promise = generatorQueries.createDashboard(ESService.client, $scope.name, $scope.description, arrayChartsToSave, arrayPanelsToSave, $rootScope.prefixActualBackground);
 													promise.then(function(response, error){
 														if(error){
 															Notification.error("Error creating dash")
@@ -239,7 +239,7 @@ define(
 																 $scope.confirmUpdate = function(result) {
 																 	console.log("Actualizar ---- ", $scope.name, $scope.description, $scope.$parent.actualDashboard)
 																	//Guardo
-																	var promiseUpdate = generatorQueries.updateDashboard(ESService.client, $scope.name, $scope.description, arrayChartsToSave, arrayPanelsToSave);
+																	var promiseUpdate = generatorQueries.updateDashboard(ESService.client, $scope.name, $scope.description, arrayChartsToSave, arrayPanelsToSave, $rootScope.prefixActualBackground);
 																	promiseUpdate.then(function(response, error){
 																		if(error){
 																			Notification.error("Error updating dash")
@@ -357,6 +357,7 @@ define(
 
 					var dash = THREEDC.dashBoard(container);
 					$scope.actualDashboard = dash;
+					$rootScope.actualdash = dash;
 
 
 
@@ -365,7 +366,7 @@ define(
 				});
       }
 
-      DashboardController.$inject = [ '$scope', 'esFactory', 'ESService', 'ModalService', 'Notification'];
+      DashboardController.$inject = [ '$scope', '$rootScope', 'esFactory', 'ESService', 'ModalService', 'Notification'];
 
 			return DashboardController;
 

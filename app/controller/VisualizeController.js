@@ -1,7 +1,7 @@
 define(
 		['node_modules/bodybuilder/browser/bodybuilder.min'],
 		function() {
-      function VisualizeController($scope, esFactory, ESService, ModalService, Notification) {
+      function VisualizeController($scope, $rootScope, esFactory, ESService, ModalService, Notification) {
 				angular.element(document).ready(function () {
         $scope.foo = "YEAH!"
 
@@ -354,7 +354,7 @@ define(
 				$scope.showDataNowBuilt = function(){
 					var statements = builderData.buildDataStructure().getDataStructure()
 
-					var promiseSearch = generatorQueries.buildBodybuilderObject(statements, bodybuilder).buildQuery().executeSearch(ESService.client, $scope.indexName)
+					var promiseSearch = generatorQueries.buildBodybuilderObject(statements, bodybuilder).buildQuery().executeSearch(ESService.client, $scope.indexName, $scope.typeName)
 					//PROMESA
 					promiseSearch.then(function (resp) {
 						$scope.hits = JSON.stringify(resp.hits, undefined, 2);
@@ -467,10 +467,17 @@ define(
 							var value = bucket.doc_count;
 						}
 
-						return {
-							key: bucket.key,
-							value: value
-						};
+						if(bucket.key_as_string){
+							return {
+								key: bucket.key_as_string,
+								value: value
+							};
+						}else{
+							return {
+								key: bucket.key,
+								value: value
+							};
+						}
 				 });
 
 
@@ -525,7 +532,19 @@ define(
 							}else{
 								var value = buckety.doc_count;
 							}
-							data.push({key1:bucketx.key, key2:buckety.key, value: value})
+
+							if(bucketx.key_as_string){
+								keyx = bucketx.key_as_string
+							}else{
+								keyx = bucketx.key
+							}
+							if(buckety.key_as_string){
+								keyy = buckety.key_as_string
+							}else{
+								keyy = buckety.key
+							}
+
+							data.push({key1:keyx, key2:keyy, value: value})
 						})
 
 				});
@@ -580,7 +599,19 @@ define(
 									var value1 = buckety.doc_count;
 									var value2 = buckety.doc_count;
 								}
-								data.push({key1:bucketx.key, key2:buckety.key, value: value1, value2: value2})
+
+								if(bucketx.key_as_string){
+									keyx = bucketx.key_as_string
+								}else{
+									keyx = bucketx.key
+								}
+								if(buckety.key_as_string){
+									keyy = buckety.key_as_string
+								}else{
+									keyy = buckety.key
+								}
+
+								data.push({key1:keyx, key2:keyy, value: value1, value2: value2})
 							})
 
 					});
@@ -849,7 +880,7 @@ define(
 
 
 
-      VisualizeController.$inject = [ '$scope', 'esFactory', 'ESService', 'ModalService', 'Notification'];
+      VisualizeController.$inject = [ '$scope',  '$rootScope', 'esFactory', 'ESService', 'ModalService', 'Notification'];
 
 			return VisualizeController;
 

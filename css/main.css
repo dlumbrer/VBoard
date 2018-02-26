@@ -22,6 +22,8 @@ body, html {
 }
 
 #ThreeJS, #ThreeJSPanels, #ThreeJSDashboard {
+  overflow-x: hidden;
+  overflow-y: hidden;
   box-sizing: border-box;
   padding-left: 0px;
   padding-right: 0px;
@@ -29,6 +31,8 @@ body, html {
 }
 
 #ThreeJSShow {
+  overflow-x: hidden;
+  overflow-y: hidden;
   box-sizing: border-box;
   padding-left: 0px;
   padding-right: 0px;
