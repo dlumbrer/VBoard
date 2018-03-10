@@ -89,6 +89,60 @@ function genES () {
     return promise
   }
 
+  // Check if .vboard index exists
+  genES.checkVBoardIndex = function (client) {
+    return client.indices.getMapping({
+      index: ".vboard"
+    })
+  }
+
+  // Create index of .vboard
+  genES.createVBoardIndex = function(client){
+    return client.indices.create({
+      index: ".vboard",
+      body: {
+        "settings": {
+          "number_of_shards": 1
+        },
+        "mappings": {
+          "visthreed": {
+            "properties": {
+              "chartType": { "type": "text" },
+              "name": { "type": "text" },
+              "description": { "type": "text" },
+              "indexOfES": { "type": "text" },
+              "typeOfES": { "type": "text" },
+              "metricsSelected": { "type": "object" },
+              "bucketsSelected": { "type": "object" },
+              "data": { "type": "object" }
+            }
+          },
+          "panelthreed": {
+            "properties": {
+              "position": { "type": "text" },
+              "rows": { "type": "text" },
+              "columns": { "type": "text" },
+              "dimension": { "type": "text" },
+              "opacity": { "type": "text" },
+              "charts": { "type": "object" },
+              "name": { "type": "text" },
+              "description": { "type": "text" }
+            }
+          },
+          "dashthreed": {
+            "properties": {
+              "background": { "type": "text" },
+              "panels": { "type": "object" },
+              "charts": { "type": "object" },
+              "name": { "type": "text" },
+              "description": { "type": "text" }
+            }
+          }
+        }
+      }
+    })
+  }
+
   //Cargar todas las visualizaciones
   genES.loadAllVis = function(client){
 
