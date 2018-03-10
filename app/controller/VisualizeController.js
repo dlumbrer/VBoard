@@ -3,7 +3,7 @@ define(
 		function() {
       function VisualizeController($scope, $rootScope, esFactory, ESService, ModalService, Notification) {
 				angular.element(document).ready(function () {
-        $scope.foo = "YEAH!"
+        $scope.$parent.navVisible = false;
 
 				var bodybuilder = require('node_modules/bodybuilder/browser/bodybuilder.min')
 

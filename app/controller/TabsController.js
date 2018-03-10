@@ -10,31 +10,44 @@ define(
 
 				$scope.loadVisualize = function () {
 					//Eliminar anterior escena//
-					$rootScope.actualdash.removeAllCharts();
-					for (var i = 0; i < $rootScope.actualdash.panels.length; i++) {
-						$rootScope.actualdash.panels[i].remove()
+					if($rootScope.actualdash){
+						$rootScope.actualdash.removeAllCharts();
+						for (var i = 0; i < $rootScope.actualdash.panels.length; i++) {
+							$rootScope.actualdash.panels[i].remove()
+						}
 					}
 					//////////////////////////
 					$scope.showSelected = false;
 					$location.url('/Visualize');
 				};
 				$scope.loadPanels = function () {
-					$rootScope.actualdash.removeAllCharts();
-					for (var i = 0; i < $rootScope.actualdash.panels.length; i++) {
-						$rootScope.actualdash.panels[i].remove()
+					if ($rootScope.actualdash) {
+						$rootScope.actualdash.removeAllCharts();
+						for (var i = 0; i < $rootScope.actualdash.panels.length; i++) {
+							$rootScope.actualdash.panels[i].remove()
+						}
 					}
 					$scope.showSelected = false;
 					$location.url('/Panels');
 				};
 				$scope.loadDashboard = function () {
-					$rootScope.actualdash.removeAllCharts();
-					for (var i = 0; i < $rootScope.actualdash.panels.length; i++) {
-						$rootScope.actualdash.panels[i].remove()
+					if ($rootScope.actualdash) {
+						$rootScope.actualdash.removeAllCharts();
+						for (var i = 0; i < $rootScope.actualdash.panels.length; i++) {
+							$rootScope.actualdash.panels[i].remove()
+						}
 					}
 					$scope.showSelected = false;
 					$location.url('/Dashboard');
 				};
 				$scope.loadShow = function () {
+					if ($rootScope.actualdash) {
+						$rootScope.actualdash.removeAllCharts();
+						for (var i = 0; i < $rootScope.actualdash.panels.length; i++) {
+							$rootScope.actualdash.panels[i].remove()
+						}
+					}
+					$scope.showSelected = true;
 					$location.url('/Show');
 				};
 
