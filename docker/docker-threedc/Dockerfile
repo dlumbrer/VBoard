@@ -14,6 +14,10 @@ RUN npm install
 # Install http-server
 RUN npm install -g http-server
 
+# Copy entrypoint
+COPY docker-entrypoint.sh .
+RUN chmod 755 docker-entrypoint.sh
+
 # Expose port ant init application
 EXPOSE 8080
-CMD [ "http-server" ]
+CMD ["./docker-entrypoint.sh"]

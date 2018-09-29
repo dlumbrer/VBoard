@@ -1,0 +1,6 @@
+vboard:
+  image: dlumbrer/vboard:threedc
+  ports:
+    - "8080:8080"
+  environment:
+    - ELASTICSEARCH_URL=http://localhost:9200
