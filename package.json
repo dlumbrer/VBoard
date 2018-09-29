@@ -1,3 +1,4 @@
+
 {
     "name": "vboard",
     "version": "0.1.1",
@@ -17,7 +18,7 @@
         "angular-modal-service": "0.13.0",
         "angular-route": "1.6.3",
         "angular-ui-notification": "0.3.6",
-        "bootstrap": "3.3.7",
+        "bootstrap": "4.1.2",
         "jquery": "3.3.1",
         "requirejs": "2.3.2"
     }
