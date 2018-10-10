@@ -1,14 +1,13 @@
 define([
       'app/controller/TabsController',
       'app/controller/VisualizeController',
-      'app/controller/PanelsController',
       'app/controller/DashboardController',
       'app/controller/ShowDashboardController',
       'app/controller/ShowListController',
       'app/controller/InitController',
       'app/service/ESService'
     ],
-		 function(TabsController, VisualizeController, PanelsController, DashboardController, ShowDashboardController, ShowListController, InitController, ESService) {
+		 function(TabsController, VisualizeController, DashboardController, ShowDashboardController, ShowListController, InitController, ESService) {
 			var app = angular.module('myApp', ['ngRoute', 'elasticsearch', 'angularModalService', 'ui-notification', 'ui.bootstrap']);
 
       app.config(['$routeProvider',
@@ -18,10 +17,6 @@ define([
           		templateUrl: 'templates/visualize.html',
           		controller: 'VisualizeController'
       	    }).
-            when('/Panels', {
-          		templateUrl: 'templates/panels.html',
-          		controller: 'PanelsController'
-            }).
             when('/Dashboard', {
           		templateUrl: 'templates/dashboard.html',
           		controller: 'DashboardController'
@@ -45,7 +40,6 @@ define([
 
       app.controller('TabsController', TabsController);
       app.controller('VisualizeController', VisualizeController);
-      app.controller('PanelsController', PanelsController);
       app.controller('DashboardController', DashboardController);
       app.controller('ShowDashboardController', ShowDashboardController);
       app.controller('ShowListController', ShowListController);

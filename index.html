@@ -52,7 +52,6 @@
             <button type="button" class="btn navbar-btn navbar-right" ng-click="switchBackground()" ng-hide="showSelected">Switch background</button>
             <ul class="nav navbar-nav">
               <li ng-class="navClass('Visualize')"><a href="" ng-click="loadVisualize()">Visualize</a></li>
-              <li ng-class="navClass('Panels')"><a href="" ng-click="loadPanels()">Panels</a></li>
               <li ng-class="navClass('Dashboard')"><a href="" ng-click="loadDashboard()">Dashboard</a></li>
               <li ng-class="navClass('Show')"><a href="" ng-click="loadShow()">Show</a></li>
             </ul>
@@ -60,14 +59,6 @@
         </div>
       </nav >
     </div>
-    <!--div class="navbar">
-      <ul class="nav navbar-nav" ng-controller="TabsController">
-        <li ng-class="navClass('Visualize')"><a href='' ng-click="loadVisualize()">Visualize</a></li>
-        <li ng-class="navClass('Panels')"><a href='' ng-click="loadPanels()">Panels</a></li>
-        <li ng-class="navClass('Visualize')"><a href=''>Dashboard</a></li>
-      </ul>
-    </div-->
-
     <div class="contain" ng-view> </div>
 
 

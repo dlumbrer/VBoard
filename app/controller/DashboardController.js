@@ -13,13 +13,6 @@ define(
 					console.log("Cargadas: ", resp.hits.hits)
 					$scope.loadedvis = resp.hits.hits;
 				})
-
-				//Me traigo las visualizaciones
-				var promise = genES.loadAllPanels(ESService.client);
-				promise.then(function (resp) {
-					console.log("Cargadas: ", resp.hits.hits)
-					$scope.loadedpanels = resp.hits.hits;
-				})
 				////////////////////////////////////////////////
 
 				//////////////////////////////////////AÑADIR VIS A DASHBOARD//////////////////////
@@ -64,71 +57,8 @@ define(
 
 				}////////////////////////////////////////////////
 
-				//////////////////////////////////////AÑADIR PANEL A DASHBOARD//////////////////////
-				$scope.addPanelToDash = function (paneltoadd, posx, posy, posz) {
-					console.log("A AÑADIR", paneltoadd);
 
-					var dimension = "[" + paneltoadd._source.dimension + "]"
-
-					var panel = THREEDC.Panel({ numberOfRows: parseInt(paneltoadd._source.rows), numberOfColumns: paneltoadd._source.columns }, JSON.parse(dimension), JSON.parse(paneltoadd._source.opacity)).setId(paneltoadd._id);;
-
-					dash.addPanel(panel, { x: posx, y: posy, z: posz })
-
-					for (var i = 0; i < paneltoadd._source.charts.length; i++) {
-						addVisToPanel(panel, paneltoadd._source.charts[i])
-					}
-
-				}
-
-				var addVisToPanel = function (panel, visall) {
-					console.log("Hay que meter esta vis en el panel", visall);
-
-					var rowchart = visall.row;
-					var rowcolumn = visall.column;
-
-					var promise = generatorQueries.getVis(ESService.client, visall.id);
-					promise.then(function (resp) {
-						console.log("Visualiazcion a editar: ", resp.hits.hits[0])
-						vis = resp.hits.hits[0]._source;
-
-
-
-						switch (vis.chartType) {
-							case "pie":
-								var chart = THREEDC.pieChart().data(vis.data).setId(visall.id).radius(visall.width / 2);
-								panel.addChart(chart, { row: rowchart, column: rowcolumn })
-								break
-							case "bars":
-								var chart = THREEDC.barsChart().data(vis.data).setId(visall.id).width(visall.width).height(visall.height);
-								panel.addChart(chart, { row: rowchart, column: rowcolumn })
-								break;
-							case "line":
-								var chart = THREEDC.lineChart().data(vis.data).setId(visall.id).width(visall.width).height(visall.height);
-								panel.addChart(chart, { row: rowchart, column: rowcolumn })
-								break;
-							case "curve":
-								var chart = THREEDC.smoothCurveChart().data(vis.data).setId(visall.id).width(visall.width).height(visall.height);
-								panel.addChart(chart, { row: rowchart, column: rowcolumn })
-								break;
-							case "3DBars":
-								var chart = THREEDC.TDbarsChart().data(vis.data).setId(visall.id).width(visall.width).height(visall.height).depth(visall.depth).gridsOn();
-								panel.addChart(chart, { row: rowchart, column: rowcolumn })
-								break;
-							case "bubbles":
-								var chart = THREEDC.bubbleChart().data(vis.data).setId(visall.id).width(visall.width).height(visall.height).depth(visall.depth).gridsOn();
-								panel.addChart(chart, { row: rowchart, column: rowcolumn })
-								break;
-							default:
-								console.log("Esta vacío")
-								return
-
-						}
-					})
-				}
-
-				////////////////////////////////////////////////
-
-				/////////////////////////////MODAL PARA ELEGIR LA POSICION DE LA VIS O EL PANEL EN EL DASHBOARD/////////////////////////////
+				/////////////////////////////MODAL PARA ELEGIR LA POSICION DE LA VIS O EL EN EL DASHBOARD/////////////////////////////
 				$scope.openAddToDashModal = function (item, isPanel) {
 
 
@@ -138,12 +68,7 @@ define(
 						controller: function ($scope, close) {
 
 							$scope.acceptAdd = function (result) {
-
-								if (isPanel) {
-									$scope.addPanelToDash(item, $scope.x, $scope.y, $scope.z);
-								} else {
-									$scope.addVisToDash(item, $scope.x, $scope.y, $scope.z);
-								}
+								$scope.addVisToDash(item, $scope.x, $scope.y, $scope.z);
 							}
 
 
@@ -175,34 +100,16 @@ define(
 							$scope.save = function (result) {
 								console.log("Queremos guardar ---- ", $scope.name, $scope.description, $scope.$parent.actualDashboard)
 
-
 								var arrayChartsToSave = [];
-								var arrayPanelsToSave = [];
-
-								for (var i = 0; i < $scope.$parent.actualDashboard.panels.length; i++) {
+								for (var i = 0; i < $scope.$parent.actualDashboard.children.length; i++) {
 									var c = {
-										x: $scope.$parent.actualDashboard.panels[i].coords.x,
-										y: $scope.$parent.actualDashboard.panels[i].coords.y,
-										z: $scope.$parent.actualDashboard.panels[i].coords.z,
-										id: $scope.$parent.actualDashboard.panels[i]._id
+										x: $scope.$parent.actualDashboard.children[i].components.position.attrValue.x,
+										y: $scope.$parent.actualDashboard.children[i].components.position.attrValue.y,
+										z: $scope.$parent.actualDashboard.children[i].components.position.attrValue.z,
+										id: $scope.$parent.actualDashboard.children[i]._id
 									}
-									arrayPanelsToSave.push(c)
+									arrayChartsToSave.push(c)
 								}
-
-								for (var i = 0; i < $scope.$parent.actualDashboard.charts.length; i++) {
-									//Si no esta en panel
-									if (!$scope.$parent.actualDashboard.charts[i].panel) {
-										var c = {
-											x: $scope.$parent.actualDashboard.charts[i].coords.x,
-											y: $scope.$parent.actualDashboard.charts[i].coords.y,
-											z: $scope.$parent.actualDashboard.charts[i].coords.z,
-											id: $scope.$parent.actualDashboard.charts[i]._id
-										}
-										arrayChartsToSave.push(c)
-									}
-
-								}
-
 
 
 								var promiseCheck = generatorQueries.checkDashboard(ESService.client, $scope.name)
@@ -215,7 +122,7 @@ define(
 									//SI NO EXISTE SE CREA DE 0, SI NO HAY QUE PREGUNTAR SI QUIERE SOBREESCRIBIRSE
 									if (response.hits.hits.length == 0) {
 										//Guardo
-										var promise = generatorQueries.createDashboard(ESService.client, $scope.name, $scope.description, arrayChartsToSave, arrayPanelsToSave, $rootScope.prefixActualBackground);
+										var promise = generatorQueries.createDashboard(ESService.client, $scope.name, $scope.description, arrayChartsToSave, [], $rootScope.prefixActualBackground);
 										promise.then(function (response, error) {
 											if (error) {
 												Notification.error("Error creating dash")
@@ -234,7 +141,7 @@ define(
 												$scope.confirmUpdate = function (result) {
 													console.log("Actualizar ---- ", $scope.name, $scope.description, $scope.$parent.actualDashboard)
 													//Guardo
-													var promiseUpdate = generatorQueries.updateDashboard(ESService.client, $scope.name, $scope.description, arrayChartsToSave, arrayPanelsToSave, $rootScope.prefixActualBackground);
+													var promiseUpdate = generatorQueries.updateDashboard(ESService.client, $scope.name, $scope.description, arrayChartsToSave, [], $rootScope.prefixActualBackground);
 													promiseUpdate.then(function (response, error) {
 														if (error) {
 															Notification.error("Error updating dash")
@@ -306,29 +213,7 @@ define(
 				$scope.loadDash = function (dashtoadd) {
 					console.log("cargar dash:", dashtoadd);
 
-					//Borrar todo
-					$scope.actualDashboard.removeAllCharts();
-					if ($scope.actualDashboard.panels) {
-						for (var i = 0; i < $scope.actualDashboard.panels.length; i++) {
-							$scope.actualDashboard.panels[i].remove();
-						}
-					}
-
 					//Pintar visualizaciones
-					for (var i = 0; i < dashtoadd._source.panels.length; i++) {
-						var promise = genES.getPanel(ESService.client, dashtoadd._source.panels[i].id)
-						promise.then(function (resp, i) {
-							console.log("Cargado panel: ", resp.hits.hits[0])
-							var panel = resp.hits.hits[0];
-							for (var i = 0; i < dashtoadd._source.panels.length; i++) {
-								if (dashtoadd._source.panels[i].id == panel._id) {
-									$scope.addPanelToDash(panel, dashtoadd._source.panels[i].x, dashtoadd._source.panels[i].y, dashtoadd._source.panels[i].z);
-								}
-							}
-
-						})
-					}
-
 					for (var i = 0; i < dashtoadd._source.charts.length; i++) {
 						var promise = genES.getVis(ESService.client, dashtoadd._source.charts[i].id)
 						var actuali = i;
@@ -348,7 +233,7 @@ define(
 				}
 
 				///////////////////////////////////////////AFRAMEDC/////////////////////////////////////////
-				
+
 				var scenediv = document.getElementById("Aframediv");
 				let dash = aframedc.dashboard(scenediv);
 				$scope.actualDashboard = dash;
