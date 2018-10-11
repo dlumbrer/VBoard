@@ -209,6 +209,11 @@ define(
 
 				$scope.loadDash = function (dashtoadd) {
 					console.log("cargar dash:", dashtoadd);
+					
+					// Remove current dashboard (removing just the children)
+					for (var i = 0; i < $rootScope.actualdash.children.length; i++) {
+						$rootScope.actualdash.removeChild($rootScope.actualdash.children[i])
+					};
 
 					//Pintar visualizaciones
 					for (var i = 0; i < dashtoadd._source.charts.length; i++) {
