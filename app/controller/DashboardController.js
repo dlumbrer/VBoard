@@ -51,8 +51,6 @@ define(
 						default:
 							console.log("Esta vacío")
 							return
-
-
 					}
 
 				}////////////////////////////////////////////////
