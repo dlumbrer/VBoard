@@ -4,11 +4,11 @@
   });
 });*/
 
-define([], function() {
-	function ESService(esFactory) {
-		this.client = esFactory({
+define([], function () {
+  function ESService(esFactory) {
+    this.client = esFactory({
       host: 'http://localhost:9200',
     });
-	}
-	return ESService;
+  }
+  return ESService;
 });
