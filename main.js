@@ -1,5 +1,5 @@
 require(['app/app_module'],
-  function() {
+  function () {
     angular.bootstrap(document, ['myApp']);
   }
 );

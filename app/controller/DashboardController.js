@@ -179,7 +179,6 @@ define(
 					});
 				};
 
-
 				///////////////////////////////////LOAD DASHBOARD////////////////////////////////////
 
 				$scope.openLoadDashboardModal = function () {
@@ -231,16 +230,11 @@ define(
 				}
 
 				///////////////////////////////////////////AFRAMEDC/////////////////////////////////////////
-
 				var scenediv = document.getElementById("Aframediv");
 				let dash = aframedc.dashboard(scenediv);
 				$scope.actualDashboard = dash;
 				$rootScope.actualdash = dash;
-
-
-
 				/////////////////////////////////////////////////////////////////////////////////////
-
 			});
 		}
 
