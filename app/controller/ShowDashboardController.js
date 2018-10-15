@@ -19,6 +19,11 @@ define(
 					console.log("Cargado dash: ", resp.hits.hits)
 					$scope.actualLoadDashboard = resp.hits.hits[0];
 
+					// Pintar background
+					if ($scope.actualLoadDashboard._source.background) {
+						$scope.$root.loadBackgroundById($scope.actualLoadDashboard._source.background)
+					}
+
 					for (var i = 0; i < $scope.actualLoadDashboard._source.charts.length; i++) {
 						var promise = genES.getVis(ESService.client, $scope.actualLoadDashboard._source.charts[i].id)
 						var actuali = i;
@@ -79,6 +84,9 @@ define(
 				///////////////////////////////////////////THREEDC/////////////////////////////////////////
 				var container = document.getElementById('AframeDCShow');
 				let dash = aframedc.dashboard(container);
+				let backgroundEntity = document.createElement("a-entity")
+				backgroundEntity.setAttribute("id", "skymap")
+				dash.appendChild(backgroundEntity)
 				$scope.actualDashboard = dash;
 				$rootScope.actualdash = dash;
 				/////////////////////////////////////////////////////////////////////////////////////
