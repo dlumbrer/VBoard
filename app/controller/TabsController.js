@@ -4,9 +4,11 @@ define(
 
 			// Clean dashboard
 			const removeVisualizations = (dash) => {
-				for (var i = 0; i < dash.children.length; i++) {
-					dash.removeChild(dash.children[i])
-				};
+				if (dash) {
+					for (var i = 0; i < dash.children.length; i++) {
+						dash.removeChild(dash.children[i])
+					};
+				}
 			}
 
 			$scope.navClass = function (page) {

@@ -28,7 +28,7 @@ define(
 
 							for (var i = 0; i < $scope.actualLoadDashboard._source.charts.length; i++) {
 								if ($scope.actualLoadDashboard._source.charts[i].id == chart._id) {
-									$scope.addVisToDash(chart, $scope.actualLoadDashboard._source.charts[i].x, $scope.actualLoadDashboard._source.charts[i].y, $scope.actualLoadDashboard._source.charts[i].z);
+									$scope.addVisToDash(chart, $scope.actualLoadDashboard._source.charts[i].x, $scope.actualLoadDashboard._source.charts[i].y, $scope.actualLoadDashboard._source.charts[i].z, $scope.actualLoadDashboard._source.charts[i].rotx, $scope.actualLoadDashboard._source.charts[i].roty, $scope.actualLoadDashboard._source.charts[i].rotz);
 								}
 							}
 
@@ -37,7 +37,7 @@ define(
 				})
 
 				//////////////////////////////////////AÑADIR VIS A DASHBOARD//////////////////////
-				$scope.addVisToDash = function (visall, posx, posy, posz) {
+				$scope.addVisToDash = function (visall, posx, posy, posz, rotx, roty, rotz) {
 					console.log("A AÑADIR", visall);
 
 					vis = visall._source;
@@ -45,28 +45,28 @@ define(
 
 					switch (vis.chartType) {
 						case "pie":
-							var chart = aframedc.pieChart().data(vis.data).depth(1).setId(visall._id);;
-							dash.addChart(chart, { x: posx, y: posy, z: posz })
+							var chart = aframedc.pieChart().data(vis.data).depth(1).setId(visall._id);
+							dash.addChart(chart, { x: posx, y: posy, z: posz }, { x: rotx, y: roty, z: rotz })
 							posx += 150;
 							break
 						case "bars":
 							var chart = aframedc.barChart().data(vis.data).setId(visall._id);
-							dash.addChart(chart, { x: posx, y: posy, z: posz })
+							dash.addChart(chart, { x: posx, y: posy, z: posz }, { x: rotx, y: roty, z: rotz })
 							posx += 150;
 							break;
 						case "curve":
 							var chart = aframedc.smoothCurveChart().data(vis.data).setId(visall._id);
-							dash.addChart(chart, { x: posx, y: posy, z: posz })
+							dash.addChart(chart, { x: posx, y: posy, z: posz }, { x: rotx, y: roty, z: rotz })
 							posx += 150;
 							break;
 						case "3DBars":
 							var chart = aframedc.barChart3d().data(vis.data).setId(visall._id);
-							dash.addChart(chart, { x: posx, y: posy, z: posz })
+							dash.addChart(chart, { x: posx, y: posy, z: posz }, { x: rotx, y: roty, z: rotz })
 							posx += 150;
 							break;
 						case "bubbles":
 							var chart = aframedc.bubbleChart().data(vis.data).setId(visall._id);
-							dash.addChart(chart, { x: posx, y: posy, z: posz })
+							dash.addChart(chart, { x: posx, y: posy, z: posz }, { x: rotx, y: roty, z: rotz })
 							posx += 150;
 							break;
 						default:
