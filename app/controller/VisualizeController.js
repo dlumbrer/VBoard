@@ -738,6 +738,9 @@ define(
 				var scenediv = document.getElementById("Aframediv");
 				// 1
 				dash = aframedc.dashboard(scenediv);
+				let backgroundEntity = document.createElement("a-entity")
+				backgroundEntity.setAttribute("id", "skymap")
+				dash.appendChild(backgroundEntity)
 				// 2
 				/*var myPieChart = aframedc.pieChart();
 				// Common
