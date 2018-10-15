@@ -16,7 +16,7 @@ define(
 				////////////////////////////////////////////////
 
 				//////////////////////////////////////AÑADIR VIS A DASHBOARD//////////////////////
-				$scope.addVisToDash = function (visall, posx, posy, posz) {
+				$scope.addVisToDash = function (visall, posx, posy, posz, rotx, roty, rotz) {
 					console.log("A AÑADIR", visall);
 
 					vis = visall._source;
@@ -24,28 +24,28 @@ define(
 
 					switch (vis.chartType) {
 						case "pie":
-							var chart = aframedc.pieChart().data(vis.data).depth(1).setId(visall._id);;
-							dash.addChart(chart, { x: posx, y: posy, z: posz })
+							var chart = aframedc.pieChart().data(vis.data).depth(1).setId(visall._id);
+							dash.addChart(chart, { x: posx, y: posy, z: posz }, { x: rotx, y: roty, z: rotz })
 							posx += 150;
 							break
 						case "bars":
 							var chart = aframedc.barChart().data(vis.data).setId(visall._id);
-							dash.addChart(chart, { x: posx, y: posy, z: posz })
+							dash.addChart(chart, { x: posx, y: posy, z: posz }, { x: rotx, y: roty, z: rotz })
 							posx += 150;
 							break;
 						case "curve":
 							var chart = aframedc.smoothCurveChart().data(vis.data).setId(visall._id);
-							dash.addChart(chart, { x: posx, y: posy, z: posz })
+							dash.addChart(chart, { x: posx, y: posy, z: posz }, { x: rotx, y: roty, z: rotz })
 							posx += 150;
 							break;
 						case "3DBars":
 							var chart = aframedc.barChart3d().data(vis.data).setId(visall._id);
-							dash.addChart(chart, { x: posx, y: posy, z: posz })
+							dash.addChart(chart, { x: posx, y: posy, z: posz }, { x: rotx, y: roty, z: rotz })
 							posx += 150;
 							break;
 						case "bubbles":
 							var chart = aframedc.bubbleChart().data(vis.data).setId(visall._id);
-							dash.addChart(chart, { x: posx, y: posy, z: posz })
+							dash.addChart(chart, { x: posx, y: posy, z: posz }, { x: rotx, y: roty, z: rotz })
 							posx += 150;
 							break;
 						default:
@@ -66,7 +66,7 @@ define(
 						controller: function ($scope, close) {
 
 							$scope.acceptAdd = function (result) {
-								$scope.addVisToDash(item, $scope.x, $scope.y, $scope.z);
+								$scope.addVisToDash(item, $scope.x, $scope.y, $scope.z, $scope.rotx, $scope.roty, $scope.rotz);
 							}
 
 
@@ -104,6 +104,9 @@ define(
 										x: $scope.$parent.actualDashboard.children[i].components.position.attrValue.x,
 										y: $scope.$parent.actualDashboard.children[i].components.position.attrValue.y,
 										z: $scope.$parent.actualDashboard.children[i].components.position.attrValue.z,
+										rotx: $scope.$parent.actualDashboard.children[i].components.rotation.attrValue.x,
+										roty: $scope.$parent.actualDashboard.children[i].components.rotation.attrValue.y,
+										rotz: $scope.$parent.actualDashboard.children[i].components.rotation.attrValue.z,
 										id: $scope.$parent.actualDashboard.children[i]._id
 									}
 									arrayChartsToSave.push(c)
@@ -225,7 +228,7 @@ define(
 
 							for (var i = 0; i < dashtoadd._source.charts.length; i++) {
 								if (dashtoadd._source.charts[i].id == chart._id) {
-									$scope.addVisToDash(chart, dashtoadd._source.charts[i].x, dashtoadd._source.charts[i].y, dashtoadd._source.charts[i].z);
+									$scope.addVisToDash(chart, dashtoadd._source.charts[i].x, dashtoadd._source.charts[i].y, dashtoadd._source.charts[i].z, dashtoadd._source.charts[i].rotx, dashtoadd._source.charts[i].roty, dashtoadd._source.charts[i].rotz);
 								}
 							}
 
