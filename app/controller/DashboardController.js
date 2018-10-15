@@ -100,16 +100,18 @@ define(
 
 								var arrayChartsToSave = [];
 								for (var i = 0; i < $scope.$parent.actualDashboard.children.length; i++) {
-									var c = {
-										x: $scope.$parent.actualDashboard.children[i].components.position.attrValue.x,
-										y: $scope.$parent.actualDashboard.children[i].components.position.attrValue.y,
-										z: $scope.$parent.actualDashboard.children[i].components.position.attrValue.z,
-										rotx: $scope.$parent.actualDashboard.children[i].components.rotation.attrValue.x,
-										roty: $scope.$parent.actualDashboard.children[i].components.rotation.attrValue.y,
-										rotz: $scope.$parent.actualDashboard.children[i].components.rotation.attrValue.z,
-										id: $scope.$parent.actualDashboard.children[i]._id
+									if ($scope.$parent.actualDashboard.children[i].id !== "skymap") {
+										var c = {
+											x: $scope.$parent.actualDashboard.children[i].components.position.attrValue.x,
+											y: $scope.$parent.actualDashboard.children[i].components.position.attrValue.y,
+											z: $scope.$parent.actualDashboard.children[i].components.position.attrValue.z,
+											rotx: $scope.$parent.actualDashboard.children[i].components.rotation.attrValue.x,
+											roty: $scope.$parent.actualDashboard.children[i].components.rotation.attrValue.y,
+											rotz: $scope.$parent.actualDashboard.children[i].components.rotation.attrValue.z,
+											id: $scope.$parent.actualDashboard.children[i]._id
+										}
+										arrayChartsToSave.push(c)
 									}
-									arrayChartsToSave.push(c)
 								}
 
 
@@ -123,7 +125,7 @@ define(
 									//SI NO EXISTE SE CREA DE 0, SI NO HAY QUE PREGUNTAR SI QUIERE SOBREESCRIBIRSE
 									if (response.hits.hits.length == 0) {
 										//Guardo
-										var promise = generatorQueries.createDashboard(ESService.client, $scope.name, $scope.description, arrayChartsToSave, [], $rootScope.prefixActualBackground);
+										var promise = generatorQueries.createDashboard(ESService.client, $scope.name, $scope.description, arrayChartsToSave, [], $rootScope.idCurrentBackground);
 										promise.then(function (response, error) {
 											if (error) {
 												Notification.error("Error creating dash")
@@ -142,7 +144,7 @@ define(
 												$scope.confirmUpdate = function (result) {
 													console.log("Actualizar ---- ", $scope.name, $scope.description, $scope.$parent.actualDashboard)
 													//Guardo
-													var promiseUpdate = generatorQueries.updateDashboard(ESService.client, $scope.name, $scope.description, arrayChartsToSave, [], $rootScope.prefixActualBackground);
+													var promiseUpdate = generatorQueries.updateDashboard(ESService.client, $scope.name, $scope.description, arrayChartsToSave, [], $rootScope.idCurrentBackground);
 													promiseUpdate.then(function (response, error) {
 														if (error) {
 															Notification.error("Error updating dash")
@@ -212,11 +214,18 @@ define(
 
 				$scope.loadDash = function (dashtoadd) {
 					console.log("cargar dash:", dashtoadd);
-					
+
 					// Remove current dashboard (removing just the children)
 					for (var i = 0; i < $rootScope.actualdash.children.length; i++) {
-						$rootScope.actualdash.removeChild($rootScope.actualdash.children[i])
+						if ($rootScope.actualdash.children[i].id !== "skymap") {
+							$rootScope.actualdash.removeChild($rootScope.actualdash.children[i])
+						}
 					};
+
+					// Pintar background
+					if (dashtoadd._source.background) {
+						$scope.$root.loadBackgroundById(dashtoadd._source.background)
+					}
 
 					//Pintar visualizaciones
 					for (var i = 0; i < dashtoadd._source.charts.length; i++) {
@@ -240,6 +249,9 @@ define(
 				///////////////////////////////////////////AFRAMEDC/////////////////////////////////////////
 				var scenediv = document.getElementById("Aframediv");
 				let dash = aframedc.dashboard(scenediv);
+				let backgroundEntity = document.createElement("a-entity")
+				backgroundEntity.setAttribute("id", "skymap")
+				dash.appendChild(backgroundEntity)
 				$scope.actualDashboard = dash;
 				$rootScope.actualdash = dash;
 				/////////////////////////////////////////////////////////////////////////////////////
