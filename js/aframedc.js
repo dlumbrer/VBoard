@@ -2740,12 +2740,15 @@ function aframedc() {
             panel.render();
             return this;
         };
-        odashboard.addChart = function (chart, coords) {
+        odashboard.addChart = function (chart, coords, rotation) {
             this.chartRegistry.register(chart);
             this.appendChild(chart);
             chart._dashboard = this;
             if (coords) {
                 chart.setAttribute("position", coords);
+            }
+            if (rotation) {
+                chart.setAttribute("rotation", rotation);
             }
             chart.render();
             return this;

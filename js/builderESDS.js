@@ -1,4 +1,4 @@
-function builderESDS () {
+function builderESDS() {
 
   var builderESDS = {};
 
@@ -12,30 +12,30 @@ function builderESDS () {
 
 
   ////////////////////////////////UNIR METRICAS Y BUCKETS EN LA ESTRUCTURA DE DATOS/////////////////////////////////////
-  builderESDS.buildDataStructure = function(){
+  builderESDS.buildDataStructure = function () {
     var statements = [{
       "id": 0,
       "type": "bucket",
-      "aggregationType":"terms",
-      "aggregationField":"author_org_name.keyword",
-      "aggregationOptions": {"size" : "10"}
+      "aggregationType": "terms",
+      "aggregationField": "author_org_name.keyword",
+      "aggregationOptions": { "size": "10" }
     }, {
       "id": 1,
       "type": "bucket",
-      "aggregationType":"terms",
-      "aggregationField":"repo_name.keyword"
+      "aggregationType": "terms",
+      "aggregationField": "repo_name.keyword"
     }, {
       "id": 2,
       "type": "bucket",
-      "aggregationType":"date_histogram",
-      "aggregationField":"author_date" ,
-      "aggregationOptions": {"interval" : "1M"}
+      "aggregationType": "date_histogram",
+      "aggregationField": "author_date",
+      "aggregationOptions": { "interval": "1M" }
     }, {
       "id": 3,
       "type": "bucket",
-      "aggregationType":"histogram",
-      "aggregationField":"lines_changed",
-      "aggregationOptions": {"interval" : "2000"}
+      "aggregationType": "histogram",
+      "aggregationField": "lines_changed",
+      "aggregationOptions": { "interval": "2000" }
     }]
 
     builderESDS.dataStucture = builderESDS.buckets.concat(builderESDS.metrics);
@@ -46,15 +46,15 @@ function builderESDS () {
     return builderESDS;
   }
 
-  builderESDS.getDataStructure = function(){
+  builderESDS.getDataStructure = function () {
     return builderESDS.dataStucture;
   }
   ////////////////////////////////////////////////////////////////////////
 
   /////////////////////////////AÑADIR METRICAS Y BUCKETS////////////
-  builderESDS.addMetric = function(aggType, field, options){
+  builderESDS.addMetric = function (aggType, field, options) {
     var agg = {
-      id : builderESDS.metricId,
+      id: builderESDS.metricId,
       type: "metric",
       aggregationType: aggType,
       aggregationField: field,
@@ -66,9 +66,9 @@ function builderESDS () {
     return builderESDS;
   }
 
-  builderESDS.addBucket = function(aggType, field, options){
+  builderESDS.addBucket = function (aggType, field, options) {
     var agg = {
-      id : builderESDS.bucketId,
+      id: builderESDS.bucketId,
       type: "bucket",
       aggregationType: aggType,
       aggregationField: field,
@@ -81,7 +81,7 @@ function builderESDS () {
   }
   ////////////////////////////////////////////////////////////////////////
 
-  builderESDS.reset = function(){
+  builderESDS.reset = function () {
     builderESDS.metrics = [];
     builderESDS.buckets = [];
 
@@ -92,5 +92,5 @@ function builderESDS () {
   }
 
 
-	return builderESDS;
+  return builderESDS;
 }
