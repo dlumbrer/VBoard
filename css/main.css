@@ -39,3 +39,8 @@ body, html {
   background-color: blue;
   position: absolute;
 }
+
+.control-menu{
+    overflow-y: auto;
+    overflow-x: hidden;
+}
