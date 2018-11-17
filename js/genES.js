@@ -1,9 +1,8 @@
 function genES() {
-  //¿DEBO CONSTRUIR EL OBJETO PASANDOLE POR PARAMETRO EL CLIENTE Y BODYBUILDER O NO?
   var genEs = {};
   genES.version = "0.0.1";
 
-  ///////////////////////////////PRUEBAS//////////////////////////////////////
+  ///////////////////////////////Get indices//////////////////////////////////////
   genES.getIndicesNames = function (client) {
     client.cat.indices({
       h: ['index', 'doc_count']
@@ -428,79 +427,3 @@ function genES() {
 
   return genES;
 }
-
-
-
-
-/*$scope.exexcuteSearch = function(query){
-  ESService.client.search({
-    index: 'opnfv',
-    type: 'items',
-    size: $scope.sizeSelected,
-    body: query
-
-    {
-      "query": {
-        "bool": {
-          "must": [
-            {
-              "query_string": {
-                "query": "*",
-                "analyze_wildcard": true
-              }
-            },
-          ],
-          "must_not": []
-        }
-      },
-      "aggs": {
-        "author": {
-          "terms": {
-            "field": $scope.bucketSelected + ".keyword",
-            "size": $scope.sizeSelected,
-            "order": {
-              "_count": "desc"
-            }
-          }
-        }
-      }
-    }
-  }).then(function (resp) {
-      //$scope.hits = resp.hits.hits;
-      $scope.hits = JSON.stringify(resp.hits, undefined, 2);
-      $scope.aggregationsToShow = JSON.stringify(resp.aggregations, undefined, 2);
-      $scope.aggregations = resp.aggregations;
-      console.log("RESPUESTA: ", resp)
-      //$scope.build3DChart();
-  }, function (err) {
-      $scope.hits = "NO RESULTS"
-      console.trace(err.message);
-  });
-}*/
-
-
-/*///ESTILO DEL ARRAY
-var statements = [{
-  "id": 0,
-  "type": "bucket",
-  "aggregationType":"terms",
-  "aggregationField":"author_org_name.keyword",
-  "aggregationOptions": {"size" : "10"}
-}, {
-  "id": 1,
-  "type": "bucket",
-  "aggregationType":"terms",
-  "aggregationField":"repo_name.keyword"
-}, {
-  "id": 2,
-  "type": "bucket",
-  "aggregationType":"date_histogram",
-  "aggregationField":"author_date" ,
-  "aggregationOptions": {"interval" : "1M"}
-}, {
-  "id": 3,
-  "type": "bucket",
-  "aggregationType":"histogram",
-  "aggregationField":"lines_changed",
-  "aggregationOptions": {"interval" : "2000"}
-}]*/
