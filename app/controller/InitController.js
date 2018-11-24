@@ -48,7 +48,7 @@ define(
 						}
 						// No está conectado ES, problema con ES
 						if (body == -1) {
-							$scope.infoMessage = "ERROR: Imposible connect to ElasticSearch";
+							$scope.infoMessage = "ERROR: Impossible connect to ElasticSearch";
 							return null
 						}
 						$scope.infoMessage = "Everything is right, welcome to VBoard!";

@@ -13,36 +13,11 @@ function builderESDS() {
 
   ////////////////////////////////UNIR METRICAS Y BUCKETS EN LA ESTRUCTURA DE DATOS/////////////////////////////////////
   builderESDS.buildDataStructure = function () {
-    var statements = [{
-      "id": 0,
-      "type": "bucket",
-      "aggregationType": "terms",
-      "aggregationField": "author_org_name.keyword",
-      "aggregationOptions": { "size": "10" }
-    }, {
-      "id": 1,
-      "type": "bucket",
-      "aggregationType": "terms",
-      "aggregationField": "repo_name.keyword"
-    }, {
-      "id": 2,
-      "type": "bucket",
-      "aggregationType": "date_histogram",
-      "aggregationField": "author_date",
-      "aggregationOptions": { "interval": "1M" }
-    }, {
-      "id": 3,
-      "type": "bucket",
-      "aggregationType": "histogram",
-      "aggregationField": "lines_changed",
-      "aggregationOptions": { "interval": "2000" }
-    }]
 
     builderESDS.dataStucture = builderESDS.buckets.concat(builderESDS.metrics);
 
     console.log("Estructura de datos", builderESDS.dataStucture)
 
-    //builderESDS.dataStucture = statements;
     return builderESDS;
   }
 
