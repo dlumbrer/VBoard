@@ -1,3 +1,3 @@
 # Web page of VBoard
 
-Go to https://github.com/dlumbrer/VBoard
+Go to https://dlumbrer.github.io/VBoard/
