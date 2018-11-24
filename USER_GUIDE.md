@@ -7,9 +7,13 @@ This user guide explains step by step how to init VBoard, how to produce visuali
 First of all, VBoard will check its connection to ElasticSearch, these are the steps that will be seen when entering the application:
 
 1. First, VBoard will notify the user who is making configurations:
+
     ![Screenshot](images/user_guide/Init1.png)
+    
     When it cannot connect to ElasticSearch, this error message will appear:
+    
     ![Screenshot](images/user_guide/Init2.png)
+    
 2. Once connected to ElasticSearch, it will search the index \textit{.vboard}, and then there are two options:
         The index doesn't exist, so it will try to create it, showing this information message:
         
