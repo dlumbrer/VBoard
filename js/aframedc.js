@@ -2804,7 +2804,11 @@ function aframedc() {
         //creating camera 
         var camera = createcamera();
 
+        var ar = document.createElement("a-marker-camera");
+        ar.setAttribute("preset", "hiro");
+
         scene.appendChild(camera);
+        scene.appendChild(ar);
         containerdiv.appendChild(scene);
         return dashBoard(scene);
     }
