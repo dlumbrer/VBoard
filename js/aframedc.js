@@ -2773,17 +2773,34 @@ function aframedc() {
     };
     var createcamera = function () {
         //taking existing camera.Adding my custom components.
+        var parent = document.createElement("a-entity");
+        parent.setAttribute("movement-controls", "fly: true");
+        parent.setAttribute("position", "0 0 0");
+
+
         var camera = document.createElement("a-entity");
         camera.setAttribute("camera", {});
         camera.setAttribute("look-controls", {});
         camera.setAttribute("wasd-controls", {});
         //camera object 3d has to be loaded.
-        camera.addEventListener("loaded", function () { camera.setAttribute("mouse-cursor", "") });
-        return camera;
+        camera.addEventListener("loaded", function () { console.log("OK camera") });
+
+        var laser = document.createElement("a-entity");
+        laser.setAttribute("laser-controls", "hand: right");
+
+        var mov = document.createElement("a-entity");
+        mov.setAttribute("oculus-go-controls", {});
+
+        parent.appendChild(camera)
+        parent.appendChild(laser)
+        parent.appendChild(mov)
+
+        return parent;
     }
     aframedc.dashboard = function (containerdiv) {
         var scene = document.createElement("a-scene");
         scene.setAttribute('embedded', {});
+        scene.setAttribute('antialias', "true");
         //creating camera 
         var camera = createcamera();
 
