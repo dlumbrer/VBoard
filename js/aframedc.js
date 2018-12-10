@@ -1643,9 +1643,9 @@ AFRAME.registerComponent('bubblechart', {
         xsteps: { default: 5 },
         ysteps: { default: 5 },
         zsteps: { default: 10 },
-        width: { default: 10 },
-        height: { default: 10 },
-        depth: { default: 20 },
+        width: { default: 1 },
+        height: { default: 1 },
+        depth: { default: 2 },
         color: { default: '#00FF00' },
         title: { default: "" }
     },
@@ -1861,9 +1861,9 @@ AFRAME.registerComponent('bubblechart', {
           var txt = value;
           var curveSeg = 3;
           var texto = document.createElement("a-entity");
-          TEXT_WIDTH = 6;
+          TEXT_WIDTH = 1;
           //FIXME: depende del tama�o de letra...
-          var xPos = -0.7;
+          var xPos = -0.2;
           //var yPos = BasicChart._coords.y + step +  0.36778332145402703 / 2;
           var yPos = step;
           texto.setAttribute("text", {
@@ -1898,9 +1898,9 @@ AFRAME.registerComponent('bubblechart', {
       var getZLabel = function (component, step, labelkv) {
           var curveSeg = 3;
           var texto = document.createElement("a-entity");
-          TEXT_WIDTH = 6;
+          TEXT_WIDTH = 1;
           //FIXME: depende del tama�o de letra...
-          var xPos = -1 * ((TEXT_WIDTH / 2) + 0.7);
+          var xPos = -1 * ((TEXT_WIDTH / 2));
           var zPos = -step;
           //todo: it must be optional
           var actualColor = component.el._colors.find(function (d) { return d.key === labelkv; }).value;
