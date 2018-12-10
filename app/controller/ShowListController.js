@@ -2,6 +2,7 @@ define(
   function () {
     function ShowListController($scope, $route, $routeParams, $location, esFactory, ESService, ModalService, Notification) {
       angular.element(document).ready(function () {
+        $scope.$parent.navVisible = false;
 
         var generatorQueries = genES()
         var builderData = builderESDS()
