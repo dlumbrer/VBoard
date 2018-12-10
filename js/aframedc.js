@@ -727,9 +727,9 @@ AFRAME.registerComponent('barchart3d', {
         xsteps: { default: 5 },
         ysteps: { default: 5 },
         zsteps: { default: 5 },
-        width: { default: 10 },
-        height: { default: 10 },
-        depth: { default: 10 },
+        width: { default: 1 },
+        height: { default: 1 },
+        depth: { default: 1 },
         color: { default: '#00FF00' },
         title: { default: "" },
         src: { type: 'asset', default: 'https://rawgit.com/fran-aguilar/a-framedc/master/examples/data/lib/scm-commits-filtered.json' }
@@ -959,9 +959,9 @@ AFRAME.registerComponent('barchart3d', {
             var txt = value;
             var curveSeg = 3;
             var texto = document.createElement("a-entity");
-            TEXT_WIDTH = 6;
+            TEXT_WIDTH = 1;
             //FIXME: depende del tama�o de letra...
-            var xPos = -0.7;
+            var xPos = -0.2;
             //var yPos = BasicChart._coords.y + step +  0.36778332145402703 / 2;
             var yPos = step;
             texto.setAttribute("text", {
@@ -996,9 +996,9 @@ AFRAME.registerComponent('barchart3d', {
         var getZLabel = function (component, step, labelkv) {
             var curveSeg = 3;
             var texto = document.createElement("a-entity");
-            TEXT_WIDTH = 6;
+            TEXT_WIDTH = 1;
             //FIXME: depende del tama�o de letra...
-            var xPos = -1 * ((TEXT_WIDTH / 2) + 0.7);
+            var xPos = -1 * ((TEXT_WIDTH / 2));
             var zPos = -step;
             //todo: it must be optional
             var actualColor = component.el._colors.find(function (d) { return d.key === labelkv; }).value;
@@ -2209,8 +2209,8 @@ var utils = __webpack_require__(2)
  */
 AFRAME.registerComponent('piechart', {
  schema: {
-        radius: {default: 2.5 },
-        depth: { default: 0.5 },
+        radius: {default: 0.5 },
+        depth: { default: 0.01 },
         color: { default: "#fff" },
         title: {default: ""}
     },
@@ -2276,7 +2276,7 @@ initChart: function () {
             }
             el.setAttribute("color", actualColor);
             //el.setAttribute("material", { color: actualColor });
-            el.setAttribute("scale", { x: 1, y: component.depth, z: 1 });
+            el.setAttribute("scale", { x: 1, y: 1, z: 1 });
             el.setAttribute("position", { x: relativeX, y: relativeY, z: 0 });
             el.setAttribute("rotation", { x: -90, y: 0, z: 0 });
 
@@ -2699,10 +2699,11 @@ function aframedc() {
         }
         return dashBoard(AFRAMEscene);
     }
-    var dashBoard = function (scene) {
-        var dashEntity = document.createElement("a-entity");
+    var dashBoard = function (dashEntity) {
+        //var dashEntity = document.createElement("a-entity");
         dashEntity.id = "aframedc";
-        scene.appendChild(dashEntity);
+        dashEntity.setAttribute('position', '0 0.5 0');
+        //scene.appendChild(dashEntity);
         var odashboard = dashEntity;
         odashboard.chartRegistry = (function () {
             var _chartMap = {};
@@ -2799,7 +2800,8 @@ function aframedc() {
     }
     aframedc.dashboard = function (containerdiv) {
         var scene = document.createElement("a-scene");
-        scene.setAttribute('embedded', {});
+        scene.setAttribute('arjs', '');
+        scene.setAttribute('embedded', '');
         scene.setAttribute('antialias', "true");
         //creating camera 
         var camera = createcamera();
@@ -2809,6 +2811,10 @@ function aframedc() {
 
         scene.appendChild(camera);
         scene.appendChild(ar);
+        var box = document.createElement("a-box");
+        box.setAttribute('position', '0 0.5 0');
+        box.setAttribute('material', 'color: red;');
+        //scene.appendChild(box);
         containerdiv.appendChild(scene);
         return dashBoard(scene);
     }
