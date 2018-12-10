@@ -216,11 +216,11 @@ define(
 					console.log("cargar dash:", dashtoadd);
 
 					// Remove current dashboard (removing just the children)
-					for (var i = 0; i < $rootScope.actualdash.children.length; i++) {
-						if ($rootScope.actualdash.children[i].id !== "skymap") {
-							$rootScope.actualdash.removeChild($rootScope.actualdash.children[i])
-						}
-					};
+					backgroundNoDelete = document.getElementById("skymap")
+					while ($rootScope.actualdash.firstChild) {
+						$rootScope.actualdash.removeChild($rootScope.actualdash.firstChild);
+					}
+					$rootScope.actualdash.appendChild(backgroundNoDelete)
 
 					// Pintar background
 					if (dashtoadd._source.background) {
