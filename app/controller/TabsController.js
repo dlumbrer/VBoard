@@ -33,7 +33,7 @@ define(
 			};
 
 			/////////////////////////////////////////////FONDO PANTALLA//////////////////////////////
-			$scope.$root.backgrounds = [{ imgprefix: "../../images/backgrounds/skycubemap-", extension: "png" }, { imgprefix: "../../images/backgrounds/dawnmountain-", extension: "png" }, { imgprefix: "../../images/backgrounds/DarkSea-", extension: "png" }, { imgprefix: "../../images/backgrounds/moondust-", extension: "png" }, { imgprefix: "../../images/backgrounds/nebula-", extension: "png" }];
+			$scope.$root.backgrounds = ["default", "contact", "egypt", "checkerboard", "forest", "goaland", "yavapai", "goldmine", "threetowers", "poison", "arches", "tron", "japan", "dream", "volcano", "starry", "osiris"];
 			$scope.$root.switchBackground = function () {
 				if (!$scope.$root.idCurrentBackground) {
 					$scope.$root.idCurrentBackground = 1
@@ -43,11 +43,18 @@ define(
 					$scope.$root.idCurrentBackground++
 				}
 
-				$scope.$root.loadBackgroundById($scope.$root.idCurrentBackground)
+				$scope.$root.loadBackgroundById($rootScope.actualdash, $scope.$root.idCurrentBackground)
 			};
-			$scope.$root.loadBackgroundById = (id) => {
-				var map = document.querySelector("#skymap");
-				map.setAttribute("envmap", $scope.$root.backgrounds[id - 1]);
+			$scope.$root.loadBackgroundById = (dash, id) => {
+				$scope.$root.idCurrentBackground = id
+				$("#skymap").remove();
+				let backgroundEntity = document.createElement("a-entity")
+				backgroundEntity.setAttribute("id", "skymap")
+				backgroundEntity.setAttribute("visible", {})
+				backgroundEntity.setAttribute("environment", "preset:" + $scope.$root.backgrounds[id - 1] + ";");
+				dash.appendChild(backgroundEntity)
+
+
 			}
 
 			///////////////////////////////////////////////////////////////////////////////////////

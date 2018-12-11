@@ -21,7 +21,7 @@ define(
 
 					// Pintar background
 					if ($scope.actualLoadDashboard._source.background) {
-						$scope.$root.loadBackgroundById($scope.actualLoadDashboard._source.background)
+						$scope.$root.loadBackgroundById($rootScope.actualdash, $scope.actualLoadDashboard._source.background)
 					}
 
 					for (var i = 0; i < $scope.actualLoadDashboard._source.charts.length; i++) {

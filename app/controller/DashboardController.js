@@ -224,7 +224,7 @@ define(
 
 					// Pintar background
 					if (dashtoadd._source.background) {
-						$scope.$root.loadBackgroundById(dashtoadd._source.background)
+						$scope.$root.loadBackgroundById($rootScope.actualdash, dashtoadd._source.background)
 					}
 
 					//Pintar visualizaciones

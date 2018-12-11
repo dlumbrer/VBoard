@@ -509,7 +509,7 @@ define(
 							   dash.allCharts[i].reBuild()
 					}*/
 
-					dash.addChart(chart, { x: 0, y: -3, z: -10 })
+					dash.addChart(chart, { x: 0, y: 0, z: -10 })
 					//pie.render();
 				}
 
@@ -741,6 +741,8 @@ define(
 				let backgroundEntity = document.createElement("a-entity")
 				backgroundEntity.setAttribute("id", "skymap")
 				dash.appendChild(backgroundEntity)
+				$scope.actualDashboard = dash;
+				$rootScope.actualdash = dash;
 				// 2
 				/*var myPieChart = aframedc.pieChart();
 				// Common

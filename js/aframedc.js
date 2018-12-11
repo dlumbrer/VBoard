@@ -2775,7 +2775,7 @@ function aframedc() {
         //taking existing camera.Adding my custom components.
         var parent = document.createElement("a-entity");
         parent.setAttribute("movement-controls", "fly: true");
-        parent.setAttribute("position", "0 0 0");
+        parent.setAttribute("position", "0 2 0");
 
 
         var camera = document.createElement("a-entity");
