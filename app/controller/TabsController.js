@@ -5,9 +5,9 @@ define(
 			// Clean dashboard
 			const removeVisualizations = (dash) => {
 				if (dash) {
-					for (var i = 0; i < dash.children.length; i++) {
-						dash.removeChild(dash.children[i])
-					};
+					while (dash.firstChild) {
+						dash.removeChild(dash.firstChild);
+					}
 				}
 			}
 
