@@ -735,12 +735,12 @@ define(
 				/////////////////////////////////CONSTRUCCIÓN DE AFRAME////////////////////////////////////////////
 
 
-				var scenediv = document.getElementById("Aframediv");
+				/*var scenediv = document.getElementById("Aframediv");
 				// 1
 				dash = aframedc.dashboard(scenediv);
 				let backgroundEntity = document.createElement("a-entity")
 				backgroundEntity.setAttribute("id", "skymap")
-				dash.appendChild(backgroundEntity)
+				dash.appendChild(backgroundEntity)*/
 				$scope.actualDashboard = dash;
 				$rootScope.actualdash = dash;
 				// 2

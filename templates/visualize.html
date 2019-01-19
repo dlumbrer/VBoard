@@ -221,8 +221,24 @@
         <button type="button" class="col-md-12 btn btn-success" ng-click="openLoadModal()">Load visualization</button>
       </div>
     </div>
+    <div class="col-md-9" style="height:100%">
+      <a-scene background="color: grey">
+        <a-light type="point" intensity="1" position="-2 10 10"></a-light>
 
-    <div class="col-md-9" id="Aframediv" style="height:100%" </div> </div> <div class="row" ng-show="showHitsAggregations">
+
+        <a-entity charts='type: pie; dataPoints: [{"size": 1, "color": "#ff0000"},  {"size": 1, "color": "#00ff00"},  {"size": 2, "color": "#0000ff"},  {"size": 1.5, "color": "#0000ff"},  {"size": 4, "color": "#4CC3D9"}]; pie_radius: 3'>
+          </a-entitys>
+          <!--a-entity charts='type: pie; dataPoints: data.json; pie_radius: 3'></a-entity-->
+
+
+          <a-entity position="2 10 14" rotation="-30 15 0">
+            <a-camera position="3 -1 4" rotation="0 -1 0">
+              <a-cursor></a-cursor>
+            </a-camera>
+          </a-entity>
+      </a-scene>
+    </div>
+    <div class="row" ng-show="showHitsAggregations">
       <div class="col-md-12">
         <div class="col-md-6">
           <h2>Hits:</h2>
