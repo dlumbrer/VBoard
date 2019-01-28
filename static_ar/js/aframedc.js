@@ -2701,7 +2701,7 @@ function aframedc() {
     }
     var dashBoard = function (dashEntity) {
         //var dashEntity = document.createElement("a-entity");
-        dashEntity.id = "aframedc";
+        //dashEntity.id = "aframedc";
         dashEntity.setAttribute('position', '0 0.5 0');
         //scene.appendChild(dashEntity);
         var odashboard = dashEntity;
@@ -2799,15 +2799,17 @@ function aframedc() {
         return parent;
     }
     aframedc.dashboard = function (containerdiv) {
-        var scene = document.createElement("a-scene");
-        scene.setAttribute('arjs', '');
+        var scene = document.getElementById("aframeScene");
+        scene.setAttribute('arjs', 'debugUIEnabled: false');
         scene.setAttribute('embedded', '');
         scene.setAttribute('antialias', "true");
         //creating camera 
         var camera = createcamera();
 
         var ar = document.createElement("a-marker-camera");
-        ar.setAttribute("preset", "hiro");
+        ar.setAttribute("preset", "custom");
+        ar.setAttribute("type", "pattern");
+        ar.setAttribute("url", "markers/pattern-marker.patt");
 
         scene.appendChild(camera);
         scene.appendChild(ar);
@@ -2815,7 +2817,7 @@ function aframedc() {
         box.setAttribute('position', '0 0.5 0');
         box.setAttribute('material', 'color: red;');
         //scene.appendChild(box);
-        containerdiv.appendChild(scene);
+        //containerdiv.appendChild(scene);
         return dashBoard(scene);
     }
     var baseMixin = {
