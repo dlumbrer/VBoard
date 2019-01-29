@@ -67,7 +67,7 @@ $(document).ready(function () {
     let backgroundEntity = document.createElement("a-entity")
     backgroundEntity.setAttribute("id", "skymap")
     backgroundEntity.setAttribute("visible", {})
-    backgroundEntity.setAttribute("environment", "preset: goaland;");
+    backgroundEntity.setAttribute("environment", "preset: forest;");
     dash.appendChild(backgroundEntity)
     /////////////////////////////////////////////////////////////////////////////////////
 });
